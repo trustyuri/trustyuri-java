@@ -13,10 +13,15 @@ import org.openrdf.model.Value;
 
 public class Hasher {
 
-	private URI baseURI;
+	private URI baseURI = null;
+	private String hash = null;
 
 	public Hasher(URI baseURI) {
 		this.baseURI = baseURI;
+	}
+
+	public Hasher(String hash) {
+		this.hash = hash;
 	}
 
 	public String makeHash(List<Statement> statements) {
@@ -24,7 +29,7 @@ public class Hasher {
 		try {
 			md = MessageDigest.getInstance("SHA-256");
 		} catch (NoSuchAlgorithmException ex) {}
-		Collections.sort(statements, new StatementComparator(baseURI));
+		Collections.sort(statements, new StatementComparator(baseURI, hash));
 		for (Statement st : statements) {
 			md.update(valueToString(st.getContext()).getBytes());
 			md.update(valueToString(st.getSubject()).getBytes());
@@ -43,8 +48,12 @@ public class Hasher {
 	}
 
 	private String valueToString(Value v) {
-		if (v instanceof URI && v.equals(baseURI)) {
-			return ".\n";
+		if (v instanceof URI) {
+			if (baseURI != null) {
+				return HashURIUtils.normalize((URI) v, baseURI) + "\n";
+			} else {
+				return HashURIUtils.normalize((URI) v, hash) + "\n";
+			}
 		} else {
 			return v.toString() + "\n";
 		}

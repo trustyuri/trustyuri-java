@@ -11,10 +11,12 @@ import org.openrdf.model.Value;
 
 public class StatementComparator implements Comparator<Statement> {
 
-	private URI baseURI;
+	private URI baseURI = null;
+	private String hash = null;
 
-	public StatementComparator(URI baseURI) {
+	public StatementComparator(URI baseURI, String hash) {
 		this.baseURI = baseURI;
+		this.hash = hash;
 	}
 
 	@Override
@@ -72,12 +74,14 @@ public class StatementComparator implements Comparator<Statement> {
 	}
 
 	private int compareURIs(URI uri1, URI uri2) {
-		if (uri1.equals(baseURI) && !uri2.equals(baseURI)) {
-			return -1;
-		} else if (!uri1.equals(baseURI) && uri2.equals(baseURI)) {
-			return 1;
+		return uriToString(uri1).compareTo(uriToString(uri2));
+	}
+
+	private String uriToString(URI uri) {
+		if (baseURI != null) {
+			return HashURIUtils.normalize(uri, baseURI);
 		} else {
-			return uri1.toString().compareTo(uri2.toString());
+			return HashURIUtils.normalize(uri, hash);
 		}
 	}
 

@@ -8,22 +8,24 @@ import org.openrdf.model.impl.ContextStatementImpl;
 import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFHandlerException;
 
-public class URIReplacer implements RDFHandler {
+public class HashAdder implements RDFHandler {
 
-	private URI findURI, replaceURI;
+	private URI baseURI;
+	private String hash;
 	private RDFHandler handler;
 
-	public URIReplacer(URI findURI, URI replaceURI, RDFHandler handler) {
-		this.findURI = findURI;
-		this.replaceURI = replaceURI;
+	public HashAdder(URI baseURI, String hash, RDFHandler handler) {
+		this.baseURI = baseURI;
+		this.hash = hash;
 		this.handler = handler;
 	}
 
 	@Override
 	public void startRDF() throws RDFHandlerException {
 		handler.startRDF();
-		if (replaceURI != null) {
-			handler.handleNamespace("this", replaceURI.toString());
+		if (baseURI != null) {
+			handler.handleNamespace("this", HashURIUtils.getHashURIString(baseURI, hash));
+			handler.handleNamespace("sub", HashURIUtils.getHashURIString(baseURI, hash, ""));
 		}
 	}
 
@@ -34,6 +36,9 @@ public class URIReplacer implements RDFHandler {
 
 	@Override
 	public void handleNamespace(String prefix, String uri) throws RDFHandlerException {
+		if (baseURI != null && baseURI.toString().equals(uri)) {
+			return;
+		}
 		handler.handleNamespace(prefix, uri);
 	}
 
@@ -62,8 +67,8 @@ public class URIReplacer implements RDFHandler {
 	}
 
 	private URI replace(URI uri) {
-		if (uri.equals(findURI)) {
-			return replaceURI;
+		if (baseURI != null) {
+			return HashURIUtils.getHashURI(uri, baseURI, hash);
 		} else {
 			return uri;
 		}
