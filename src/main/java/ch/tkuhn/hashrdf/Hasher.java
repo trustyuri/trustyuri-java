@@ -51,8 +51,10 @@ public class Hasher {
 		if (v instanceof URI) {
 			if (baseURI != null) {
 				return HashURIUtils.normalize((URI) v, baseURI) + "\n";
-			} else {
+			} else if (hash != null) {
 				return HashURIUtils.normalize((URI) v, hash) + "\n";
+			} else {
+				return v.toString() + "\n";
 			}
 		} else {
 			return v.toString() + "\n";

@@ -80,8 +80,10 @@ public class StatementComparator implements Comparator<Statement> {
 	private String uriToString(URI uri) {
 		if (baseURI != null) {
 			return HashURIUtils.normalize(uri, baseURI);
-		} else {
+		} else if (hash != null) {
 			return HashURIUtils.normalize(uri, hash);
+		} else {
+			return uri.toString();
 		}
 	}
 
