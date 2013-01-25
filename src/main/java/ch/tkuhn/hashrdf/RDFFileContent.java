@@ -8,7 +8,7 @@ import org.openrdf.model.Statement;
 import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFHandlerException;
 
-public class RDFGraphs implements RDFHandler {
+public class RDFFileContent implements RDFHandler {
 	
 	private List<Object> objects;
 	private List<Statement> statements;

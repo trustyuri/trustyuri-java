@@ -21,7 +21,7 @@
 
 :Att {
     : pav:authoredBy <http://www.tkuhn.ch/me> ;
-        dc:created "2013-01-23T14:33:21"^^xsd:dateTime .
+        dc:created "2013-01-23T14:33:21+01:00"^^xsd:dateTime .
 }
 
 :Supp {

@@ -1,5 +1,5 @@
-@prefix this: <http://www.tkuhn.ch/hashrdf/examples/nanopub2.NpHsnE8Jj2JasW72Qqa7usQ9FicII3zX28RrcCQIyFw> .
-@prefix sub: <http://www.tkuhn.ch/hashrdf/examples/nanopub2.NpHsnE8Jj2JasW72Qqa7usQ9FicII3zX28RrcCQIyFw.> .
+@prefix this: <http://www.tkuhn.ch/hashrdf/examples/nanopub2.CBDvsLrX-BhnT6ZknHKqkNS8RljuPlXz_T_UU3GYW0o> .
+@prefix sub: <http://www.tkuhn.ch/hashrdf/examples/nanopub2.CBDvsLrX-BhnT6ZknHKqkNS8RljuPlXz_T_UU3GYW0o.> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix dc: <http://purl.org/dc/terms/> .
@@ -23,9 +23,9 @@ sub:Ass {
 
 sub:Att {
 	this: pav:authoredBy <http://www.tkuhn.ch/me> ;
-		dc:created "2013-01-23T14:33:21"^^xsd:dateTime .
+		dc:created "2013-01-23T14:33:21+01:00"^^xsd:dateTime .
 }
 
 sub:Supp {
-	this: swan:citesAsSupportiveEvidence <http://www.tkuhn.ch/hashrdf/examples/nanopub1.ORpz6mGGUigbYIxSkGOSNn-Kbiz3DRlSV0NLta48AtE> .
+	this: swan:citesAsSupportiveEvidence <http://www.tkuhn.ch/hashrdf/examples/nanopub1.4jWMi-TQ9EQG2iLkBpM9QDJxjcw7rHJWhD-Sx1mibpY> .
 }

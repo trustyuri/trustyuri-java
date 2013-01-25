@@ -16,11 +16,11 @@ public class TransformFile {
 		if (args.length > 1) {
 			baseName = args[1];
 		}
-		RDFGraphs graphs = FileUtils.loadFile(inputFile);
-		transform(graphs, inputFile.getParent(), baseName);
+		RDFFileContent content = FileUtils.loadFile(inputFile);
+		transform(content, inputFile.getParent(), baseName);
 	}
 
-	public static void transform(RDFGraphs graphs, String outputDir, String baseName) throws Exception {
+	public static void transform(RDFFileContent content, String outputDir, String baseName) throws Exception {
 		String name = baseName;
 		URI baseURI = null;
 		if (baseName.indexOf("/") > 0) {
@@ -29,7 +29,7 @@ public class TransformFile {
 		}
 
 		Hasher hasher = new Hasher(baseURI);
-		String hash = hasher.makeHash(graphs.getStatements());
+		String hash = hasher.makeHash(content.getStatements());
 		String fileName = name;
 		if (fileName.length() == 0) {
 			fileName = hash;
@@ -40,7 +40,7 @@ public class TransformFile {
 		OutputStream out = new FileOutputStream(outputFile);
 		TriGWriter writer = new CustomTriGWriter(out);
 		HashAdder replacer = new HashAdder(baseURI, hash, writer);
-		graphs.propagate(replacer);
+		content.propagate(replacer);
 		out.close();
 	}
 

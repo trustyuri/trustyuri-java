@@ -10,14 +10,21 @@ public class FileUtils {
 
 	private FileUtils() {}  // no instances allowed
 
-	public static RDFGraphs loadFile(File file) throws Exception {
+	public static RDFFileContent loadFile(File file) throws Exception {
 		InputStream in = new FileInputStream(file);
 		TriGParser p = new TriGParser();
-		RDFGraphs graphs = new RDFGraphs();
-		p.setRDFHandler(graphs);
+		RDFFileContent content = new RDFFileContent();
+		p.setRDFHandler(content);
 		p.parse(in, "");
 		in.close();
-		return graphs;
+		return content;
+	}
+
+	public static String getHashPart(String s) {
+		if (!s.matches("(.*[^A-Za-z0-9\\-_]|)[A-Za-z0-9\\-_]{43}")) {
+			return null;
+		}
+		return s.replaceFirst("^(.*[^A-Za-z0-9\\-_]|)([A-Za-z0-9\\-_]{43})$", "$2");
 	}
 
 }

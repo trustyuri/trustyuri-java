@@ -14,9 +14,9 @@ public class TransformNanopub {
 
 	public static void main(String[] args) throws Exception {
 		File inputFile = new File(args[0]);
-		RDFGraphs graphs = FileUtils.loadFile(inputFile);
+		RDFFileContent content = FileUtils.loadFile(inputFile);
 		Set<String> baseURICandidates = new HashSet<>();
-		for (Statement st : graphs.getStatements()) {
+		for (Statement st : content.getStatements()) {
 			String s = st.getSubject().toString();
 			String p = st.getPredicate().toString();
 			String o = st.getObject().toString();
@@ -37,7 +37,7 @@ public class TransformNanopub {
 			System.exit(1);
 		}
 		String baseName = baseURICandidates.iterator().next();
-		TransformFile.transform(graphs, inputFile.getParent(), baseName);
+		TransformFile.transform(content, inputFile.getParent(), baseName);
 	}
 
 }
