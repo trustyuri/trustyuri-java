@@ -1,0 +1,31 @@
+@prefix this: <http://www.tkuhn.ch/hashrdf/examples/nanopub2.CBDvsLrX-BhnT6ZknHKqkNS8RljuPlXz_T_UU3GYW0o> .
+@prefix sub: <http://www.tkuhn.ch/hashrdf/examples/nanopub2.CBDvsLrX-BhnT6ZknHKqkNS8RljuPlXz_T_UU3GYW0o.> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dc: <http://purl.org/dc/terms/> .
+@prefix opm: <http://purl.org/net/opmv/ns#> .
+@prefix pav: <http://swan.mindinformatics.org/ontologies/1.2/pav/> .
+@prefix swan: <http://purl.org/swan/1.2/swan-commons/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+
+sub:Head {
+	this: a np:Nanopublication ;
+		np:hasAssertion sub:Ass ;
+		np:hasProvenance sub:Prov .
+	
+	sub:Prov np:hasAttribution sub:Att ;
+		np:hasSupporting sub:Supp .
+}
+
+sub:Ass {
+	<http://example.com/mosquito> owl:subClassOf <http://example.com/dangerousAnimal> .
+}
+
+sub:Att {
+	this: pav:authoredBy <http://www.tkuhn.ch/me> ;
+		dc:created "2013-01-23T14:33:21+01:00"^^xsd:dateTime .
+}
+
+sub:Supp {
+	this: swan:citesAsSupportiveEvidence <http://www.tkuhn.ch/hashrdf/examples/nanopub1.4jWMi-TQ9EQG2iLkBpM9QDJxjcw7rHJWhD-Sx1mibpY> .
+}
