@@ -14,7 +14,7 @@ public class TransformNanopub {
 
 	public static void main(String[] args) throws Exception {
 		File inputFile = new File(args[0]);
-		RDFFileContent content = FileUtils.loadFile(inputFile);
+		RDFFileContent content = FileUtils.load(inputFile);
 		Set<String> baseURICandidates = new HashSet<>();
 		for (Statement st : content.getStatements()) {
 			String s = st.getSubject().toString();

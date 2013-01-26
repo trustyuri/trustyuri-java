@@ -10,14 +10,17 @@ public class FileUtils {
 
 	private FileUtils() {}  // no instances allowed
 
-	public static RDFFileContent loadFile(File file) throws Exception {
-		InputStream in = new FileInputStream(file);
+	public static RDFFileContent load(InputStream in) throws Exception {
 		TriGParser p = new TriGParser();
 		RDFFileContent content = new RDFFileContent();
 		p.setRDFHandler(content);
 		p.parse(in, "");
 		in.close();
 		return content;
+	}
+
+	public static RDFFileContent load(File file) throws Exception {
+		return load(new FileInputStream(file));
 	}
 
 	public static String getHashPart(String s) {

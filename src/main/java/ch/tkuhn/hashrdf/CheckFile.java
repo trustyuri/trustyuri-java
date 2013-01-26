@@ -1,6 +1,9 @@
 package ch.tkuhn.hashrdf;
 
-import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class CheckFile {
 
@@ -11,9 +14,14 @@ public class CheckFile {
 			System.out.println("ERROR: No hash in file name");
 			System.exit(1);
 		}
-		File inputFile = new File(fileName);
+		InputStream in;
+		try {
+			in = new URL(fileName).openConnection().getInputStream();
+		} catch (MalformedURLException ex) {
+			in = new FileInputStream(fileName);
+		}
 		
-		RDFFileContent content = FileUtils.loadFile(inputFile);
+		RDFFileContent content = FileUtils.load(in);
 		Hasher hasher = new Hasher(hash);
 		String h = hasher.makeHash(content.getStatements());
 		if (hash.equals(h)) {

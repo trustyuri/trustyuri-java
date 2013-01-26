@@ -16,7 +16,7 @@ public class TransformFile {
 		if (args.length > 1) {
 			baseName = args[1];
 		}
-		RDFFileContent content = FileUtils.loadFile(inputFile);
+		RDFFileContent content = FileUtils.load(inputFile);
 		transform(content, inputFile.getParent(), baseName);
 	}
 
