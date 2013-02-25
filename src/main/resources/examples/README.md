@@ -20,7 +20,7 @@ Fetch and check nanopub via its URI:
     $ scripts/CheckFile.sh http://www.tkuhn.ch/hashrdf/examples/nanopub1.ALxsBP-3kmRikSxw19MPYbG6ssK3mH826KDLIOLpfUa0
     Correct hash: ALxsBP-3kmRikSxw19MPYbG6ssK3mH826KDLIOLpfUa0
 
-Load unchanged file `nanopub1.4jWMi...` into local Virtuoso triple store and check via SPARQL:
+Load unchanged file `nanopub1.ALxsB...` into local Virtuoso triple store and check via SPARQL:
 
     $ scripts/CheckNanopubViaSPARQL.sh http://localhost:8890/sparql http://www.tkuhn.ch/hashrdf/examples/nanopub1.ALxsBP-3kmRikSxw19MPYbG6ssK3mH826KDLIOLpfUa0
     Correct hash: ALxsBP-3kmRikSxw19MPYbG6ssK3mH826KDLIOLpfUa0
