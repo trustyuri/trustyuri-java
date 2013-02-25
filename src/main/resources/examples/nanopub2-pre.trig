@@ -7,24 +7,22 @@
 @prefix swan: <http://purl.org/swan/1.2/swan-commons/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 
-:Head {
+: {
     : a np:Nanopublication ;
         np:hasAssertion :Ass ;
-        np:hasProvenance :Prov .
-
-    :Prov np:hasAttribution :Att ;
-        np:hasSupporting :Supp .
+        np:hasProvenance :Prov ;
+        np:hasPublicationInfo :Info .
 }
 
 :Ass {
     <http://example.com/mosquito> owl:subClassOf <http://example.com/dangerousAnimal> .
 }
 
-:Att {
-    : pav:authoredBy <http://www.tkuhn.ch/me> ;
-        dc:created "2013-01-23T14:33:21+01:00"^^xsd:dateTime .
+:Prov {
+    : swan:citesAsSupportiveEvidence <http://www.tkuhn.ch/hashrdf/examples/nanopub1.ALxsBP-3kmRikSxw19MPYbG6ssK3mH826KDLIOLpfUa0> .
 }
 
-:Supp {
-    : swan:citesAsSupportiveEvidence <http://www.tkuhn.ch/hashrdf/examples/nanopub1.4jWMi-TQ9EQG2iLkBpM9QDJxjcw7rHJWhD-Sx1mibpY> .
+:Info {
+    : pav:authoredBy <http://www.tkuhn.ch/me> ;
+        dc:created "2013-02-25T14:33:21+01:00"^^xsd:dateTime .
 }

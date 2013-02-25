@@ -70,6 +70,29 @@ public class StatementComparator implements Comparator<Statement> {
 	}
 
 	private int compareLiteral(Literal l1, Literal l2) {
+		String s1 = l1.stringValue();
+		String s2 = l2.stringValue();
+		if (!s1.equals(s2)) {
+			return s1.compareTo(s2);
+		}
+		s1 = uriToString(l1.getDatatype());
+		s2 = uriToString(l2.getDatatype());
+		if (s1 == null && s2 != null) {
+			return -1;
+		} else if (s1 != null && s2 == null) {
+			return 1;
+		} else if (s1 != null && !s1.equals(s2)) {
+			return s1.compareTo(s2);
+		}
+		s1 = l1.getLanguage();
+		s2 = l2.getLanguage();
+		if (s1 == null && s2 != null) {
+			return -1;
+		} else if (s1 != null && s2 == null) {
+			return 1;
+		} else if (s1 != null && !s1.equals(s2)) {
+			return s1.compareTo(s2);
+		}
 		return 0;
 	}
 
@@ -78,6 +101,7 @@ public class StatementComparator implements Comparator<Statement> {
 	}
 
 	private String uriToString(URI uri) {
+		if (uri == null) return null;
 		if (baseURI != null) {
 			return HashURIUtils.normalize(uri, baseURI);
 		} else if (hash != null) {

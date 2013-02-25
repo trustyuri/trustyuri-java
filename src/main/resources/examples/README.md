@@ -7,20 +7,20 @@ Transform preliminary nanopub into final version:
 
 Check integrity of resulting file:
 
-    $ scripts/CheckFile.sh src/main/resources/examples/nanopub1.4jWMi-TQ9EQG2iLkBpM9QDJxjcw7rHJWhD-Sx1mibpY
-    Correct hash: 4jWMi-TQ9EQG2iLkBpM9QDJxjcw7rHJWhD-Sx1mibpY
+    $ scripts/CheckFile.sh src/main/resources/examples/nanopub1.ALxsBP-3kmRikSxw19MPYbG6ssK3mH826KDLIOLpfUa0 
+    Correct hash: ALxsBP-3kmRikSxw19MPYbG6ssK3mH826KDLIOLpfUa0
 
-Change creation time of generated file to "14:33:22" (line 25) and check again:
+Change creation time of generated file to "14:33:22" (line 27) and check again:
 
-    $ scripts/CheckFile.sh src/main/resources/examples/nanopub1.4jWMi-TQ9EQG2iLkBpM9QDJxjcw7rHJWhD-Sx1mibpY
-    *** INCORRECT HASH ***: X43jqRnRCpb5_EcCxMiV-kr6QgWLUUKmwQp36ITMeLo
+    $ scripts/CheckFile.sh src/main/resources/examples/nanopub1.ALxsBP-3kmRikSxw19MPYbG6ssK3mH826KDLIOLpfUa0 
+    *** INCORRECT HASH ***: AuOUH51T1GgEAgAP7kXB3aBOvG97jBIDM6B8qT2D-Aqk
 
 Fetch and check nanopub via its URI:
 
-    $ scripts/CheckFile.sh http://www.tkuhn.ch/hashrdf/examples/nanopub1.4jWMi-TQ9EQG2iLkBpM9QDJxjcw7rHJWhD-Sx1mibpY
-    Correct hash: 4jWMi-TQ9EQG2iLkBpM9QDJxjcw7rHJWhD-Sx1mibpY
+    $ scripts/CheckFile.sh http://www.tkuhn.ch/hashrdf/examples/nanopub1.ALxsBP-3kmRikSxw19MPYbG6ssK3mH826KDLIOLpfUa0
+    Correct hash: ALxsBP-3kmRikSxw19MPYbG6ssK3mH826KDLIOLpfUa0
 
 Load unchanged file `nanopub1.4jWMi...` into local Virtuoso triple store and check via SPARQL:
 
-    $ scripts/CheckNanopubViaSPARQL.sh http://localhost:8890/sparql http://www.tkuhn.ch/hashrdf/examples/nanopub1.4jWMi-TQ9EQG2iLkBpM9QDJxjcw7rHJWhD-Sx1mibpY
-    Correct hash: 4jWMi-TQ9EQG2iLkBpM9QDJxjcw7rHJWhD-Sx1mibpY
+    $ scripts/CheckNanopubViaSPARQL.sh http://localhost:8890/sparql http://www.tkuhn.ch/hashrdf/examples/nanopub1.ALxsBP-3kmRikSxw19MPYbG6ssK3mH826KDLIOLpfUa0
+    Correct hash: ALxsBP-3kmRikSxw19MPYbG6ssK3mH826KDLIOLpfUa0

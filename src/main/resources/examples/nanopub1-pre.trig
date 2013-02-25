@@ -6,24 +6,22 @@
 @prefix swan: <http://purl.org/swan/1.2/swan-commons/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 
-:Head {
+: {
     : a np:Nanopublication ;
         np:hasAssertion :Ass ;
-        np:hasProvenance :Prov .
-
-    :Prov np:hasAttribution :Att ;
-        np:hasSupporting :Supp .
+        np:hasProvenance :Prov ;
+        np:hasPublicationInfo :Info .
 }
 
 :Ass {
     <http://example.com/mosquito> <http://example.com/transmits> <http://example.com/malaria> .
 }
 
-:Att {
-    : pav:authoredBy <http://www.tkuhn.ch/me> ;
-        dc:created "2013-01-23T14:33:21+01:00"^^xsd:dateTime .
+:Prov {
+    : swan:citesAsSupportiveEvidence <http://iospress.metapress.com/content/ftkh21q50t521wm2/> .
 }
 
-:Supp {
-    : swan:citesAsSupportiveEvidence <http://iospress.metapress.com/content/ftkh21q50t521wm2/> .
+:Info {
+    : pav:authoredBy <http://www.tkuhn.ch/me> ;
+        dc:created "2013-02-25T14:33:21+01:00"^^xsd:dateTime .
 }

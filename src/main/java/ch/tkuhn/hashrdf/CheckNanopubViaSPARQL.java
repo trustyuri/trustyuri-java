@@ -49,8 +49,8 @@ public class CheckNanopubViaSPARQL {
 			"  { " +
 			"    graph ?G { this: np:hasAssertion ?A } " +
 			"  } union { " +
-			"    graph ?H { { this: np:hasAssertion ?G } union { this: np:hasProvenance ?R " +
-			"        { { ?R np:hasAttribution ?G } union { ?R np:hasSupporting ?G } } } } " +
+			"    graph ?H { { this: np:hasAssertion ?G } union { this: np:hasProvenance ?G } " +
+			"        union { this: np:hasPublicationInfo ?G } } " +
 			"  } " +
 			"  graph ?G { ?S ?P ?O } " +
 			"}";

@@ -24,10 +24,10 @@ public class FileUtils {
 	}
 
 	public static String getHashPart(String s) {
-		if (!s.matches("(.*[^A-Za-z0-9\\-_]|)[A-Za-z0-9\\-_]{43}")) {
+		if (!s.matches("(.*[^A-Za-z0-9\\-_]|)A[A-Za-z0-9\\-_]{43}")) {
 			return null;
 		}
-		return s.replaceFirst("^(.*[^A-Za-z0-9\\-_]|)([A-Za-z0-9\\-_]{43})$", "$2");
+		return s.replaceFirst("^(.*[^A-Za-z0-9\\-_]|)(A[A-Za-z0-9\\-_]{43})$", "$2");
 	}
 
 }
