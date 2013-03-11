@@ -15,7 +15,7 @@ public class HashURIUtils {
 		String s = expandBaseURI(baseURI) + hash;
 		if (suffix != null) {
 			if (suffix.startsWith(".")) {
-				// Make three dots, as two dot are reserved for blank nodes
+				// Make three dots, as two dots are reserved for blank nodes
 				s += ".." + suffix;
 			} else {
 				s += "." + suffix;
