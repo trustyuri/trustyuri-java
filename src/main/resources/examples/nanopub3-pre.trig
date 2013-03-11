@@ -1,6 +1,5 @@
-@prefix : <http://www.tkuhn.ch/hashrdf/examples/nanopub2> .
+@prefix : <http://www.tkuhn.ch/hashrdf/examples/nanopub3> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix dc: <http://purl.org/dc/terms/> .
 @prefix opm: <http://purl.org/net/opmv/ns#> .
 @prefix pav: <http://swan.mindinformatics.org/ontologies/1.2/pav/> .
@@ -16,14 +15,14 @@
 }
 
 :Ass {
-    ex:mosquito owl:subClassOf ex:dangerousAnimal .
+    [ a ex:mosquito-species ] ex:transmits [ a ex:disease ] .
 }
 
 :Prov {
-    : swan:citesAsSupportiveEvidence <http://www.tkuhn.ch/hashrdf/examples/nanopub1.ALxsBP-3kmRikSxw19MPYbG6ssK3mH826KDLIOLpfUa0> .
+    : swan:citesAsSupportiveEvidence <http://iospress.metapress.com/content/ftkh21q50t521wm2/> .
 }
 
 :Info {
     : pav:authoredBy <http://www.tkuhn.ch/me> ;
-        dc:created "2013-02-25T14:33:21+01:00"^^xsd:dateTime .
+        dc:created "2013-03-11T10:51:33+01:00"^^xsd:dateTime .
 }

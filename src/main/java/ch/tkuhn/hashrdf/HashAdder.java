@@ -1,5 +1,8 @@
 package ch.tkuhn.hashrdf;
 
+import java.util.Map;
+
+import org.openrdf.model.BNode;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
@@ -13,11 +16,13 @@ public class HashAdder implements RDFHandler {
 	private URI baseURI;
 	private String hash;
 	private RDFHandler handler;
+	private Map<String,Integer> blankNodeMap;
 
-	public HashAdder(URI baseURI, String hash, RDFHandler handler) {
+	public HashAdder(URI baseURI, String hash, RDFHandler handler, Map<String,Integer> blankNodeMap) {
 		this.baseURI = baseURI;
 		this.hash = hash;
 		this.handler = handler;
+		this.blankNodeMap = blankNodeMap;
 	}
 
 	@Override
@@ -26,6 +31,7 @@ public class HashAdder implements RDFHandler {
 		if (baseURI != null) {
 			handler.handleNamespace("this", HashURIUtils.getHashURIString(baseURI, hash));
 			handler.handleNamespace("sub", HashURIUtils.getHashURIString(baseURI, hash, ""));
+			handler.handleNamespace("blank", HashURIUtils.getHashURIString(baseURI, hash, "") + ".");
 		}
 	}
 
@@ -44,18 +50,12 @@ public class HashAdder implements RDFHandler {
 
 	@Override
 	public void handleStatement(Statement st) throws RDFHandlerException {
-		Resource context = st.getContext();
-		if (context instanceof URI) {
-			context = replace((URI) context);
-		}
-		Resource subject = st.getSubject();
-		if (subject instanceof URI) {
-			subject = replace((URI) subject);
-		}
-		URI predicate = replace(st.getPredicate());
+		Resource context = transform(st.getContext());
+		Resource subject = transform(st.getSubject());
+		URI predicate = transform(st.getPredicate());
 		Value object = st.getObject();
-		if (object instanceof URI) {
-			object = replace((URI) object);
+		if (object instanceof Resource) {
+			object = transform((Resource) object);
 		}
 		Statement n = new ContextStatementImpl(subject, predicate, object, context);
 		handler.handleStatement(n);
@@ -66,11 +66,13 @@ public class HashAdder implements RDFHandler {
 		handler.handleComment(comment);
 	}
 
-	private URI replace(URI uri) {
+	private URI transform(Resource r) {
 		if (baseURI != null) {
-			return HashURIUtils.getHashURI(uri, baseURI, hash);
+			return HashURIUtils.getHashURI(r, baseURI, hash, blankNodeMap);
+		} else if (r instanceof BNode) {
+			throw new RuntimeException("Unexpected blank node encountered");
 		} else {
-			return uri;
+			return (URI) r;
 		}
 	}
 

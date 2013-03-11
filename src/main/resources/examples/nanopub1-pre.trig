@@ -5,6 +5,7 @@
 @prefix pav: <http://swan.mindinformatics.org/ontologies/1.2/pav/> .
 @prefix swan: <http://purl.org/swan/1.2/swan-commons/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
+@prefix ex: <http://example.com/> .
 
 : {
     : a np:Nanopublication ;
@@ -14,7 +15,7 @@
 }
 
 :Ass {
-    <http://example.com/mosquito> <http://example.com/transmits> <http://example.com/malaria> .
+    ex:mosquito ex:transmits ex:malaria .
 }
 
 :Prov {

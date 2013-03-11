@@ -3,6 +3,8 @@ package ch.tkuhn.hashrdf;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
@@ -28,7 +30,8 @@ public class TransformFile {
 			name = baseName.replaceFirst("^.*[^A-Za-z0-9.\\-_]([A-Za-z0-9.\\-_]*)$", "$1");
 		}
 
-		Hasher hasher = new Hasher(baseURI);
+		Map<String,Integer> blankNodeMap = new HashMap<>();
+		Hasher hasher = new Hasher(baseURI, blankNodeMap);
 		String hash = hasher.makeHash(content.getStatements());
 		String fileName = name;
 		if (fileName.length() == 0) {
@@ -39,7 +42,7 @@ public class TransformFile {
 		File outputFile = new File(outputDir, fileName);
 		OutputStream out = new FileOutputStream(outputFile);
 		TriGWriter writer = new CustomTriGWriter(out);
-		HashAdder replacer = new HashAdder(baseURI, hash, writer);
+		HashAdder replacer = new HashAdder(baseURI, hash, writer, blankNodeMap);
 		content.propagate(replacer);
 		out.close();
 	}

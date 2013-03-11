@@ -24,3 +24,6 @@ Load unchanged file `nanopub1.ALxsB...` into local Virtuoso triple store and che
 
     $ scripts/CheckNanopubViaSPARQL.sh http://localhost:8890/sparql http://www.tkuhn.ch/hashrdf/examples/nanopub1.ALxsBP-3kmRikSxw19MPYbG6ssK3mH826KDLIOLpfUa0
     Correct hash: ALxsBP-3kmRikSxw19MPYbG6ssK3mH826KDLIOLpfUa0
+
+`nanopub2` is a second example that cites the first one. `nanopub3` shows how blank nodes are
+transformed.

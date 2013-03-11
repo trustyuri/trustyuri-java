@@ -1,5 +1,6 @@
 @prefix this: <http://www.tkuhn.ch/hashrdf/examples/nanopub2.A5AbXdpz5DcaYXCh9l3eI9ruBosiL5XDU3rxBbBaUO70> .
 @prefix sub: <http://www.tkuhn.ch/hashrdf/examples/nanopub2.A5AbXdpz5DcaYXCh9l3eI9ruBosiL5XDU3rxBbBaUO70.> .
+@prefix blank: <http://www.tkuhn.ch/hashrdf/examples/nanopub2.A5AbXdpz5DcaYXCh9l3eI9ruBosiL5XDU3rxBbBaUO70..> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix dc: <http://purl.org/dc/terms/> .
@@ -7,6 +8,7 @@
 @prefix pav: <http://swan.mindinformatics.org/ontologies/1.2/pav/> .
 @prefix swan: <http://purl.org/swan/1.2/swan-commons/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
+@prefix ex: <http://example.com/> .
 
 this: {
 	this: a np:Nanopublication ;
@@ -16,7 +18,7 @@ this: {
 }
 
 sub:Ass {
-	<http://example.com/mosquito> owl:subClassOf <http://example.com/dangerousAnimal> .
+	ex:mosquito owl:subClassOf ex:dangerousAnimal .
 }
 
 sub:Prov {

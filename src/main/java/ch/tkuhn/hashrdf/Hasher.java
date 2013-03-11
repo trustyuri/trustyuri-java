@@ -4,6 +4,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.bind.DatatypeConverter;
 
@@ -17,9 +18,11 @@ public class Hasher {
 
 	private URI baseURI = null;
 	private String hash = null;
+	private Map<String,Integer> blankNodeMap;
 
-	public Hasher(URI baseURI) {
+	public Hasher(URI baseURI, Map<String,Integer> blankNodeMap) {
 		this.baseURI = baseURI;
+		this.blankNodeMap = blankNodeMap;
 	}
 
 	public Hasher(String hash) {
@@ -31,7 +34,7 @@ public class Hasher {
 		try {
 			md = MessageDigest.getInstance("SHA-256");
 		} catch (NoSuchAlgorithmException ex) {}
-		Collections.sort(statements, new StatementComparator(baseURI, hash));
+		Collections.sort(statements, new StatementComparator(baseURI, hash, blankNodeMap));
 		for (Statement st : statements) {
 			md.update(valueToString(st.getContext()).getBytes());
 			md.update(valueToString(st.getSubject()).getBytes());
@@ -52,7 +55,11 @@ public class Hasher {
 
 	private String valueToString(Value v) {
 		if (v instanceof BNode) {
-			throw new RuntimeException("Blank nodes are not allowed");
+			if (baseURI == null) {
+				throw new RuntimeException("Unexpected blank node encountered");
+			} else {
+				return HashURIUtils.normalize((BNode) v, baseURI, blankNodeMap) + "\n";
+			}
 		} else if (v instanceof URI) {
 			if (baseURI != null) {
 				return HashURIUtils.normalize((URI) v, baseURI) + "\n";

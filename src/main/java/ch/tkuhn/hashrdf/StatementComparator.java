@@ -1,6 +1,7 @@
 package ch.tkuhn.hashrdf;
 
 import java.util.Comparator;
+import java.util.Map;
 
 import org.openrdf.model.BNode;
 import org.openrdf.model.Literal;
@@ -13,10 +14,12 @@ public class StatementComparator implements Comparator<Statement> {
 
 	private URI baseURI = null;
 	private String hash = null;
+	private Map<String,Integer> blankNodeMap = null;
 
-	public StatementComparator(URI baseURI, String hash) {
+	public StatementComparator(URI baseURI, String hash, Map<String,Integer> blankNodeMap) {
 		this.baseURI = baseURI;
 		this.hash = hash;
+		this.blankNodeMap = blankNodeMap;
 	}
 
 	@Override
@@ -63,10 +66,15 @@ public class StatementComparator implements Comparator<Statement> {
 	}
 
 	private int compareResource(Resource r1, Resource r2) {
-		if (r1 instanceof BNode || r2 instanceof BNode) {
-			throw new RuntimeException("Blank nodes are not allowed");
+		if (r1 instanceof BNode && !(r2 instanceof BNode)) {
+			return 1;
+		} else if (!(r1 instanceof BNode) && r2 instanceof BNode) {
+			return -1;
+		} else if (r1 instanceof BNode) {
+			return getBlankNodeNumber(r1) - getBlankNodeNumber(r2);
+		} else {
+			return compareURIs((URI) r1, (URI) r2);
 		}
-		return compareURIs((URI) r1, (URI) r2);
 	}
 
 	private int compareLiteral(Literal l1, Literal l2) {
@@ -109,6 +117,10 @@ public class StatementComparator implements Comparator<Statement> {
 		} else {
 			return uri.toString();
 		}
+	}
+
+	private int getBlankNodeNumber(Resource blankNode) {
+		return HashURIUtils.getBlankNodeNumber((BNode) blankNode, blankNodeMap);
 	}
 
 }
