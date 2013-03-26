@@ -1,5 +1,5 @@
-hashrdf
-=======
+hashuri-java
+============
 
 This code generates and checks URIs that represent content such as plain bytes or RDF data, and
 contain a cryptographic hash value. This hash can be used to check that the respective content has
@@ -26,4 +26,4 @@ See the [examples](src/main/resources/examples).
 License
 -------
 
-hashrdf is free software under the MIT License. See LICENSE.txt.
+hashuri-java is free software under the MIT License. See LICENSE.txt.

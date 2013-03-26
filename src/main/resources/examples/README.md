@@ -15,7 +15,7 @@ Change creation time of generated file to "14:33:22" (line 29) and check again:
     $ scripts/CheckFile.sh src/main/resources/examples/nanopub1.RAcbjcRIQozo2wBMq4WcCYkFAjRz0AX-Ux3PquZZrC68s
     *** INCORRECT HASH ***
 
-Fetch and check nanopub via its URI:
+Fetch and check nanopub via its URI (might be temporarily unavailable):
 
     $ scripts/CheckFile.sh http://purl.org/hashuri/examples/nanopub1.RAcbjcRIQozo2wBMq4WcCYkFAjRz0AX-Ux3PquZZrC68s
     Correct hash: RAcbjcRIQozo2wBMq4WcCYkFAjRz0AX-Ux3PquZZrC68s

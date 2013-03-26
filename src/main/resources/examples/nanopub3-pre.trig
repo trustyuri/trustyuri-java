@@ -1,4 +1,4 @@
-@prefix : <http://www.tkuhn.ch/hashrdf/examples/nanopub3> .
+@prefix : <http://purl.org/hashuri/examples/nanopub3> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix dc: <http://purl.org/dc/terms/> .
 @prefix opm: <http://purl.org/net/opmv/ns#> .
