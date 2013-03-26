@@ -20,10 +20,10 @@
 }
 
 :Prov {
-    : swan:citesAsSupportiveEvidence <http://www.tkuhn.ch/hashrdf/examples/nanopub1.ALxsBP-3kmRikSxw19MPYbG6ssK3mH826KDLIOLpfUa0> .
+    : swan:citesAsSupportiveEvidence <http://purl.org/hashuri/examples/nanopub1.RAcbjcRIQozo2wBMq4WcCYkFAjRz0AX-Ux3PquZZrC68s> .
 }
 
 :Info {
-    : pav:authoredBy <http://www.tkuhn.ch/me> ;
+    : pav:authoredBy <http://www.researcherid.com/rid/B-6810-2013> ;
         dc:created "2013-02-25T14:33:21+01:00"^^xsd:dateTime .
 }

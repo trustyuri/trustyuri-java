@@ -1,4 +1,4 @@
-package ch.tkuhn.hashrdf;
+package ch.tkuhn.hashuri.rdf;
 
 import java.util.Comparator;
 import java.util.Map;
@@ -111,16 +111,16 @@ public class StatementComparator implements Comparator<Statement> {
 	private String uriToString(URI uri) {
 		if (uri == null) return null;
 		if (baseURI != null) {
-			return HashURIUtils.normalize(uri, baseURI);
+			return RdfUtils.normalize(uri, baseURI);
 		} else if (hash != null) {
-			return HashURIUtils.normalize(uri, hash);
+			return RdfUtils.normalize(uri, hash);
 		} else {
 			return uri.toString();
 		}
 	}
 
 	private int getBlankNodeNumber(Resource blankNode) {
-		return HashURIUtils.getBlankNodeNumber((BNode) blankNode, blankNodeMap);
+		return RdfUtils.getBlankNodeNumber((BNode) blankNode, blankNodeMap);
 	}
 
 }

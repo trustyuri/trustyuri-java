@@ -1,4 +1,4 @@
-package ch.tkuhn.hashrdf;
+package ch.tkuhn.hashuri;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -9,7 +9,7 @@ public class CheckFile {
 
 	public static void main(String[] args) throws Exception {
 		String fileName = args[0];
-		String hash = FileUtils.getHashPart(fileName);
+		String hash = HashUriUtils.getHashUriDataPart(fileName);
 		if (hash == null) {
 			System.out.println("ERROR: No hash in file name");
 			System.exit(1);
@@ -21,13 +21,12 @@ public class CheckFile {
 			in = new FileInputStream(fileName);
 		}
 		
-		RDFFileContent content = FileUtils.load(in);
-		Hasher hasher = new Hasher(hash);
-		String h = hasher.makeHash(content.getStatements());
-		if (hash.equals(h)) {
-			System.out.println("Correct hash: " + h);
+		String algorithmID = hash.substring(0, 2);
+		HashUriModule module = ModuleDirectory.getModule(algorithmID);
+		if (module.isCorrectHash(in, hash)) {
+			System.out.println("Correct hash: " + hash);
 		} else {
-			System.out.println("*** INCORRECT HASH ***: " + h);
+			System.out.println("*** INCORRECT HASH ***");
 		}
 	}
 

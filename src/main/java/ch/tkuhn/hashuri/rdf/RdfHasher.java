@@ -1,4 +1,4 @@
-package ch.tkuhn.hashrdf;
+package ch.tkuhn.hashuri.rdf;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -6,26 +6,26 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.bind.DatatypeConverter;
-
 import org.openrdf.model.BNode;
 import org.openrdf.model.Literal;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 
-public class Hasher {
+import ch.tkuhn.hashuri.HashUriUtils;
+
+public class RdfHasher {
 
 	private URI baseURI = null;
 	private String hash = null;
 	private Map<String,Integer> blankNodeMap;
 
-	public Hasher(URI baseURI, Map<String,Integer> blankNodeMap) {
+	public RdfHasher(URI baseURI, Map<String,Integer> blankNodeMap) {
 		this.baseURI = baseURI;
 		this.blankNodeMap = blankNodeMap;
 	}
 
-	public Hasher(String hash) {
+	public RdfHasher(String hash) {
 		this.hash = hash;
 	}
 
@@ -41,16 +41,7 @@ public class Hasher {
 			md.update(valueToString(st.getPredicate()).getBytes());
 			md.update(valueToString(st.getObject()).getBytes());
 		}
-		// A = Version 0
-		return "A" + bytesToString(md.digest());
-	}
-
-	private String bytesToString(byte[] bytes) {
-		String h = DatatypeConverter.printBase64Binary(bytes);
-		h = h.replaceFirst("=*$", "");
-		h = h.replace('+', '-');
-		h = h.replace('/', '_');
-		return h;
+		return RdfModule.ALGORITHM_ID + HashUriUtils.getBase64(md.digest());
 	}
 
 	private String valueToString(Value v) {
@@ -58,13 +49,13 @@ public class Hasher {
 			if (baseURI == null) {
 				throw new RuntimeException("Unexpected blank node encountered");
 			} else {
-				return HashURIUtils.normalize((BNode) v, baseURI, blankNodeMap) + "\n";
+				return RdfUtils.normalize((BNode) v, baseURI, blankNodeMap) + "\n";
 			}
 		} else if (v instanceof URI) {
 			if (baseURI != null) {
-				return HashURIUtils.normalize((URI) v, baseURI) + "\n";
+				return RdfUtils.normalize((URI) v, baseURI) + "\n";
 			} else if (hash != null) {
-				return HashURIUtils.normalize((URI) v, hash) + "\n";
+				return RdfUtils.normalize((URI) v, hash) + "\n";
 			} else {
 				return v.toString() + "\n";
 			}

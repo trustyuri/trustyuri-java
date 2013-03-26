@@ -1,15 +1,19 @@
-package ch.tkuhn.hashrdf;
+package ch.tkuhn.hashuri.rdf;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.Map;
 
 import org.openrdf.model.BNode;
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
+import org.openrdf.rio.trig.TriGParser;
 
-public class HashURIUtils {
+public class RdfUtils {
 
-	private HashURIUtils() {}  // no instances allowed
+	private RdfUtils() {}  // no instances allowed
 
 	public static String getHashURIString(URI baseURI, String hash, String suffix) {
 		String s = expandBaseURI(baseURI) + hash;
@@ -88,6 +92,19 @@ public class HashURIUtils {
 			s += ".";
 		}
 		return s;
+	}
+
+	public static RdfFileContent load(InputStream in) throws Exception {
+		TriGParser p = new TriGParser();
+		RdfFileContent content = new RdfFileContent();
+		p.setRDFHandler(content);
+		p.parse(in, "");
+		in.close();
+		return content;
+	}
+
+	public static RdfFileContent load(File file) throws Exception {
+		return load(new FileInputStream(file));
 	}
 
 }

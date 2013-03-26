@@ -7,23 +7,23 @@ Transform preliminary nanopub into final version:
 
 Check integrity of resulting file:
 
-    $ scripts/CheckFile.sh src/main/resources/examples/nanopub1.ALxsBP-3kmRikSxw19MPYbG6ssK3mH826KDLIOLpfUa0 
-    Correct hash: ALxsBP-3kmRikSxw19MPYbG6ssK3mH826KDLIOLpfUa0
+    $ scripts/CheckFile.sh src/main/resources/examples/nanopub1.RAcbjcRIQozo2wBMq4WcCYkFAjRz0AX-Ux3PquZZrC68s
+    Correct hash: RAcbjcRIQozo2wBMq4WcCYkFAjRz0AX-Ux3PquZZrC68s
 
-Change creation time of generated file to "14:33:22" (line 27) and check again:
+Change creation time of generated file to "14:33:22" (line 29) and check again:
 
-    $ scripts/CheckFile.sh src/main/resources/examples/nanopub1.ALxsBP-3kmRikSxw19MPYbG6ssK3mH826KDLIOLpfUa0 
-    *** INCORRECT HASH ***: AuOUH51T1GgEAgAP7kXB3aBOvG97jBIDM6B8qT2D-Aqk
+    $ scripts/CheckFile.sh src/main/resources/examples/nanopub1.RAcbjcRIQozo2wBMq4WcCYkFAjRz0AX-Ux3PquZZrC68s
+    *** INCORRECT HASH ***
 
 Fetch and check nanopub via its URI:
 
-    $ scripts/CheckFile.sh http://www.tkuhn.ch/hashrdf/examples/nanopub1.ALxsBP-3kmRikSxw19MPYbG6ssK3mH826KDLIOLpfUa0
-    Correct hash: ALxsBP-3kmRikSxw19MPYbG6ssK3mH826KDLIOLpfUa0
+    $ scripts/CheckFile.sh http://purl.org/hashuri/examples/nanopub1.RAcbjcRIQozo2wBMq4WcCYkFAjRz0AX-Ux3PquZZrC68s
+    Correct hash: RAcbjcRIQozo2wBMq4WcCYkFAjRz0AX-Ux3PquZZrC68s
 
-Load unchanged file `nanopub1.ALxsB...` into local Virtuoso triple store and check via SPARQL:
+Load unchanged file `nanopub1.RAcbjc...` into local Virtuoso triple store and check via SPARQL:
 
-    $ scripts/CheckNanopubViaSPARQL.sh http://localhost:8890/sparql http://www.tkuhn.ch/hashrdf/examples/nanopub1.ALxsBP-3kmRikSxw19MPYbG6ssK3mH826KDLIOLpfUa0
-    Correct hash: ALxsBP-3kmRikSxw19MPYbG6ssK3mH826KDLIOLpfUa0
+    $ scripts/CheckNanopubViaSparql.sh http://localhost:8890/sparql http://purl.org/hashuri/examples/nanopub1.RAcbjcRIQozo2wBMq4WcCYkFAjRz0AX-Ux3PquZZrC68s
+    Correct hash: RAcbjcRIQozo2wBMq4WcCYkFAjRz0AX-Ux3PquZZrC68s
 
 `nanopub2` is a second example that cites the first one. `nanopub3` shows how blank nodes are
 transformed.

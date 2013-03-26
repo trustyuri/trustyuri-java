@@ -1,4 +1,4 @@
-package ch.tkuhn.hashrdf;
+package ch.tkuhn.hashuri.rdf;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,7 @@ import org.openrdf.model.Statement;
 import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFHandlerException;
 
-public class RDFFileContent implements RDFHandler {
+public class RdfFileContent implements RDFHandler {
 	
 	private List<Object> objects;
 	private List<Statement> statements;

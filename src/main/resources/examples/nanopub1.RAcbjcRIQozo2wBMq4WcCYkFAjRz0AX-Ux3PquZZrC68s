@@ -1,6 +1,6 @@
-@prefix this: <http://www.tkuhn.ch/hashrdf/examples/nanopub3.AYB8AK6ALsKS4I7YFhiEXS3eoRtm7y9L12LLs1V1S_QY> .
-@prefix sub: <http://www.tkuhn.ch/hashrdf/examples/nanopub3.AYB8AK6ALsKS4I7YFhiEXS3eoRtm7y9L12LLs1V1S_QY.> .
-@prefix blank: <http://www.tkuhn.ch/hashrdf/examples/nanopub3.AYB8AK6ALsKS4I7YFhiEXS3eoRtm7y9L12LLs1V1S_QY..> .
+@prefix this: <http://purl.org/hashuri/examples/nanopub1.RAcbjcRIQozo2wBMq4WcCYkFAjRz0AX-Ux3PquZZrC68s> .
+@prefix sub: <http://purl.org/hashuri/examples/nanopub1.RAcbjcRIQozo2wBMq4WcCYkFAjRz0AX-Ux3PquZZrC68s.> .
+@prefix blank: <http://purl.org/hashuri/examples/nanopub1.RAcbjcRIQozo2wBMq4WcCYkFAjRz0AX-Ux3PquZZrC68s..> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix dc: <http://purl.org/dc/terms/> .
 @prefix opm: <http://purl.org/net/opmv/ns#> .
@@ -17,11 +17,7 @@ this: {
 }
 
 sub:Ass {
-	blank:2 a ex:mosquito-species .
-	
-	blank:1 a ex:disease .
-	
-	blank:2 ex:transmits blank:1 .
+	ex:mosquito ex:transmits ex:malaria .
 }
 
 sub:Prov {
@@ -29,6 +25,6 @@ sub:Prov {
 }
 
 sub:Info {
-	this: pav:authoredBy <http://www.tkuhn.ch/me> ;
-		dc:created "2013-03-11T10:51:33+01:00"^^xsd:dateTime .
+	this: pav:authoredBy <http://www.researcherid.com/rid/B-6810-2013> ;
+		dc:created "2013-02-25T14:33:21+01:00"^^xsd:dateTime .
 }

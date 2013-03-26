@@ -1,4 +1,4 @@
-package ch.tkuhn.hashrdf;
+package ch.tkuhn.hashuri.rdf;
 
 import java.util.Map;
 
@@ -29,9 +29,9 @@ public class HashAdder implements RDFHandler {
 	public void startRDF() throws RDFHandlerException {
 		handler.startRDF();
 		if (baseURI != null) {
-			handler.handleNamespace("this", HashURIUtils.getHashURIString(baseURI, hash));
-			handler.handleNamespace("sub", HashURIUtils.getHashURIString(baseURI, hash, ""));
-			handler.handleNamespace("blank", HashURIUtils.getHashURIString(baseURI, hash, "") + ".");
+			handler.handleNamespace("this", RdfUtils.getHashURIString(baseURI, hash));
+			handler.handleNamespace("sub", RdfUtils.getHashURIString(baseURI, hash, ""));
+			handler.handleNamespace("blank", RdfUtils.getHashURIString(baseURI, hash, "") + ".");
 		}
 	}
 
@@ -68,7 +68,7 @@ public class HashAdder implements RDFHandler {
 
 	private URI transform(Resource r) {
 		if (baseURI != null) {
-			return HashURIUtils.getHashURI(r, baseURI, hash, blankNodeMap);
+			return RdfUtils.getHashURI(r, baseURI, hash, blankNodeMap);
 		} else if (r instanceof BNode) {
 			throw new RuntimeException("Unexpected blank node encountered");
 		} else {

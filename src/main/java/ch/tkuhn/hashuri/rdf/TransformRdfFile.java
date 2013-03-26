@@ -1,4 +1,4 @@
-package ch.tkuhn.hashrdf;
+package ch.tkuhn.hashuri.rdf;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -10,7 +10,7 @@ import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.rio.trig.TriGWriter;
 
-public class TransformFile {
+public class TransformRdfFile {
 
 	public static void main(String[] args) throws Exception {
 		File inputFile = new File(args[0]);
@@ -18,11 +18,11 @@ public class TransformFile {
 		if (args.length > 1) {
 			baseName = args[1];
 		}
-		RDFFileContent content = FileUtils.load(inputFile);
+		RdfFileContent content = RdfUtils.load(inputFile);
 		transform(content, inputFile.getParent(), baseName);
 	}
 
-	public static void transform(RDFFileContent content, String outputDir, String baseName) throws Exception {
+	public static void transform(RdfFileContent content, String outputDir, String baseName) throws Exception {
 		String name = baseName;
 		URI baseURI = null;
 		if (baseName.indexOf("/") > 0) {
@@ -31,7 +31,7 @@ public class TransformFile {
 		}
 
 		Map<String,Integer> blankNodeMap = new HashMap<>();
-		Hasher hasher = new Hasher(baseURI, blankNodeMap);
+		RdfHasher hasher = new RdfHasher(baseURI, blankNodeMap);
 		String hash = hasher.makeHash(content.getStatements());
 		String fileName = name;
 		if (fileName.length() == 0) {
@@ -41,7 +41,7 @@ public class TransformFile {
 		}
 		File outputFile = new File(outputDir, fileName);
 		OutputStream out = new FileOutputStream(outputFile);
-		TriGWriter writer = new CustomTriGWriter(out);
+		TriGWriter writer = new CustomTrigWriter(out);
 		HashAdder replacer = new HashAdder(baseURI, hash, writer, blankNodeMap);
 		content.propagate(replacer);
 		out.close();

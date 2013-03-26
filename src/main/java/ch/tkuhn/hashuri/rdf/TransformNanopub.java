@@ -1,4 +1,4 @@
-package ch.tkuhn.hashrdf;
+package ch.tkuhn.hashuri.rdf;
 
 import java.io.File;
 import java.util.HashSet;
@@ -14,7 +14,7 @@ public class TransformNanopub {
 
 	public static void main(String[] args) throws Exception {
 		File inputFile = new File(args[0]);
-		RDFFileContent content = FileUtils.load(inputFile);
+		RdfFileContent content = RdfUtils.load(inputFile);
 		Set<String> baseURICandidates = new HashSet<>();
 		for (Statement st : content.getStatements()) {
 			String s = st.getSubject().toString();
@@ -37,7 +37,7 @@ public class TransformNanopub {
 			System.exit(1);
 		}
 		String baseName = baseURICandidates.iterator().next();
-		TransformFile.transform(content, inputFile.getParent(), baseName);
+		TransformRdfFile.transform(content, inputFile.getParent(), baseName);
 	}
 
 }

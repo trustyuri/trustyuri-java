@@ -1,4 +1,4 @@
-package ch.tkuhn.hashrdf;
+package ch.tkuhn.hashuri.rdf;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,23 +16,25 @@ import org.openrdf.query.TupleQueryResult;
 import org.openrdf.repository.RepositoryConnection;
 import org.openrdf.repository.sparql.SPARQLRepository;
 
-public class CheckNanopubViaSPARQL {
+import ch.tkuhn.hashuri.HashUriUtils;
+
+public class CheckNanopubViaSparql {
 	
 	public static void main(String[] args) throws Exception {
 		String endpointURL = args[0];
 		String uri = args[1];
-		String hash = FileUtils.getHashPart(uri);
+		String hash = HashUriUtils.getHashUriDataPart(uri);
 		if (hash == null) {
 			System.out.println("ERROR: No hash in URI");
 			System.exit(1);
 		}
 		
-		List<Statement> statements = getNanopubViaSPARQL(endpointURL, uri);
+		List<Statement> statements = getNanopubViaSparql(endpointURL, uri);
 		if (statements == null || statements.size() == 0) {
 			System.out.println("Nanopub not found");
 			System.exit(1);
 		}
-		Hasher hasher = new Hasher(hash);
+		RdfHasher hasher = new RdfHasher(hash);
 		String h = hasher.makeHash(statements);
 		if (hash.equals(h)) {
 			System.out.println("Correct hash: " + h);
@@ -55,7 +57,7 @@ public class CheckNanopubViaSPARQL {
 			"  graph ?G { ?S ?P ?O } " +
 			"}";
 
-	public static List<Statement> getNanopubViaSPARQL(String endpointURL, String nanopubURI) {
+	public static List<Statement> getNanopubViaSparql(String endpointURL, String nanopubURI) {
 		List<Statement> statements = new ArrayList<Statement>();
 		try {
 			SPARQLRepository repo = new SPARQLRepository(endpointURL);

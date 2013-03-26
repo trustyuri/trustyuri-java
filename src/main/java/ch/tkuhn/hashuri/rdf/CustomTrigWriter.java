@@ -1,4 +1,4 @@
-package ch.tkuhn.hashrdf;
+package ch.tkuhn.hashuri.rdf;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -6,9 +6,9 @@ import java.io.OutputStream;
 import org.openrdf.model.URI;
 import org.openrdf.rio.trig.TriGWriter;
 
-public class CustomTriGWriter extends TriGWriter {
+public class CustomTrigWriter extends TriGWriter {
 
-	public CustomTriGWriter(OutputStream out) {
+	public CustomTrigWriter(OutputStream out) {
 		super(out);
 	}
 
