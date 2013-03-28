@@ -7,6 +7,12 @@
   <version>1.0-SNAPSHOT</version>
   <name>hashuri</name>
   <url>http://maven.apache.org</url>
+  <licenses>
+    <license>
+      <name>MIT license</name>
+      <url>http://www.opensource.org/licenses/mit-license</url>
+    </license>
+  </licenses>
   <properties>
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
