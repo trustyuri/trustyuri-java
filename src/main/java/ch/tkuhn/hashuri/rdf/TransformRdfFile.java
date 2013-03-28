@@ -2,6 +2,7 @@ package ch.tkuhn.hashuri.rdf;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,29 +23,52 @@ public class TransformRdfFile {
 		transform(content, inputFile.getParent(), baseName);
 	}
 
-	public static void transform(RdfFileContent content, String outputDir, String baseName) throws Exception {
+	public static URI transform(RdfFileContent content, String outputDir, String baseName) throws Exception {
+		URI baseURI = getBaseURI(baseName);
 		String name = baseName;
-		URI baseURI = null;
 		if (baseName.indexOf("/") > 0) {
-			baseURI = new URIImpl(baseName);
 			name = baseName.replaceFirst("^.*[^A-Za-z0-9.\\-_]([A-Za-z0-9.\\-_]*)$", "$1");
 		}
 
 		Map<String,Integer> blankNodeMap = new HashMap<>();
-		RdfHasher hasher = new RdfHasher(baseURI, blankNodeMap);
-		String hash = hasher.makeHash(content.getStatements());
+		String hash = makeHash(content, baseName, blankNodeMap);
 		String fileName = name;
 		if (fileName.length() == 0) {
 			fileName = hash;
 		} else {
 			fileName += "." + hash;
 		}
-		File outputFile = new File(outputDir, fileName);
-		OutputStream out = new FileOutputStream(outputFile);
+		OutputStream out = new FileOutputStream(new File(outputDir, fileName));
 		TriGWriter writer = new CustomTrigWriter(out);
 		HashAdder replacer = new HashAdder(baseURI, hash, writer, blankNodeMap);
 		content.propagate(replacer);
 		out.close();
+		return RdfUtils.getHashURI(baseURI, baseURI, hash, blankNodeMap);
+	}
+
+	public static URI transform(InputStream in, OutputStream out, String baseName) throws Exception {
+		URI baseURI = getBaseURI(baseName);
+		RdfFileContent content = RdfUtils.load(in);
+		Map<String,Integer> blankNodeMap = new HashMap<>();
+		String hash = makeHash(content, baseName, blankNodeMap);
+		TriGWriter writer = new CustomTrigWriter(out);
+		HashAdder replacer = new HashAdder(baseURI, hash, writer, blankNodeMap);
+		content.propagate(replacer);
+		out.close();
+		return RdfUtils.getHashURI(baseURI, baseURI, hash, blankNodeMap);
+	}
+
+	private static URI getBaseURI(String baseName) {
+		URI baseURI = null;
+		if (baseName.indexOf("/") > 0) {
+			baseURI = new URIImpl(baseName);
+		}
+		return baseURI;
+	}
+
+	private static String makeHash(RdfFileContent content, String baseName, Map<String,Integer> blankNodeMap) {
+		RdfHasher hasher = new RdfHasher(getBaseURI(baseName), blankNodeMap);
+		return hasher.makeHash(content.getStatements());
 	}
 
 }
