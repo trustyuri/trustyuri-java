@@ -11,6 +11,8 @@ import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.rio.trig.TriGWriter;
 
+import ch.tkuhn.nanopub.CustomTrigWriter;
+
 public class TransformRdfFile {
 
 	public static void main(String[] args) throws Exception {
