@@ -2,6 +2,7 @@ package ch.tkuhn.hashuri.rdf;
 
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
+import org.openrdf.repository.sparql.SPARQLRepository;
 
 import ch.tkuhn.hashuri.HashUriUtils;
 import ch.tkuhn.nanopub.MalformedNanopubException;
@@ -16,7 +17,9 @@ public class CheckNanopubViaSparql {
 		URI uri = new URIImpl(uriString);
 		Nanopub nanopub = null;
 		try {
-			nanopub = new NanopubImpl(endpointURL, uri);
+			SPARQLRepository repo = new SPARQLRepository(endpointURL);
+			repo.initialize();
+			nanopub = new NanopubImpl(repo, uri);
 		} catch (MalformedNanopubException ex) {
 			System.out.println("Nanopub not found");
 			System.exit(1);
