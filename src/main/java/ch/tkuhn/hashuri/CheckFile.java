@@ -23,6 +23,10 @@ public class CheckFile {
 		
 		String algorithmID = hash.substring(0, 2);
 		HashUriModule module = ModuleDirectory.getModule(algorithmID);
+		if (module == null) {
+			System.out.println("ERROR: Not a hash-URI or unknown algorithm");
+			System.exit(1);
+		}
 		if (module.isCorrectHash(in, hash)) {
 			System.out.println("Correct hash: " + hash);
 		} else {

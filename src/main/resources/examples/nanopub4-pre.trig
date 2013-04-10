@@ -1,0 +1,39 @@
+@prefix : <http://purl.org/hashuri/examples/nanopub4> .
+@prefix rdfg: <http://www.w3.org/2004/03/trix/rdfg-1/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dc: <http://purl.org/dc/terms/> .
+@prefix pav: <http://swan.mindinformatics.org/ontologies/1.2/pav/> .
+@prefix swan: <http://purl.org/swan/1.2/swan-commons/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix ex: <http://example.com/> .
+
+: {
+    : a np:Nanopublication ;
+        np:hasAssertion :Ass ;
+        np:hasProvenance :Prov ;
+        np:hasPublicationInfo :Info .
+
+    :AssHead rdfg:subGraphOf :Ass .
+    :AssStatement rdfg:subGraphOf :Ass .
+}
+
+:AssHead {
+    :Ass
+        npx:asSentence <http://purl.org/aida/Malaria+is+transmitted+by+mosquitoes.> ;
+        npx:asFormula :AssStatement .
+}
+
+:AssStatement {
+    ex:mosquito ex:transmits ex:malaria .
+}
+
+:Prov {
+    : swan:citesAsSupportiveEvidence <http://iospress.metapress.com/content/ftkh21q50t521wm2/> .
+}
+
+:Info {
+    : pav:authoredBy <http://www.researcherid.com/rid/F-1227-2011> .
+    : pav:createdBy <http://www.researcherid.com/rid/B-6810-2013> .
+    : dc:created "2013-03-04T17:24:00Z"^^xsd:dateTime .
+}
