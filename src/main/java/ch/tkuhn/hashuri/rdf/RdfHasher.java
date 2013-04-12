@@ -68,6 +68,8 @@ public class RdfHasher {
 			} else {
 				return "#" + escapeString(l.stringValue()) + "\n";
 			}
+		} else if (v == null) {
+			return "";
 		} else {
 			throw new RuntimeException("Unknown element");
 		}

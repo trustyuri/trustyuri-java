@@ -37,8 +37,12 @@ public class StatementComparator implements Comparator<Statement> {
 	private int compareContext(Statement st1, Statement st2) {
 		Resource r1 = st1.getContext();
 		Resource r2 = st2.getContext();
-		if (r1 == null || r2 == null) {
-			throw new RuntimeException("Context of statement is null");
+		if (r1 == null && r2 == null) {
+			return 0;
+		} else if (r1 == null && r2 != null) {
+			return -1;
+		} else if (r1 != null && r2 == null) {
+			return 1;
 		}
 		return compareResource(r1, r2);
 	}

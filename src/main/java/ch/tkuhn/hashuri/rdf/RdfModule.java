@@ -1,8 +1,7 @@
 package ch.tkuhn.hashuri.rdf;
 
-import java.io.InputStream;
-
 import ch.tkuhn.hashuri.HashUriModule;
+import ch.tkuhn.hashuri.HashUriResource;
 
 public class RdfModule implements HashUriModule {
 
@@ -14,11 +13,11 @@ public class RdfModule implements HashUriModule {
 	}
 
 	@Override
-	public boolean isCorrectHash(InputStream in, String hash) throws Exception {
-		RdfFileContent content = RdfUtils.load(in);
-		RdfHasher hasher = new RdfHasher(hash);
+	public boolean hasCorrectHash(HashUriResource r) throws Exception {
+		RdfFileContent content = RdfUtils.load(r);
+		RdfHasher hasher = new RdfHasher(r.getHash());
 		String h = hasher.makeHash(content.getStatements());
-		return hash.equals(h);
+		return r.getHash().equals(h);
 	}
 
 }

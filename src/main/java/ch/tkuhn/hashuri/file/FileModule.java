@@ -1,8 +1,7 @@
 package ch.tkuhn.hashuri.file;
 
-import java.io.InputStream;
-
 import ch.tkuhn.hashuri.HashUriModule;
+import ch.tkuhn.hashuri.HashUriResource;
 
 public class FileModule implements HashUriModule {
 
@@ -14,10 +13,10 @@ public class FileModule implements HashUriModule {
 	}
 
 	@Override
-	public boolean isCorrectHash(InputStream in, String hash) throws Exception {
+	public boolean hasCorrectHash(HashUriResource r) throws Exception {
 		FileHasher hasher = new FileHasher();
-		String h = hasher.makeHash(in);
-		return hash.equals(h);
+		String h = hasher.makeHash(r.getInputStream());
+		return r.getHash().equals(h);
 	}
 
 }

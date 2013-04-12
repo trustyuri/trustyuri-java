@@ -9,9 +9,11 @@ import java.util.Map;
 
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
-import org.openrdf.rio.trig.TriGWriter;
+import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.RDFWriter;
+import org.openrdf.rio.Rio;
 
-import ch.tkuhn.nanopub.CustomTrigWriter;
+import ch.tkuhn.hashuri.HashUriResource;
 
 public class TransformRdfFile {
 
@@ -21,7 +23,7 @@ public class TransformRdfFile {
 		if (args.length > 1) {
 			baseName = args[1];
 		}
-		RdfFileContent content = RdfUtils.load(inputFile);
+		RdfFileContent content = RdfUtils.load(new HashUriResource(inputFile));
 		transform(content, inputFile.getParent(), baseName);
 	}
 
@@ -35,25 +37,30 @@ public class TransformRdfFile {
 		Map<String,Integer> blankNodeMap = new HashMap<>();
 		String hash = makeHash(content, baseName, blankNodeMap);
 		String fileName = name;
+		RDFFormat format = content.getOriginalFormat();
+		String ext = "";
+		if (!format.getFileExtensions().isEmpty()) {
+			ext = "." + format.getFileExtensions().get(0);
+		}
 		if (fileName.length() == 0) {
-			fileName = hash;
+			fileName = hash + ext;
 		} else {
-			fileName += "." + hash;
+			fileName += "." + hash + ext;
 		}
 		OutputStream out = new FileOutputStream(new File(outputDir, fileName));
-		TriGWriter writer = new CustomTrigWriter(out);
+		RDFWriter writer = Rio.createWriter(format, out);
 		HashAdder replacer = new HashAdder(baseURI, hash, writer, blankNodeMap);
 		content.propagate(replacer);
 		out.close();
 		return RdfUtils.getHashURI(baseURI, baseURI, hash, blankNodeMap);
 	}
 
-	public static URI transform(InputStream in, OutputStream out, String baseName) throws Exception {
+	public static URI transform(InputStream in, RDFFormat format, OutputStream out, String baseName) throws Exception {
 		URI baseURI = getBaseURI(baseName);
-		RdfFileContent content = RdfUtils.load(in);
+		RdfFileContent content = RdfUtils.load(in, format);
 		Map<String,Integer> blankNodeMap = new HashMap<>();
 		String hash = makeHash(content, baseName, blankNodeMap);
-		TriGWriter writer = new CustomTrigWriter(out);
+		RDFWriter writer = Rio.createWriter(format, out);
 		HashAdder replacer = new HashAdder(baseURI, hash, writer, blankNodeMap);
 		content.propagate(replacer);
 		out.close();

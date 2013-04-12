@@ -1,34 +1,29 @@
 package ch.tkuhn.hashuri;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 public class CheckFile {
-
+	
 	public static void main(String[] args) throws Exception {
 		String fileName = args[0];
-		String hash = HashUriUtils.getHashUriDataPart(fileName);
-		if (hash == null) {
-			System.out.println("ERROR: No hash in file name");
-			System.exit(1);
-		}
-		InputStream in;
+		HashUriResource r;
 		try {
-			in = new URL(fileName).openConnection().getInputStream();
+			URL url = new URL(fileName);
+			r = new HashUriResource(url);
 		} catch (MalformedURLException ex) {
-			in = new FileInputStream(fileName);
+			r = new HashUriResource(new File(fileName));
 		}
 		
-		String algorithmID = hash.substring(0, 2);
+		String algorithmID = r.getHash().substring(0, 2);
 		HashUriModule module = ModuleDirectory.getModule(algorithmID);
 		if (module == null) {
 			System.out.println("ERROR: Not a hash-URI or unknown algorithm");
 			System.exit(1);
 		}
-		if (module.isCorrectHash(in, hash)) {
-			System.out.println("Correct hash: " + hash);
+		if (module.hasCorrectHash(r)) {
+			System.out.println("Correct hash: " + r.getHash());
 		} else {
 			System.out.println("*** INCORRECT HASH ***");
 		}

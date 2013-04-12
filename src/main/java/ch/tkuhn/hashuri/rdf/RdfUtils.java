@@ -1,7 +1,5 @@
 package ch.tkuhn.hashuri.rdf;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Map;
 
@@ -9,7 +7,11 @@ import org.openrdf.model.BNode;
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
-import org.openrdf.rio.trig.TriGParser;
+import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.RDFParser;
+import org.openrdf.rio.Rio;
+
+import ch.tkuhn.hashuri.HashUriResource;
 
 public class RdfUtils {
 
@@ -40,6 +42,8 @@ public class RdfUtils {
 				return plainURI;
 			}
 			return new URIImpl(getHashURIString(baseURI, hash, suffix));
+		} else if (resource == null) {
+			return null;
 		} else {
 			BNode blankNode = (BNode) resource;
 			int n = getBlankNodeNumber(blankNode, blankNodeMap);
@@ -94,17 +98,21 @@ public class RdfUtils {
 		return s;
 	}
 
-	public static RdfFileContent load(InputStream in) throws Exception {
-		TriGParser p = new TriGParser();
-		RdfFileContent content = new RdfFileContent();
+	public static RdfFileContent load(InputStream in, RDFFormat format) throws Exception {
+		RDFParser p = Rio.createParser(format);
+		RdfFileContent content = new RdfFileContent(format);
 		p.setRDFHandler(content);
 		p.parse(in, "");
 		in.close();
 		return content;
 	}
 
-	public static RdfFileContent load(File file) throws Exception {
-		return load(new FileInputStream(file));
+	public static RdfFileContent load(HashUriResource r) throws Exception {
+		RDFFormat format = RDFFormat.forMIMEType(r.getMimetype());
+		if (format == null) {
+			format = RDFFormat.forFileName(r.getFilename(), RDFFormat.TURTLE);
+		}
+		return load(r.getInputStream(), format);
 	}
 
 }

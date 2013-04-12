@@ -5,14 +5,20 @@ import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.openrdf.model.Statement;
+import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFHandlerException;
 
 public class RdfFileContent implements RDFHandler {
 	
+	private RDFFormat originalFormat = null;
 	private List<Object> objects;
 	private List<Statement> statements;
 
+	public RdfFileContent(RDFFormat originalFormat) {
+		this.originalFormat = originalFormat;
+	}
+	
 	@Override
 	public void startRDF() throws RDFHandlerException {
 		objects = new ArrayList<>();
@@ -57,6 +63,10 @@ public class RdfFileContent implements RDFHandler {
 			}
 		}
 		handler.endRDF();
+	}
+
+	public RDFFormat getOriginalFormat() {
+		return originalFormat;
 	}
 
 }
