@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<rdf:RDF
+xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+xmlns:dc="http://purl.org/dc/elements/1.1/"
+xmlns:pav="http://swan.mindinformatics.org/ontologies/1.2/pav/">
+
+<rdf:Description
+rdf:about="http://purl.org/hashuri/examples/rdfxml1">
+  <dc:title>RDF/XML example</dc:title>
+  <pav:authoredBy rdf:resource="http://www.researcherid.com/rid/B-6810-2013"/>
+</rdf:Description>
+
+</rdf:RDF>

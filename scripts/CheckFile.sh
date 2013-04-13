@@ -1,3 +1,3 @@
 #!/bin/sh
 
-mvn -q exec:java -Dexec.mainClass="ch.tkuhn.hashuri.CheckFile" -Dexec.args="$*"
+mvn -q -e exec:java -Dexec.mainClass="ch.tkuhn.hashuri.CheckFile" -Dexec.args="$*"
