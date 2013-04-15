@@ -84,8 +84,8 @@ public class RdfUtils {
 		String id = blankNode.getID();
 		Integer n = blankNodeMap.get(id);
 		if (n == null) {
-			n = blankNodeMap.size();
-			blankNodeMap.put(id, n+1);
+			n = blankNodeMap.size()+1;
+			blankNodeMap.put(id, n);
 		}
 		return n;
 	}
