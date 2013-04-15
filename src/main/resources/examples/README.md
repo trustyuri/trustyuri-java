@@ -10,7 +10,7 @@ Check integrity of resulting file:
     $ scripts/CheckFile.sh src/main/resources/examples/nanopub1.RAcbjcRIQozo2wBMq4WcCYkFAjRz0AX-Ux3PquZZrC68s.trig
     Correct hash: RAcbjcRIQozo2wBMq4WcCYkFAjRz0AX-Ux3PquZZrC68s
 
-Change creation time of generated file to "14:33:22" (line 29) and check again:
+Change content of generated file and check again:
 
     $ scripts/CheckFile.sh src/main/resources/examples/nanopub1.RAcbjcRIQozo2wBMq4WcCYkFAjRz0AX-Ux3PquZZrC68s.trig
     *** INCORRECT HASH ***

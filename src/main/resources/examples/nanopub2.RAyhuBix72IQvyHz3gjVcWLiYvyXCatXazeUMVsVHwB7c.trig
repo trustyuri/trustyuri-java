@@ -10,8 +10,8 @@
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix ex: <http://example.com/> .
 
-<http://purl.org/hashuri/examples/nanopub2.RAyhuBix72IQvyHz3gjVcWLiYvyXCatXazeUMVsVHwB7c> {
-	<http://purl.org/hashuri/examples/nanopub2.RAyhuBix72IQvyHz3gjVcWLiYvyXCatXazeUMVsVHwB7c> a np:Nanopublication ;
+this: {
+	this: a np:Nanopublication ;
 		np:hasAssertion sub:Ass ;
 		np:hasProvenance sub:Prov ;
 		np:hasPublicationInfo sub:Info .
@@ -22,10 +22,10 @@ sub:Ass {
 }
 
 sub:Prov {
-	<http://purl.org/hashuri/examples/nanopub2.RAyhuBix72IQvyHz3gjVcWLiYvyXCatXazeUMVsVHwB7c> swan:citesAsSupportiveEvidence <http://purl.org/hashuri/examples/nanopub1.RAcbjcRIQozo2wBMq4WcCYkFAjRz0AX-Ux3PquZZrC68s> .
+	this: swan:citesAsSupportiveEvidence <http://purl.org/hashuri/examples/nanopub1.RAcbjcRIQozo2wBMq4WcCYkFAjRz0AX-Ux3PquZZrC68s> .
 }
 
 sub:Info {
-	<http://purl.org/hashuri/examples/nanopub2.RAyhuBix72IQvyHz3gjVcWLiYvyXCatXazeUMVsVHwB7c> pav:authoredBy <http://www.researcherid.com/rid/B-6810-2013> ;
+	this: pav:authoredBy <http://www.researcherid.com/rid/B-6810-2013> ;
 		dc:created "2013-02-25T14:33:21+01:00"^^xsd:dateTime .
 }

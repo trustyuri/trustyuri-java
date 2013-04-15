@@ -11,11 +11,17 @@ import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFWriter;
+import org.openrdf.rio.RDFWriterRegistry;
 import org.openrdf.rio.Rio;
 
 import ch.tkuhn.hashuri.HashUriResource;
+import ch.tkuhn.nanopub.CustomTrigWriterFactory;
 
 public class TransformRdfFile {
+
+	static {
+		RDFWriterRegistry.getInstance().add(new CustomTrigWriterFactory());
+	}
 
 	public static void main(String[] args) throws Exception {
 		File inputFile = new File(args[0]);
