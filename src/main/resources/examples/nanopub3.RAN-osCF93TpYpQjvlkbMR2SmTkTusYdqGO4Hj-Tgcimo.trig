@@ -1,6 +1,6 @@
-@prefix this: <http://purl.org/hashuri/examples/nanopub3.RABR1w_kT5LkJpJmRLzCIBW-mm9TlUQOOy0KSZZI_UVWI> .
-@prefix sub: <http://purl.org/hashuri/examples/nanopub3.RABR1w_kT5LkJpJmRLzCIBW-mm9TlUQOOy0KSZZI_UVWI.> .
-@prefix blank: <http://purl.org/hashuri/examples/nanopub3.RABR1w_kT5LkJpJmRLzCIBW-mm9TlUQOOy0KSZZI_UVWI..> .
+@prefix this: <http://purl.org/hashuri/examples/nanopub3.RAN-osCF93TpYpQjvlkbMR2SmTkTusYdqGO4Hj-Tgcimo> .
+@prefix sub: <http://purl.org/hashuri/examples/nanopub3.RAN-osCF93TpYpQjvlkbMR2SmTkTusYdqGO4Hj-Tgcimo.> .
+@prefix blank: <http://purl.org/hashuri/examples/nanopub3.RAN-osCF93TpYpQjvlkbMR2SmTkTusYdqGO4Hj-Tgcimo..> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix dc: <http://purl.org/dc/terms/> .
 @prefix opm: <http://purl.org/net/opmv/ns#> .
@@ -17,11 +17,11 @@ this: {
 }
 
 sub:Ass {
-	blank:2 a ex:mosquito-species .
+	blank:1 a ex:mosquito-species .
 	
-	blank:1 a ex:disease .
+	blank:2 a ex:disease .
 	
-	blank:2 ex:transmits blank:1 .
+	blank:1 ex:transmits blank:2 .
 }
 
 sub:Prov {

@@ -72,12 +72,8 @@ public class RdfUtils {
 	}
 
 	public static String normalize(URI uri, String hash) {
+		if (hash == null) return uri.toString();
 		return uri.toString().replaceAll(hash, " ");
-	}
-
-	public static String normalize(BNode blankNode, URI baseURI, Map<String,Integer> blankNodeMap) {
-		int n = getBlankNodeNumber(blankNode, blankNodeMap);
-		return expandBaseURI(baseURI) + " .." + n;
 	}
 
 	public static int getBlankNodeNumber(BNode blankNode, Map<String,Integer> blankNodeMap) {

@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
@@ -40,10 +38,11 @@ public class TransformRdfFile {
 			name = baseName.replaceFirst("^.*[^A-Za-z0-9.\\-_]([A-Za-z0-9.\\-_]*)$", "$1");
 		}
 
-		Map<String,Integer> blankNodeMap = new HashMap<>();
-		String hash = makeHash(content, baseName, blankNodeMap);
-		String fileName = name;
 		RDFFormat format = content.getOriginalFormat();
+		RdfFileContent contentPreprocessed = new RdfFileContent(format);
+		content.propagate(new RdfPreprocessor(contentPreprocessed, baseURI));
+		String hash = makeHash(contentPreprocessed);
+		String fileName = name;
 		String ext = "";
 		if (!format.getFileExtensions().isEmpty()) {
 			ext = "." + format.getFileExtensions().get(0);
@@ -55,22 +54,23 @@ public class TransformRdfFile {
 		}
 		OutputStream out = new FileOutputStream(new File(outputDir, fileName));
 		RDFWriter writer = Rio.createWriter(format, out);
-		HashAdder replacer = new HashAdder(baseURI, hash, writer, blankNodeMap);
-		content.propagate(replacer);
+		HashAdder replacer = new HashAdder(baseURI, hash, writer);
+		contentPreprocessed.propagate(replacer);
 		out.close();
-		return RdfUtils.getHashURI(baseURI, baseURI, hash, blankNodeMap);
+		return RdfUtils.getHashURI(baseURI, baseURI, hash, null);
 	}
 
 	public static URI transform(InputStream in, RDFFormat format, OutputStream out, String baseName) throws Exception {
 		URI baseURI = getBaseURI(baseName);
 		RdfFileContent content = RdfUtils.load(in, format);
-		Map<String,Integer> blankNodeMap = new HashMap<>();
-		String hash = makeHash(content, baseName, blankNodeMap);
+		RdfFileContent contentPreprocessed = new RdfFileContent(format);
+		content.propagate(new RdfPreprocessor(contentPreprocessed, baseURI));
+		String hash = makeHash(contentPreprocessed);
 		RDFWriter writer = Rio.createWriter(format, out);
-		HashAdder replacer = new HashAdder(baseURI, hash, writer, blankNodeMap);
-		content.propagate(replacer);
+		HashAdder replacer = new HashAdder(baseURI, hash, writer);
+		contentPreprocessed.propagate(replacer);
 		out.close();
-		return RdfUtils.getHashURI(baseURI, baseURI, hash, blankNodeMap);
+		return RdfUtils.getHashURI(baseURI, baseURI, hash, null);
 	}
 
 	private static URI getBaseURI(String baseName) {
@@ -81,8 +81,8 @@ public class TransformRdfFile {
 		return baseURI;
 	}
 
-	private static String makeHash(RdfFileContent content, String baseName, Map<String,Integer> blankNodeMap) {
-		RdfHasher hasher = new RdfHasher(getBaseURI(baseName), blankNodeMap);
+	private static String makeHash(RdfFileContent content) {
+		RdfHasher hasher = new RdfHasher();
 		return hasher.makeHash(content.getStatements());
 	}
 

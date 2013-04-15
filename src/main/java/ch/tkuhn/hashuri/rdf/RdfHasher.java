@@ -4,7 +4,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import org.openrdf.model.BNode;
 import org.openrdf.model.Literal;
@@ -16,13 +15,11 @@ import ch.tkuhn.hashuri.HashUriUtils;
 
 public class RdfHasher {
 
-	private URI baseURI = null;
-	private String hash = null;
-	private Map<String,Integer> blankNodeMap;
+	private static boolean DEBUG = false;
 
-	public RdfHasher(URI baseURI, Map<String,Integer> blankNodeMap) {
-		this.baseURI = baseURI;
-		this.blankNodeMap = blankNodeMap;
+	private String hash = null;
+
+	public RdfHasher() {
 	}
 
 	public RdfHasher(String hash) {
@@ -34,31 +31,27 @@ public class RdfHasher {
 		try {
 			md = MessageDigest.getInstance("SHA-256");
 		} catch (NoSuchAlgorithmException ex) {}
-		Collections.sort(statements, new StatementComparator(baseURI, hash, blankNodeMap));
+		Collections.sort(statements, new StatementComparator(hash));
+		if (DEBUG) System.err.println("----------");
 		for (Statement st : statements) {
+			if (DEBUG) System.err.print(valueToString(st.getContext()));
 			md.update(valueToString(st.getContext()).getBytes());
+			if (DEBUG) System.err.print(valueToString(st.getSubject()));
 			md.update(valueToString(st.getSubject()).getBytes());
+			if (DEBUG) System.err.print(valueToString(st.getPredicate()));
 			md.update(valueToString(st.getPredicate()).getBytes());
+			if (DEBUG) System.err.print(valueToString(st.getObject()));
 			md.update(valueToString(st.getObject()).getBytes());
 		}
+		if (DEBUG) System.err.println("----------");
 		return RdfModule.ALGORITHM_ID + HashUriUtils.getBase64(md.digest());
 	}
 
 	private String valueToString(Value v) {
 		if (v instanceof BNode) {
-			if (baseURI == null) {
-				throw new RuntimeException("Unexpected blank node encountered");
-			} else {
-				return RdfUtils.normalize((BNode) v, baseURI, blankNodeMap) + "\n";
-			}
+			throw new RuntimeException("Unexpected blank node encountered");
 		} else if (v instanceof URI) {
-			if (baseURI != null) {
-				return RdfUtils.normalize((URI) v, baseURI) + "\n";
-			} else if (hash != null) {
-				return RdfUtils.normalize((URI) v, hash) + "\n";
-			} else {
-				return v.toString() + "\n";
-			}
+			return RdfUtils.normalize((URI) v, hash) + "\n";
 		} else if (v instanceof Literal) {
 			Literal l = (Literal) v;
 			if (l.getDatatype() != null) {
@@ -69,7 +62,7 @@ public class RdfHasher {
 				return "#" + escapeString(l.stringValue()) + "\n";
 			}
 		} else if (v == null) {
-			return "";
+			return "\n";
 		} else {
 			throw new RuntimeException("Unknown element");
 		}

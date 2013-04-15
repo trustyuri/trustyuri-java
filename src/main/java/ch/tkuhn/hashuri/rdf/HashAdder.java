@@ -1,13 +1,12 @@
 package ch.tkuhn.hashuri.rdf;
 
-import java.util.Map;
-
 import org.openrdf.model.BNode;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.impl.ContextStatementImpl;
+import org.openrdf.model.impl.URIImpl;
 import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFHandlerException;
 
@@ -16,13 +15,11 @@ public class HashAdder implements RDFHandler {
 	private URI baseURI;
 	private String hash;
 	private RDFHandler handler;
-	private Map<String,Integer> blankNodeMap;
 
-	public HashAdder(URI baseURI, String hash, RDFHandler handler, Map<String,Integer> blankNodeMap) {
+	public HashAdder(URI baseURI, String hash, RDFHandler handler) {
 		this.baseURI = baseURI;
 		this.hash = hash;
 		this.handler = handler;
-		this.blankNodeMap = blankNodeMap;
 	}
 
 	@Override
@@ -67,12 +64,12 @@ public class HashAdder implements RDFHandler {
 	}
 
 	private URI transform(Resource r) {
-		if (baseURI != null) {
-			return RdfUtils.getHashURI(r, baseURI, hash, blankNodeMap);
+		if (r == null) {
+			return null;
 		} else if (r instanceof BNode) {
 			throw new RuntimeException("Unexpected blank node encountered");
 		} else {
-			return (URI) r;
+			return new URIImpl(r.toString().replaceAll(" ", hash));
 		}
 	}
 

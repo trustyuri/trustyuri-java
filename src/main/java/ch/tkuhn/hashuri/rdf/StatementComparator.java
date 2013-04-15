@@ -1,7 +1,6 @@
 package ch.tkuhn.hashuri.rdf;
 
 import java.util.Comparator;
-import java.util.Map;
 
 import org.openrdf.model.BNode;
 import org.openrdf.model.Literal;
@@ -12,14 +11,10 @@ import org.openrdf.model.Value;
 
 public class StatementComparator implements Comparator<Statement> {
 
-	private URI baseURI = null;
 	private String hash = null;
-	private Map<String,Integer> blankNodeMap = null;
 
-	public StatementComparator(URI baseURI, String hash, Map<String,Integer> blankNodeMap) {
-		this.baseURI = baseURI;
+	public StatementComparator(String hash) {
 		this.hash = hash;
-		this.blankNodeMap = blankNodeMap;
 	}
 
 	@Override
@@ -75,7 +70,7 @@ public class StatementComparator implements Comparator<Statement> {
 		} else if (!(r1 instanceof BNode) && r2 instanceof BNode) {
 			return -1;
 		} else if (r1 instanceof BNode) {
-			return getBlankNodeNumber(r1) - getBlankNodeNumber(r2);
+			throw new RuntimeException("Unexpected blank node");
 		} else {
 			return compareURIs((URI) r1, (URI) r2);
 		}
@@ -114,17 +109,7 @@ public class StatementComparator implements Comparator<Statement> {
 
 	private String uriToString(URI uri) {
 		if (uri == null) return null;
-		if (baseURI != null) {
-			return RdfUtils.normalize(uri, baseURI);
-		} else if (hash != null) {
-			return RdfUtils.normalize(uri, hash);
-		} else {
-			return uri.toString();
-		}
-	}
-
-	private int getBlankNodeNumber(Resource blankNode) {
-		return RdfUtils.getBlankNodeNumber((BNode) blankNode, blankNodeMap);
+		return RdfUtils.normalize(uri, hash);
 	}
 
 }

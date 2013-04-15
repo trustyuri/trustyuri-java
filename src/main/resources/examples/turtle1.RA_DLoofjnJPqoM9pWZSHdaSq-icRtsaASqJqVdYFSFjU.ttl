@@ -1,0 +1,8 @@
+@prefix this: <http://purl.org/hashuri/examples/turtle1.RA_DLoofjnJPqoM9pWZSHdaSq-icRtsaASqJqVdYFSFjU> .
+@prefix sub: <http://purl.org/hashuri/examples/turtle1.RA_DLoofjnJPqoM9pWZSHdaSq-icRtsaASqJqVdYFSFjU.> .
+@prefix blank: <http://purl.org/hashuri/examples/turtle1.RA_DLoofjnJPqoM9pWZSHdaSq-icRtsaASqJqVdYFSFjU..> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix pav: <http://swan.mindinformatics.org/ontologies/1.2/pav/> .
+
+<http://purl.org/hashuri/examples/turtle1.RA_DLoofjnJPqoM9pWZSHdaSq-icRtsaASqJqVdYFSFjU> dc:title "Turtle example 1" ;
+	pav:authoredBy <http://www.researcherid.com/rid/B-6810-2013> .
