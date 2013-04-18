@@ -1,0 +1,8 @@
+<http://purl.org/hashuri/examples/nanopub1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.nanopub.org/nschema#Nanopublication> <http://purl.org/hashuri/examples/nanopub1> .
+<http://purl.org/hashuri/examples/nanopub1> <http://www.nanopub.org/nschema#hasAssertion> <http://purl.org/hashuri/examples/nanopub1Ass> <http://purl.org/hashuri/examples/nanopub1> .
+<http://purl.org/hashuri/examples/nanopub1> <http://www.nanopub.org/nschema#hasProvenance> <http://purl.org/hashuri/examples/nanopub1Prov> <http://purl.org/hashuri/examples/nanopub1> .
+<http://purl.org/hashuri/examples/nanopub1> <http://www.nanopub.org/nschema#hasPublicationInfo> <http://purl.org/hashuri/examples/nanopub1Info> <http://purl.org/hashuri/examples/nanopub1> .
+<http://example.com/mosquito> <http://example.com/transmits> <http://example.com/malaria> <http://purl.org/hashuri/examples/nanopub1Ass> .
+<http://purl.org/hashuri/examples/nanopub1> <http://purl.org/swan/1.2/swan-commons/citesAsSupportiveEvidence> <http://iospress.metapress.com/content/ftkh21q50t521wm2/> <http://purl.org/hashuri/examples/nanopub1Prov> .
+<http://purl.org/hashuri/examples/nanopub1> <http://swan.mindinformatics.org/ontologies/1.2/pav/authoredBy> <http://www.researcherid.com/rid/B-6810-2013> <http://purl.org/hashuri/examples/nanopub1Info> .
+<http://purl.org/hashuri/examples/nanopub1> <http://purl.org/dc/terms/created> "2013-02-25T14:33:21+01:00"^^<http://www.w3.org/2001/XMLSchema#dateTime> <http://purl.org/hashuri/examples/nanopub1Info> .

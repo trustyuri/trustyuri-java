@@ -16,7 +16,7 @@ public class TransformNanopub {
 
 	public static void main(String[] args) throws Exception {
 		File inputFile = new File(args[0]);
-		HashUriResource r = new HashUriResource(inputFile, "application/x-trig");
+		HashUriResource r = new HashUriResource(inputFile);
 		RdfFileContent content = RdfUtils.load(r);
 		Nanopub nanopub = null;
 		try {
@@ -28,8 +28,12 @@ public class TransformNanopub {
 		TransformRdfFile.transform(content, inputFile.getParent(), nanopub.getUri().toString());
 	}
 
+	public static URI transform(InputStream in, RDFFormat format, OutputStream out, String baseName) throws Exception {
+		return TransformRdfFile.transform(in, format, out, baseName);
+	}
+
 	public static URI transform(InputStream in, OutputStream out, String baseName) throws Exception {
-		return TransformRdfFile.transform(in, RDFFormat.TRIG, out, baseName);
+		return transform(in, RDFFormat.TRIG, out, baseName);
 	}
 
 }
