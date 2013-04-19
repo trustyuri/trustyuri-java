@@ -17,21 +17,14 @@ public class RdfHasher {
 
 	private static boolean DEBUG = false;
 
-	private String hash = null;
+	private RdfHasher() {}  // no instances allowed
 
-	public RdfHasher() {
-	}
-
-	public RdfHasher(String hash) {
-		this.hash = hash;
-	}
-
-	public String makeHash(List<Statement> statements) {
+	public static String makeHash(List<Statement> statements) {
 		MessageDigest md = null;
 		try {
 			md = MessageDigest.getInstance("SHA-256");
 		} catch (NoSuchAlgorithmException ex) {}
-		Collections.sort(statements, new StatementComparator(hash));
+		Collections.sort(statements, new StatementComparator());
 		if (DEBUG) System.err.println("----------");
 		for (Statement st : statements) {
 			if (DEBUG) System.err.print(valueToString(st.getContext()));
@@ -47,11 +40,11 @@ public class RdfHasher {
 		return RdfModule.ALGORITHM_ID + HashUriUtils.getBase64(md.digest());
 	}
 
-	private String valueToString(Value v) {
+	private static String valueToString(Value v) {
 		if (v instanceof BNode) {
 			throw new RuntimeException("Unexpected blank node encountered");
 		} else if (v instanceof URI) {
-			return RdfUtils.normalize((URI) v, hash) + "\n";
+			return ((URI) v).toString() + "\n";
 		} else if (v instanceof Literal) {
 			Literal l = (Literal) v;
 			if (l.getDatatype() != null) {

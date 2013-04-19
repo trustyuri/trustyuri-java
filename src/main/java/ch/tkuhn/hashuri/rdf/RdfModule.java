@@ -15,8 +15,8 @@ public class RdfModule implements HashUriModule {
 	@Override
 	public boolean hasCorrectHash(HashUriResource r) throws Exception {
 		RdfFileContent content = RdfUtils.load(r);
-		RdfHasher hasher = new RdfHasher(r.getHash());
-		String h = hasher.makeHash(content.getStatements());
+		content = RdfPreprocessor.run(content, r.getHash());
+		String h = RdfHasher.makeHash(content.getStatements());
 		return r.getHash().equals(h);
 	}
 

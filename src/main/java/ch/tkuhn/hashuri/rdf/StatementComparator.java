@@ -11,10 +11,7 @@ import org.openrdf.model.Value;
 
 public class StatementComparator implements Comparator<Statement> {
 
-	private String hash = null;
-
-	public StatementComparator(String hash) {
-		this.hash = hash;
+	public StatementComparator() {
 	}
 
 	@Override
@@ -78,8 +75,8 @@ public class StatementComparator implements Comparator<Statement> {
 		if (!s1.equals(s2)) {
 			return s1.compareTo(s2);
 		}
-		s1 = uriToString(l1.getDatatype());
-		s2 = uriToString(l2.getDatatype());
+		s1 = l1.getDatatype().toString();
+		s2 = l2.getDatatype().toString();
 		if (s1 == null && s2 != null) {
 			return -1;
 		} else if (s1 != null && s2 == null) {
@@ -100,12 +97,7 @@ public class StatementComparator implements Comparator<Statement> {
 	}
 
 	private int compareURIs(URI uri1, URI uri2) {
-		return uriToString(uri1).compareTo(uriToString(uri2));
-	}
-
-	private String uriToString(URI uri) {
-		if (uri == null) return null;
-		return RdfUtils.normalize(uri, hash);
+		return uri1.toString().compareTo(uri2.toString());
 	}
 
 }

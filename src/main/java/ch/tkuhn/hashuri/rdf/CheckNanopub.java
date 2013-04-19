@@ -14,8 +14,8 @@ public class CheckNanopub {
 		String hash = HashUriUtils.getHashUriDataPart(nanopub.getUri().toString());
 		if (hash == null) return false;
 		List<Statement> statements = NanopubUtils.getStatements(nanopub);
-		RdfHasher hasher = new RdfHasher(hash);
-		String h = hasher.makeHash(statements);
+		statements = RdfPreprocessor.run(statements, hash);
+		String h = RdfHasher.makeHash(statements);
 		return h.equals(hash);
 	}
 

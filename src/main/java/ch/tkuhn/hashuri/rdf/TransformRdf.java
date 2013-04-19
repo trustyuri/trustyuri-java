@@ -38,10 +38,9 @@ public class TransformRdf {
 			name = baseName.replaceFirst("^.*[^A-Za-z0-9.\\-_]([A-Za-z0-9.\\-_]*)$", "$1");
 		}
 
+		content = RdfPreprocessor.run(content, baseURI);
+		String hash = RdfHasher.makeHash(content.getStatements());
 		RDFFormat format = content.getOriginalFormat();
-		RdfFileContent contentPreprocessed = new RdfFileContent(format);
-		content.propagate(new RdfPreprocessor(contentPreprocessed, baseURI));
-		String hash = makeHash(contentPreprocessed);
 		String fileName = name;
 		String ext = "";
 		if (!format.getFileExtensions().isEmpty()) {
@@ -54,8 +53,7 @@ public class TransformRdf {
 		}
 		OutputStream out = new FileOutputStream(new File(outputDir, fileName));
 		RDFWriter writer = Rio.createWriter(format, out);
-		HashAdder replacer = new HashAdder(baseURI, hash, writer);
-		contentPreprocessed.propagate(replacer);
+		content.propagate(new HashAdder(baseURI, hash, writer));
 		out.close();
 		return RdfUtils.getHashURI(baseURI, baseURI, hash, null);
 	}
@@ -63,12 +61,11 @@ public class TransformRdf {
 	public static URI transform(InputStream in, RDFFormat format, OutputStream out, String baseName) throws Exception {
 		URI baseURI = getBaseURI(baseName);
 		RdfFileContent content = RdfUtils.load(in, format);
-		RdfFileContent contentPreprocessed = new RdfFileContent(format);
-		content.propagate(new RdfPreprocessor(contentPreprocessed, baseURI));
-		String hash = makeHash(contentPreprocessed);
+		content = RdfPreprocessor.run(content, baseURI);
+		String hash = RdfHasher.makeHash(content.getStatements());
 		RDFWriter writer = Rio.createWriter(format, out);
 		HashAdder replacer = new HashAdder(baseURI, hash, writer);
-		contentPreprocessed.propagate(replacer);
+		content.propagate(replacer);
 		out.close();
 		return RdfUtils.getHashURI(baseURI, baseURI, hash, null);
 	}
@@ -79,11 +76,6 @@ public class TransformRdf {
 			baseURI = new URIImpl(baseName);
 		}
 		return baseURI;
-	}
-
-	private static String makeHash(RdfFileContent content) {
-		RdfHasher hasher = new RdfHasher();
-		return hasher.makeHash(content.getStatements());
 	}
 
 }
