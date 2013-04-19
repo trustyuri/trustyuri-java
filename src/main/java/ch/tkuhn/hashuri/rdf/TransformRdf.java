@@ -15,7 +15,7 @@ import org.openrdf.rio.Rio;
 import ch.tkuhn.hashuri.HashUriResource;
 import ch.tkuhn.nanopub.CustomTrigWriterFactory;
 
-public class TransformRdfFile {
+public class TransformRdf {
 
 	static {
 		RDFWriterRegistry.getInstance().add(new CustomTrigWriterFactory());

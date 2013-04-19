@@ -25,11 +25,11 @@ public class TransformNanopub {
 			System.out.println("ERROR: Malformed nanopub: " + ex.getMessage());
 			System.exit(1);
 		}
-		TransformRdfFile.transform(content, inputFile.getParent(), nanopub.getUri().toString());
+		TransformRdf.transform(content, inputFile.getParent(), nanopub.getUri().toString());
 	}
 
 	public static URI transform(InputStream in, RDFFormat format, OutputStream out, String baseName) throws Exception {
-		return TransformRdfFile.transform(in, format, out, baseName);
+		return TransformRdf.transform(in, format, out, baseName);
 	}
 
 	public static URI transform(InputStream in, OutputStream out, String baseName) throws Exception {

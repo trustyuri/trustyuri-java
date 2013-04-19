@@ -65,11 +65,7 @@ public class StatementComparator implements Comparator<Statement> {
 	}
 
 	private int compareResource(Resource r1, Resource r2) {
-		if (r1 instanceof BNode && !(r2 instanceof BNode)) {
-			return 1;
-		} else if (!(r1 instanceof BNode) && r2 instanceof BNode) {
-			return -1;
-		} else if (r1 instanceof BNode) {
+		if (r1 instanceof BNode) {
 			throw new RuntimeException("Unexpected blank node");
 		} else {
 			return compareURIs((URI) r1, (URI) r2);
