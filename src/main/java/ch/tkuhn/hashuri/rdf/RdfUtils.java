@@ -35,15 +35,15 @@ public class RdfUtils {
 	}
 
 	public static URI getHashURI(Resource resource, URI baseURI, String hash, Map<String,Integer> blankNodeMap) {
-		if (resource instanceof URI) {
+		if (resource == null) {
+			return null;
+		} else if (resource instanceof URI) {
 			URI plainURI = (URI) resource;
 			String suffix = getSuffix(plainURI, baseURI);
 			if (suffix == null && !plainURI.equals(baseURI)) {
 				return plainURI;
 			}
 			return new URIImpl(getHashURIString(baseURI, hash, suffix));
-		} else if (resource == null) {
-			return null;
 		} else {
 			BNode blankNode = (BNode) resource;
 			int n = getBlankNodeNumber(blankNode, blankNodeMap);
@@ -61,14 +61,6 @@ public class RdfUtils {
 		} else {
 			return null;
 		}
-	}
-
-	public static String normalize(URI plainURI, URI baseURI) {
-		String suffix = getSuffix(plainURI, baseURI);
-		if (suffix == null && !plainURI.equals(baseURI)) {
-			return plainURI.toString();
-		}
-		return getHashURIString(baseURI, " ", suffix);
 	}
 
 	public static String normalize(URI uri, String hash) {
