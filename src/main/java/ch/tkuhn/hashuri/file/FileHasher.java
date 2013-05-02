@@ -24,7 +24,7 @@ public class FileHasher {
 		} finally {
 			d.close();
 		}
-		return FileModule.ALGORITHM_ID + HashUriUtils.getBase64(md.digest());
+		return FileModule.MODULE_ID + HashUriUtils.getBase64(md.digest());
 	}
 
 }

@@ -1,5 +1,7 @@
 package ch.tkuhn.hashuri;
 
+import java.net.URI;
+
 import javax.activation.MimetypesFileTypeMap;
 import javax.xml.bind.DatatypeConverter;
 
@@ -12,6 +14,26 @@ public class HashUriUtils {
 			return null;
 		}
 		return s.replaceFirst("^(.*[^A-Za-z0-9\\-_]|)([A-Za-z0-9\\-_]{25,})(\\.[A-Za-z0-9\\-_]{0,20})?$", "$2");
+	}
+
+	public static String getNiUri(String s) {
+		return getNiUri(s, true);
+	}
+
+	public static String getNiUri(String s, boolean withAuthority) {
+		String d = getHashUriDataPart(s);
+		if (d == null) return null;
+		String moduleId = d.substring(0, 2);
+		String hash = d.substring(2);
+		HashUriModule module = ModuleDirectory.getModule(moduleId);
+		String tail = "/" + module.getAlgorithmId() + ";" + hash + "?module=" + moduleId;
+		if (withAuthority) {
+			try {
+				String autority = (new URI(s)).getAuthority().toString();
+				return "ni://" + autority + tail;
+			} catch (Exception ex) {}
+		}
+		return "ni://" + tail;
 	}
 
 	public static String getBase64(byte[] bytes) {

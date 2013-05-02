@@ -5,11 +5,16 @@ import ch.tkuhn.hashuri.HashUriResource;
 
 public class RdfModule implements HashUriModule {
 
-	public static final String ALGORITHM_ID = "RA";
+	public static final String MODULE_ID = "RA";
 
 	@Override
-	public String getAlgorithmID() {
-		return ALGORITHM_ID;
+	public String getModuleId() {
+		return MODULE_ID;
+	}
+
+	@Override
+	public String getAlgorithmId() {
+		return "sha-256";
 	}
 
 	@Override

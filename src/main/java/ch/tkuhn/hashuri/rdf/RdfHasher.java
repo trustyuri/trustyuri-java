@@ -37,7 +37,7 @@ public class RdfHasher {
 			md.update(valueToString(st.getObject()).getBytes());
 		}
 		if (DEBUG) System.err.println("----------");
-		return RdfModule.ALGORITHM_ID + HashUriUtils.getBase64(md.digest());
+		return RdfModule.MODULE_ID + HashUriUtils.getBase64(md.digest());
 	}
 
 	private static String valueToString(Value v) {

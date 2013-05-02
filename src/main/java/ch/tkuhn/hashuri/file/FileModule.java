@@ -5,11 +5,16 @@ import ch.tkuhn.hashuri.HashUriResource;
 
 public class FileModule implements HashUriModule {
 
-	public static final String ALGORITHM_ID = "FA";
+	public static final String MODULE_ID = "FA";
 
 	@Override
-	public String getAlgorithmID() {
-		return ALGORITHM_ID;
+	public String getModuleId() {
+		return MODULE_ID;
+	}
+
+	@Override
+	public String getAlgorithmId() {
+		return "sha-256";
 	}
 
 	@Override

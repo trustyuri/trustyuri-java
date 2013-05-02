@@ -17,12 +17,12 @@ public class ModuleDirectory {
 		addModule(new FileModule());
 	}
 
-	public static HashUriModule getModule(String algorithmID) {
-		return modules.get(algorithmID);
+	public static HashUriModule getModule(String moduleId) {
+		return modules.get(moduleId);
 	}
 
 	private static void addModule(HashUriModule module) {
-		modules.put(module.getAlgorithmID(), module);
+		modules.put(module.getModuleId(), module);
 	}
 
 }
