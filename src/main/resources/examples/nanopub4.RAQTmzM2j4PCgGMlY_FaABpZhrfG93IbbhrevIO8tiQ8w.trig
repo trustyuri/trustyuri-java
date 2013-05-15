@@ -1,6 +1,5 @@
 @prefix this: <http://purl.org/hashuri/examples/nanopub4.RAQTmzM2j4PCgGMlY_FaABpZhrfG93IbbhrevIO8tiQ8w> .
 @prefix sub: <http://purl.org/hashuri/examples/nanopub4.RAQTmzM2j4PCgGMlY_FaABpZhrfG93IbbhrevIO8tiQ8w.> .
-@prefix blank: <http://purl.org/hashuri/examples/nanopub4.RAQTmzM2j4PCgGMlY_FaABpZhrfG93IbbhrevIO8tiQ8w..> .
 @prefix rdfg: <http://www.w3.org/2004/03/trix/rdfg-1/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix dc: <http://purl.org/dc/terms/> .

@@ -1,5 +1,7 @@
 package ch.tkuhn.hashuri.rdf;
 
+import java.util.Map;
+
 import org.openrdf.model.BNode;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
@@ -15,21 +17,21 @@ public class HashAdder implements RDFHandler {
 	private URI baseURI;
 	private String hash;
 	private RDFHandler handler;
+	private Map<String,String> ns;
 
-	public HashAdder(URI baseURI, String hash, RDFHandler handler) {
+	public HashAdder(URI baseURI, String hash, RDFHandler handler, Map<String,String> ns) {
 		this.baseURI = baseURI;
 		this.hash = hash;
 		this.handler = handler;
+		this.ns = ns;
 	}
 
 	@Override
 	public void startRDF() throws RDFHandlerException {
 		handler.startRDF();
-		if (baseURI != null) {
-			handler.handleNamespace("this", RdfUtils.getHashURIString(baseURI, hash));
-			handler.handleNamespace("sub", RdfUtils.getHashURIString(baseURI, hash, ""));
-			handler.handleNamespace("blank", RdfUtils.getHashURIString(baseURI, hash, "") + ".");
-		}
+		if (ns.get("this") != null) handler.handleNamespace("this", ns.get("this"));
+		if (ns.get("sub") != null) handler.handleNamespace("sub", ns.get("sub"));
+		if (ns.get("blank") != null) handler.handleNamespace("blank", ns.get("blank"));
 	}
 
 	@Override

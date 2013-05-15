@@ -23,6 +23,8 @@ public class RdfUtils {
 			if (suffix.startsWith(".")) {
 				// Make three dots, as two dots are reserved for blank nodes
 				s += ".." + suffix;
+			} else if (suffix.matches("[^A-Za-z0-9\\-_].*")) {
+				s += suffix;
 			} else {
 				s += "." + suffix;
 			}
