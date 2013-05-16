@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:this="http://purl.org/hashuri/examples/rdfxml1.RAJase0GSn-6UT-7ve_fYWLb0iHqX7z6KmopkwbUepEJw"
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:pav="http://swan.mindinformatics.org/ontologies/1.2/pav/">
+
+<rdf:Description rdf:about="http://purl.org/hashuri/examples/rdfxml1.RAJase0GSn-6UT-7ve_fYWLb0iHqX7z6KmopkwbUepEJw">
+	<dc:title>RDF/XML example</dc:title>
+	<pav:authoredBy rdf:resource="http://orcid.org/0000-0002-1267-0234"/>
+</rdf:Description>
+
+</rdf:RDF>
