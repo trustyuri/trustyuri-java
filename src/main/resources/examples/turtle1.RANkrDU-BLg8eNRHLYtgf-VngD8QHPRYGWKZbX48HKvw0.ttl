@@ -1,0 +1,6 @@
+@prefix this: <http://purl.org/hashuri/examples/turtle1.RANkrDU-BLg8eNRHLYtgf-VngD8QHPRYGWKZbX48HKvw0> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix pav: <http://swan.mindinformatics.org/ontologies/1.2/pav/> .
+
+<http://purl.org/hashuri/examples/turtle1.RANkrDU-BLg8eNRHLYtgf-VngD8QHPRYGWKZbX48HKvw0> dc:title "Turtle example 1" ;
+	pav:authoredBy <http://orcid.org/0000-0002-1267-0234> .

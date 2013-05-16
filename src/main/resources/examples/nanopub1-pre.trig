@@ -19,10 +19,10 @@
 }
 
 :Prov {
-    : swan:citesAsSupportiveEvidence <http://iospress.metapress.com/content/ftkh21q50t521wm2/> .
+    : swan:citesAsSupportiveEvidence <http://dx.doi.org/10.3233/ISU-2010-0613> .
 }
 
 :Info {
-    : pav:authoredBy <http://www.researcherid.com/rid/B-6810-2013> ;
+    : pav:authoredBy <http://orcid.org/0000-0002-1267-0234> ;
         dc:created "2013-02-25T14:33:21+01:00"^^xsd:dateTime .
 }

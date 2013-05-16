@@ -1,6 +1,6 @@
-@prefix this: <http://purl.org/hashuri/examples/nanopub3.RAN-osCF93TpYpQjvlkbMR2SmTkTusYdqGO4Hj-Tgcimo> .
-@prefix sub: <http://purl.org/hashuri/examples/nanopub3.RAN-osCF93TpYpQjvlkbMR2SmTkTusYdqGO4Hj-Tgcimo.> .
-@prefix blank: <http://purl.org/hashuri/examples/nanopub3.RAN-osCF93TpYpQjvlkbMR2SmTkTusYdqGO4Hj-Tgcimo..> .
+@prefix this: <http://purl.org/hashuri/examples/nanopub3.RAGEgUJRjRd0guvKXkejgV3t1Cg6nySVeU27zl8aYLa68> .
+@prefix sub: <http://purl.org/hashuri/examples/nanopub3.RAGEgUJRjRd0guvKXkejgV3t1Cg6nySVeU27zl8aYLa68.> .
+@prefix blank: <http://purl.org/hashuri/examples/nanopub3.RAGEgUJRjRd0guvKXkejgV3t1Cg6nySVeU27zl8aYLa68..> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix dc: <http://purl.org/dc/terms/> .
 @prefix opm: <http://purl.org/net/opmv/ns#> .
@@ -25,10 +25,10 @@ sub:Ass {
 }
 
 sub:Prov {
-	this: swan:citesAsSupportiveEvidence <http://iospress.metapress.com/content/ftkh21q50t521wm2/> .
+	this: swan:citesAsSupportiveEvidence <http://dx.doi.org/10.3233/ISU-2010-0613> .
 }
 
 sub:Info {
-	this: pav:authoredBy <http://www.researcherid.com/rid/B-6810-2013> ;
+	this: pav:authoredBy <http://orcid.org/0000-0002-1267-0234> ;
 		dc:created "2013-03-11T10:51:33+01:00"^^xsd:dateTime .
 }

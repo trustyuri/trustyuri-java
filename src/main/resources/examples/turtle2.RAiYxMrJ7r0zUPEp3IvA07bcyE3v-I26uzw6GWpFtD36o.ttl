@@ -1,5 +1,4 @@
 @prefix this: <http://purl.org/hashuri/examples/turtle2.RAiYxMrJ7r0zUPEp3IvA07bcyE3v-I26uzw6GWpFtD36o> .
-@prefix sub: <http://purl.org/hashuri/examples/turtle2.RAiYxMrJ7r0zUPEp3IvA07bcyE3v-I26uzw6GWpFtD36o.> .
 @prefix blank: <http://purl.org/hashuri/examples/turtle2.RAiYxMrJ7r0zUPEp3IvA07bcyE3v-I26uzw6GWpFtD36o..> .
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .

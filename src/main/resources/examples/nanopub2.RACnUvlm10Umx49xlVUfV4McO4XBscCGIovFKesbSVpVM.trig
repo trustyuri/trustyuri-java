@@ -1,6 +1,7 @@
-@prefix this: <http://purl.org/hashuri/examples/nanopub1.RAcbjcRIQozo2wBMq4WcCYkFAjRz0AX-Ux3PquZZrC68s> .
-@prefix sub: <http://purl.org/hashuri/examples/nanopub1.RAcbjcRIQozo2wBMq4WcCYkFAjRz0AX-Ux3PquZZrC68s.> .
+@prefix this: <http://purl.org/hashuri/examples/nanopub2.RACnUvlm10Umx49xlVUfV4McO4XBscCGIovFKesbSVpVM> .
+@prefix sub: <http://purl.org/hashuri/examples/nanopub2.RACnUvlm10Umx49xlVUfV4McO4XBscCGIovFKesbSVpVM.> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix dc: <http://purl.org/dc/terms/> .
 @prefix opm: <http://purl.org/net/opmv/ns#> .
 @prefix pav: <http://swan.mindinformatics.org/ontologies/1.2/pav/> .
@@ -16,14 +17,14 @@ this: {
 }
 
 sub:Ass {
-	ex:mosquito ex:transmits ex:malaria .
+	ex:mosquito owl:subClassOf ex:dangerousAnimal .
 }
 
 sub:Prov {
-	this: swan:citesAsSupportiveEvidence <http://iospress.metapress.com/content/ftkh21q50t521wm2/> .
+	this: swan:citesAsSupportiveEvidence <http://purl.org/hashuri/examples/nanopub1.RA1SuhYyX9qlNnWWIIp9dqjGEuyOi5D384gjVShN6SuXk> .
 }
 
 sub:Info {
-	this: pav:authoredBy <http://www.researcherid.com/rid/B-6810-2013> ;
+	this: pav:authoredBy <http://orcid.org/0000-0002-1267-0234> ;
 		dc:created "2013-02-25T14:33:21+01:00"^^xsd:dateTime .
 }
