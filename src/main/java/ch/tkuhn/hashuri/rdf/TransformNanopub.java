@@ -15,17 +15,22 @@ import ch.tkuhn.nanopub.NanopubImpl;
 public class TransformNanopub {
 
 	public static void main(String[] args) throws Exception {
-		File inputFile = new File(args[0]);
-		HashUriResource r = new HashUriResource(inputFile);
-		RdfFileContent content = RdfUtils.load(r);
-		Nanopub nanopub = null;
-		try {
-			nanopub = new NanopubImpl(content.getStatements());
-		} catch (MalformedNanopubException ex) {
-			System.out.println("ERROR: Malformed nanopub: " + ex.getMessage());
-			System.exit(1);
+		if (args.length == 0) {
+			System.out.println("ERROR: No file given");
 		}
-		TransformRdf.transform(content, inputFile.getParent(), nanopub.getUri().toString());
+		for (String arg : args) {
+			File inputFile = new File(arg);
+			HashUriResource r = new HashUriResource(inputFile);
+			RdfFileContent content = RdfUtils.load(r);
+			Nanopub nanopub = null;
+			try {
+				nanopub = new NanopubImpl(content.getStatements());
+			} catch (MalformedNanopubException ex) {
+				System.out.println("ERROR: Malformed nanopub: " + ex.getMessage());
+				System.exit(1);
+			}
+			TransformRdf.transform(content, inputFile.getParent(), nanopub.getUri().toString());
+		}
 	}
 
 	public static URI transform(InputStream in, RDFFormat format, OutputStream out, String baseName) throws Exception {
