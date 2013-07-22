@@ -24,7 +24,7 @@ public class CheckFile {
 		}
 		if (module.hasCorrectHash(r)) {
 			System.out.println("Correct hash: " + r.getHash());
-			System.out.println("ni URI: " + HashUriUtils.getNiUri(fileName));
+			//System.out.println("ni URI: " + HashUriUtils.getNiUri(fileName));
 		} else {
 			System.out.println("*** INCORRECT HASH ***");
 		}
