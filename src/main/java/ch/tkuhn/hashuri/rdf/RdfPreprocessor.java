@@ -90,7 +90,10 @@ public class RdfPreprocessor implements RDFHandler {
 	}
 
 	private static Statement preprocess(Statement st, URI baseUri, String hash, Map<String,Integer> blankNodeMap) {
-		Resource context = transform(st.getContext(), baseUri, hash, blankNodeMap);
+		Resource context = null;
+		if (st.getContext() != null) {
+			context = transform(st.getContext(), baseUri, hash, blankNodeMap);
+		}
 		Resource subject = transform(st.getSubject(), baseUri, hash, blankNodeMap);
 		URI predicate = transform(st.getPredicate(), baseUri, hash, blankNodeMap);
 		Value object = st.getObject();
