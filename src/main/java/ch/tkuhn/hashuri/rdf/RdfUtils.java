@@ -1,17 +1,23 @@
 package ch.tkuhn.hashuri.rdf;
 
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Map;
 
 import org.openrdf.model.BNode;
 import org.openrdf.model.Resource;
+import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.RDFParser;
+import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.Rio;
 
 import ch.tkuhn.hashuri.HashUriResource;
+import ch.tkuhn.nanopub.Nanopub;
+import ch.tkuhn.nanopub.NanopubUtils;
 
 public class RdfUtils {
 
@@ -103,6 +109,28 @@ public class RdfUtils {
 			format = RDFFormat.forFileName(r.getFilename(), RDFFormat.TURTLE);
 		}
 		return load(r.getInputStream(), format);
+	}
+
+	public static void writeNanopub(Nanopub nanopub, OutputStream out, RDFFormat format)
+			throws RDFHandlerException {
+		RDFWriter writer = Rio.createWriter(format, out);
+		writer.startRDF();
+		String s = nanopub.getUri().toString();
+		writer.handleNamespace("this", s);
+		writer.handleNamespace("sub", s + ".");
+		writer.handleNamespace("blank", s + "..");
+		writer.handleNamespace("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+		writer.handleNamespace("rdfs", "http://www.w3.org/2000/01/rdf-schema#");
+		writer.handleNamespace("rdfg", "http://www.w3.org/2004/03/trix/rdfg-1/");
+		writer.handleNamespace("xsd", "http://www.w3.org/2001/XMLSchema#");
+		writer.handleNamespace("owl", "http://www.w3.org/2002/07/owl#");
+		writer.handleNamespace("dc", "http://purl.org/dc/terms/");
+		writer.handleNamespace("pav", "http://swan.mindinformatics.org/ontologies/1.2/pav/");
+		writer.handleNamespace("np", "http://www.nanopub.org/nschema#");
+		for (Statement st : NanopubUtils.getStatements(nanopub)) {
+			writer.handleStatement(st);
+		}
+		writer.endRDF();
 	}
 
 }
