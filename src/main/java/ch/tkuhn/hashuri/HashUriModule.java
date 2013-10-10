@@ -6,6 +6,8 @@ public interface HashUriModule {
 
 	public String getAlgorithmId();
 
+	public int getHashLength();
+
 	public boolean hasCorrectHash(HashUriResource resource) throws Exception;
 
 }

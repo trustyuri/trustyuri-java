@@ -18,6 +18,11 @@ public class RdfModule implements HashUriModule {
 	}
 
 	@Override
+	public int getHashLength() {
+		return 43;
+	}
+
+	@Override
 	public boolean hasCorrectHash(HashUriResource r) throws Exception {
 		RdfFileContent content = RdfUtils.load(r);
 		content = RdfPreprocessor.run(content, r.getHash());

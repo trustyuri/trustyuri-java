@@ -1,6 +1,6 @@
 package ch.tkuhn.hashuri;
 
-import java.net.URI;
+import org.openrdf.model.URI;
 
 import javax.activation.MimetypesFileTypeMap;
 import javax.xml.bind.DatatypeConverter;
@@ -16,6 +16,16 @@ public class HashUriUtils {
 		return s.replaceFirst("^(.*[^A-Za-z0-9\\-_]|)([A-Za-z0-9\\-_]{25,})(\\.[A-Za-z0-9\\-_]{0,20})?$", "$2");
 	}
 
+	public static boolean isPotentialHashUri(URI uri) {
+		String d = getHashUriDataPart(uri.toString());
+		if (d == null) return false;
+		String id = d.substring(0, 2);
+		HashUriModule module = ModuleDirectory.getModule(id);
+		if (module == null) return false;
+		int l = d.substring(2).length();
+		return l == module.getHashLength();
+	}
+
 	public static String getNiUri(String s) {
 		return getNiUri(s, true);
 	}
@@ -29,7 +39,7 @@ public class HashUriUtils {
 		String tail = "/" + module.getAlgorithmId() + ";" + hash + "?module=" + moduleId;
 		if (withAuthority) {
 			try {
-				String autority = (new URI(s)).getAuthority().toString();
+				String autority = (new java.net.URI(s)).getAuthority().toString();
 				return "ni://" + autority + tail;
 			} catch (Exception ex) {}
 		}

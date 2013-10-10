@@ -18,6 +18,11 @@ public class FileModule implements HashUriModule {
 	}
 
 	@Override
+	public int getHashLength() {
+		return 43;
+	}
+
+	@Override
 	public boolean hasCorrectHash(HashUriResource r) throws Exception {
 		FileHasher hasher = new FileHasher();
 		String h = hasher.makeHash(r.getInputStream());
