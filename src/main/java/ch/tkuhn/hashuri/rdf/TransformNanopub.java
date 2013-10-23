@@ -11,6 +11,8 @@ import ch.tkuhn.hashuri.HashUriResource;
 import ch.tkuhn.nanopub.MalformedNanopubException;
 import ch.tkuhn.nanopub.Nanopub;
 import ch.tkuhn.nanopub.NanopubImpl;
+import ch.tkuhn.nanopub.NanopubRdfHandler;
+import ch.tkuhn.nanopub.NanopubUtils;
 
 public class TransformNanopub {
 
@@ -39,6 +41,14 @@ public class TransformNanopub {
 
 	public static URI transform(InputStream in, OutputStream out, String baseName) throws Exception {
 		return transform(in, RDFFormat.TRIG, out, baseName);
+	}
+
+	public static Nanopub transform(Nanopub nanopub, String baseName) throws Exception {
+		RdfFileContent r = new RdfFileContent(RDFFormat.TRIG);
+		NanopubUtils.propagateToHandler(nanopub, r);
+		NanopubRdfHandler h = new NanopubRdfHandler();
+		TransformRdf.transform(r, h, baseName);
+		return h.getNanopub();
 	}
 
 }

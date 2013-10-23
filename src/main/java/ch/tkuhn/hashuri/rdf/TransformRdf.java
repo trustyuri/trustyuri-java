@@ -13,6 +13,7 @@ import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.RDFWriterRegistry;
 import org.openrdf.rio.Rio;
@@ -61,6 +62,15 @@ public class TransformRdf {
 		Map<String,String> ns = makeNamespaceMap(content.getStatements(), baseURI, hash);
 		content.propagate(new HashAdder(baseURI, hash, writer, ns));
 		out.close();
+		return RdfUtils.getHashURI(baseURI, baseURI, hash, null);
+	}
+
+	public static URI transform(RdfFileContent content, RDFHandler handler, String baseName) throws Exception {
+		URI baseURI = getBaseURI(baseName);
+		content = RdfPreprocessor.run(content, baseURI);
+		String hash = RdfHasher.makeHash(content.getStatements());
+		Map<String,String> ns = makeNamespaceMap(content.getStatements(), baseURI, hash);
+		content.propagate(new HashAdder(baseURI, hash, handler, ns));
 		return RdfUtils.getHashURI(baseURI, baseURI, hash, null);
 	}
 
