@@ -20,4 +20,4 @@ CP=$(cat classpath.txt):$HASHURIJAVADIR/$(ls target/hashuri-*.jar)
 
 cd $DIR
 
-java -cp $CP ch.tkuhn.hashuri.rdf.TransformNanopub $*
+java -cp $CP $JAVA_OPTS ch.tkuhn.hashuri.rdf.TransformNanopub $*
