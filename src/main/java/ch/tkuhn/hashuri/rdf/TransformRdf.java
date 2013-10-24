@@ -32,6 +32,8 @@ public class TransformRdf {
 		String baseName = "";
 		if (args.length > 1) {
 			baseName = args[1];
+		} else {
+			baseName = inputFile.getName().replaceFirst("[.][^.]+$", "");
 		}
 		RdfFileContent content = RdfUtils.load(new HashUriResource(inputFile));
 		transform(content, inputFile.getParent(), baseName);
