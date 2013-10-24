@@ -3,11 +3,21 @@
 DIR=`pwd`
 cd "$( dirname "${BASH_SOURCE[0]}" )"
 cd ..
+
+if [ ! -f target/hashuri-*.jar ]; then
+  echo "hashuri-*.jar not found: Run scripts/build.sh first."
+  exit 1
+fi
+
+if [ ! -f classpath.txt ]; then
+  echo "classpath.txt not found: Run scripts/build.sh first."
+  exit 1
+fi
+
 HASHURIJAVADIR=`pwd`
+
+CP=$(cat classpath.txt):$HASHURIJAVADIR/$(ls target/hashuri-*.jar)
+
 cd $DIR
 
-if [ -f $HASHURIJAVADIR/target/hashuri-*-jar-with-dependencies.jar ]; then
-  java -cp $HASHURIJAVADIR/target/hashuri-*-jar-with-dependencies.jar ch.tkuhn.hashuri.CheckFile $*
-else
-  echo "hashuri-*-jar-with-dependencies.jar not found: Run scripts/build.sh first."
-fi
+java -cp $CP ch.tkuhn.hashuri.CheckFile $*

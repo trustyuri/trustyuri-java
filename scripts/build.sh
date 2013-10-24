@@ -3,4 +3,4 @@
 cd "$( dirname "${BASH_SOURCE[0]}" )"
 cd ..
 
-mvn clean compile assembly:single
+mvn clean package dependency:build-classpath -Dmdep.outputFile=classpath.txt
