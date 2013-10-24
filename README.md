@@ -12,7 +12,7 @@ This URI stands for a nanopublication. Ideally, such URIs are resolvable to file
 respective content. The last 45 characters of the URI (after '.') are the hash value. The first two
 characters define the type and version of the algorithm; only 'FA' for plain file content and 'RA'
 for sets of RDF graphs are supported at this point. The remaining 43 characters are a SHA-256 hash
-value in Base64 notation ('-' instead of '+'; '_' instead of '/').
+value in Base64 notation.
 
 
 Documentation

@@ -1,6 +1,13 @@
 #!/bin/bash
 
+DIR=`pwd`
 cd "$( dirname "${BASH_SOURCE[0]}" )"
 cd ..
+HASHURIJAVADIR=`pwd`
+cd $DIR
 
-mvn -q -e exec:java -Dexec.mainClass="ch.tkuhn.hashuri.file.ProcessFile" -Dexec.args="$*"
+if [ -f $HASHURIJAVADIR/target/hashuri-*-jar-with-dependencies.jar ]; then
+  java -cp $HASHURIJAVADIR/target/hashuri-*-jar-with-dependencies.jar ch.tkuhn.hashuri.file.ProcessFile $*
+else
+  echo "hashuri-*-jar-with-dependencies.jar not found: Run scripts/build.sh first."
+fi
