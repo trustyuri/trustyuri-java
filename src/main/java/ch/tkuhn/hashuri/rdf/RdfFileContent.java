@@ -21,7 +21,7 @@ public class RdfFileContent implements RDFHandler {
 	private static Map<Value,Value> rdfEntityMap = new HashMap<>();
 	
 	private RDFFormat originalFormat = null;
-	private List<Object> objects;
+	private List<Pair<String,String>> namespaces;
 	private List<Statement> statements;
 
 	public RdfFileContent(RDFFormat originalFormat) {
@@ -30,7 +30,7 @@ public class RdfFileContent implements RDFHandler {
 	
 	@Override
 	public void startRDF() throws RDFHandlerException {
-		objects = new ArrayList<>();
+		namespaces = new ArrayList<>();
 		statements = new ArrayList<>();
 	}
 
@@ -40,7 +40,7 @@ public class RdfFileContent implements RDFHandler {
 
 	@Override
 	public void handleNamespace(String prefix, String uri) throws RDFHandlerException {
-		objects.add(Pair.of(prefix, uri));
+		namespaces.add(Pair.of(prefix, uri));
 	}
 
 	@Override
@@ -70,31 +70,25 @@ public class RdfFileContent implements RDFHandler {
 			}
 			st = new ContextStatementImpl(subj, pred, obj, context);
 		}
-		objects.add(st);
 		statements.add(st);
 	}
 
 	@Override
 	public void handleComment(String comment) throws RDFHandlerException {
-		objects.add(comment);
+		// Ignore comments
 	}
 	
 	public List<Statement> getStatements() {
-		return new ArrayList<>(statements);
+		return statements;
 	}
 
 	public void propagate(RDFHandler handler) throws RDFHandlerException {
 		handler.startRDF();
-		for (Object obj : objects) {
-			if (obj instanceof Pair) {
-				@SuppressWarnings("unchecked")
-				Pair<String,String> ns = (Pair<String, String>) obj;
-				handler.handleNamespace(ns.getLeft(), ns.getRight());
-			} else if (obj instanceof Statement) {
-				handler.handleStatement((Statement) obj);
-			} else {
-				handler.handleComment((String) obj);
-			}
+		for (Pair<String,String> ns : namespaces) {
+			handler.handleNamespace(ns.getLeft(), ns.getRight());
+		}
+		for (Statement st : statements) {
+			handler.handleStatement(st);
 		}
 		handler.endRDF();
 	}
