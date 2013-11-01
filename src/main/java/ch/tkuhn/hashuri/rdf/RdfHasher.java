@@ -15,7 +15,7 @@ import ch.tkuhn.hashuri.HashUriUtils;
 
 public class RdfHasher {
 
-	private static boolean DEBUG = false;
+	private static final boolean DEBUG = false;
 
 	private RdfHasher() {}  // no instances allowed
 
