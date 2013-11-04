@@ -19,7 +19,21 @@ public class RdfPreprocessor implements RDFHandler {
 	private RDFHandler nestedHandler;
 	private URI baseUri;
 	private String hash;
-	private Map<String,Integer> blankNodeMap = new HashMap<>();
+	private Map<String,Integer> blankNodeMap;
+
+	public static RdfFileContent run(RdfFileContent content, URI baseUri,
+			Map<String,Integer> blankNodeMap) throws RDFHandlerException {
+		RdfFileContent p = new RdfFileContent(content.getOriginalFormat());
+		content.propagate(new RdfPreprocessor(p, baseUri, blankNodeMap));
+		return p;
+	}
+
+	public static RdfFileContent run(RdfFileContent content, String hash,
+			Map<String,Integer> blankNodeMap) throws RDFHandlerException {
+		RdfFileContent p = new RdfFileContent(content.getOriginalFormat());
+		content.propagate(new RdfPreprocessor(p, hash, blankNodeMap));
+		return p;
+	}
 
 	public static RdfFileContent run(RdfFileContent content, URI baseUri) throws RDFHandlerException {
 		RdfFileContent p = new RdfFileContent(content.getOriginalFormat());
@@ -51,15 +65,31 @@ public class RdfPreprocessor implements RDFHandler {
 	}
 
 	public RdfPreprocessor(RDFHandler nestedHandler, URI baseUri) {
-		this.nestedHandler = nestedHandler;
-		this.baseUri = baseUri;
-		this.hash = null;
+		this(nestedHandler, baseUri, null);
 	}
 
 	public RdfPreprocessor(RDFHandler nestedHandler, String hash) {
+		this(nestedHandler, hash, null);
+	}
+
+	public RdfPreprocessor(RDFHandler nestedHandler, URI baseUri, Map<String,Integer> blankNodeMap) {
+		this.nestedHandler = nestedHandler;
+		this.baseUri = baseUri;
+		this.hash = null;
+		this.blankNodeMap = blankNodeMap;
+		if (blankNodeMap == null) {
+			this.blankNodeMap = new HashMap<>();
+		}
+	}
+
+	public RdfPreprocessor(RDFHandler nestedHandler, String hash, Map<String,Integer> blankNodeMap) {
 		this.nestedHandler = nestedHandler;
 		this.baseUri = null;
 		this.hash = hash;
+		this.blankNodeMap = blankNodeMap;
+		if (blankNodeMap == null) {
+			this.blankNodeMap = new HashMap<>();
+		}
 	}
 
 	@Override
@@ -89,7 +119,7 @@ public class RdfPreprocessor implements RDFHandler {
 		nestedHandler.handleComment(comment);
 	}
 
-	private static Statement preprocess(Statement st, URI baseUri, String hash, Map<String,Integer> blankNodeMap) {
+	public static Statement preprocess(Statement st, URI baseUri, String hash, Map<String,Integer> blankNodeMap) {
 		Resource context = null;
 		if (st.getContext() != null) {
 			context = transform(st.getContext(), baseUri, hash, blankNodeMap);
@@ -103,9 +133,16 @@ public class RdfPreprocessor implements RDFHandler {
 		return new ContextStatementImpl(subject, predicate, object, context);
 	}
 
-	private static URI transform(Resource r, URI baseUri, String hash, Map<String,Integer> blankNodeMap) {
+	public static URI transform(Resource r, URI baseUri, String hash, Map<String,Integer> blankNodeMap) {
 		if (baseUri == null) {
 			return new URIImpl(RdfUtils.normalize((URI) r, hash));
+		}
+		return RdfUtils.getHashURI(r, baseUri, " ", blankNodeMap);
+	}
+
+	public static URI transformResource(Resource r, URI baseUri, Map<String,Integer> blankNodeMap) {
+		if (r instanceof URI && ((URI) r).toString().indexOf(" ") > -1) {
+			return (URI) r;
 		}
 		return RdfUtils.getHashURI(r, baseUri, " ", blankNodeMap);
 	}

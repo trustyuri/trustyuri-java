@@ -29,7 +29,7 @@ public class TransformRdf {
 
 	public static void main(String[] args) throws Exception {
 		File inputFile = new File(args[0]);
-		String baseName = "";
+		String baseName;
 		if (args.length > 1) {
 			baseName = args[1];
 		} else {
@@ -89,7 +89,7 @@ public class TransformRdf {
 		return RdfUtils.getHashURI(baseURI, baseURI, hash, null);
 	}
 
-	private static URI getBaseURI(String baseName) {
+	static URI getBaseURI(String baseName) {
 		URI baseURI = null;
 		if (baseName.indexOf("/") > 0) {
 			baseURI = new URIImpl(baseName);

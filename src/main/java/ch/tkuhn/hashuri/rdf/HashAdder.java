@@ -1,5 +1,6 @@
 package ch.tkuhn.hashuri.rdf;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.openrdf.model.BNode;
@@ -24,6 +25,9 @@ public class HashAdder implements RDFHandler {
 		this.hash = hash;
 		this.handler = handler;
 		this.ns = ns;
+		if (ns == null) {
+			this.ns = new HashMap<>();
+		}
 	}
 
 	@Override

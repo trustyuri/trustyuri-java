@@ -8,6 +8,8 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
+import org.openrdf.rio.RDFFormat;
+
 public class HashUriResource {
 
 	private String filename;
@@ -81,6 +83,14 @@ public class HashUriResource {
 
 	public String getHash() {
 		return hash;
+	}
+
+	public RDFFormat getFormat(RDFFormat defaultFormat) {
+		RDFFormat format = RDFFormat.forMIMEType(getMimetype());
+		if (format == null) {
+			format = RDFFormat.forFileName(getFilename(), defaultFormat);
+		}
+		return format;
 	}
 
 }

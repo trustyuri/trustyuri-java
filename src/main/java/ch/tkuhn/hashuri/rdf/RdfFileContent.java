@@ -18,14 +18,20 @@ import org.openrdf.rio.RDFHandlerException;
 
 public class RdfFileContent implements RDFHandler {
 	
-	private static Map<Value,Value> rdfEntityMap = new HashMap<>();
-	
+	static Map<Value,Value> rdfEntityMap = new HashMap<>();
+
+	private RdfFilter filter = null;
 	private RDFFormat originalFormat = null;
 	private List<Pair<String,String>> namespaces;
 	private List<Statement> statements;
 
 	public RdfFileContent(RDFFormat originalFormat) {
 		this.originalFormat = originalFormat;
+	}
+
+	public RdfFileContent(RDFFormat originalFormat, RdfFilter filter) {
+		this.originalFormat = originalFormat;
+		this.filter = filter;
 	}
 	
 	@Override
@@ -60,16 +66,21 @@ public class RdfFileContent implements RDFHandler {
 			obj = st.getObject();
 			rdfEntityMap.put(obj, obj);
 		}
+		Resource context = null;
 		if (st.getContext() == null) {
 			st = new StatementImpl(subj, pred, obj);
 		} else {
-			Resource context = (Resource) rdfEntityMap.get(st.getContext());
+			context = (Resource) rdfEntityMap.get(st.getContext());
 			if (context == null) {
 				context = st.getContext();
 				rdfEntityMap.put(context, context);
 			}
 			st = new ContextStatementImpl(subj, pred, obj, context);
 		}
+		if (filter != null && !filter.matches(context, subj, pred, obj)) {
+			return;
+		}
+
 		statements.add(st);
 	}
 

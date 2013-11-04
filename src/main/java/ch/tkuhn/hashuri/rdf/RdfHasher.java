@@ -20,24 +20,37 @@ public class RdfHasher {
 	private RdfHasher() {}  // no instances allowed
 
 	public static String makeHash(List<Statement> statements) {
+		MessageDigest md = getDigest();
+		Collections.sort(statements, new StatementComparator());
+		if (DEBUG) System.err.println("----------");
+		for (Statement st : statements) {
+			digest(st, md);
+		}
+		if (DEBUG) System.err.println("----------");
+		return getHash(md);
+	}
+
+	public static MessageDigest getDigest() {
 		MessageDigest md = null;
 		try {
 			md = MessageDigest.getInstance("SHA-256");
 		} catch (NoSuchAlgorithmException ex) {}
-		Collections.sort(statements, new StatementComparator());
-		if (DEBUG) System.err.println("----------");
-		for (Statement st : statements) {
-			if (DEBUG) System.err.print(valueToString(st.getContext()));
-			md.update(valueToString(st.getContext()).getBytes());
-			if (DEBUG) System.err.print(valueToString(st.getSubject()));
-			md.update(valueToString(st.getSubject()).getBytes());
-			if (DEBUG) System.err.print(valueToString(st.getPredicate()));
-			md.update(valueToString(st.getPredicate()).getBytes());
-			if (DEBUG) System.err.print(valueToString(st.getObject()));
-			md.update(valueToString(st.getObject()).getBytes());
-		}
-		if (DEBUG) System.err.println("----------");
+		return md;
+	}
+
+	public static String getHash(MessageDigest md) {
 		return RdfModule.MODULE_ID + HashUriUtils.getBase64(md.digest());
+	}
+
+	public static void digest(Statement st, MessageDigest md) {
+		if (DEBUG) System.err.print(valueToString(st.getContext()));
+		md.update(valueToString(st.getContext()).getBytes());
+		if (DEBUG) System.err.print(valueToString(st.getSubject()));
+		md.update(valueToString(st.getSubject()).getBytes());
+		if (DEBUG) System.err.print(valueToString(st.getPredicate()));
+		md.update(valueToString(st.getPredicate()).getBytes());
+		if (DEBUG) System.err.print(valueToString(st.getObject()));
+		md.update(valueToString(st.getObject()).getBytes());
 	}
 
 	private static String valueToString(Value v) {

@@ -60,6 +60,7 @@ public class RdfUtils {
 	}
 
 	private static String getSuffix(URI plainURI, URI baseURI) {
+		if (baseURI == null) return null;
 		String b = baseURI.toString();
 		String p = plainURI.toString();
 		if (p.equals(b)) {
@@ -103,12 +104,36 @@ public class RdfUtils {
 		return content;
 	}
 
+	public static RdfFileContent load(InputStream in, RDFFormat format, RdfFilter filter) throws Exception {
+		RDFParser p = Rio.createParser(format);
+		RdfFileContent content = new RdfFileContent(format, filter);
+		p.setRDFHandler(content);
+		p.parse(in, "");
+		in.close();
+		return content;
+	}
+
+	public static RdfSummary loadSummary(InputStream in, RDFFormat format, URI baseUri,
+			Map<String,Integer> blankNodeMap) throws Exception {
+		RDFParser p = Rio.createParser(format);
+		RdfSummary summary = new RdfSummary(format, baseUri, blankNodeMap);
+		p.setRDFHandler(summary);
+		p.parse(in, "");
+		in.close();
+		return summary;
+	}
+
 	public static RdfFileContent load(HashUriResource r) throws Exception {
-		RDFFormat format = RDFFormat.forMIMEType(r.getMimetype());
-		if (format == null) {
-			format = RDFFormat.forFileName(r.getFilename(), RDFFormat.TURTLE);
-		}
-		return load(r.getInputStream(), format);
+		return load(r.getInputStream(), r.getFormat(RDFFormat.TURTLE));
+	}
+
+	public static RdfFileContent load(HashUriResource r, RdfFilter filter) throws Exception {
+		return load(r.getInputStream(), r.getFormat(RDFFormat.TURTLE), filter);
+	}
+
+	public static RdfSummary loadSummary(HashUriResource r, URI baseUri,
+			Map<String,Integer> blankNodeMap) throws Exception {
+		return loadSummary(r.getInputStream(), r.getFormat(RDFFormat.TURTLE), baseUri, blankNodeMap);
 	}
 
 	public static void writeNanopub(Nanopub nanopub, OutputStream out, RDFFormat format)
