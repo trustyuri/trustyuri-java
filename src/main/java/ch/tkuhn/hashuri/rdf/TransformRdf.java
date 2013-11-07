@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.nanopub.CustomTrigWriterFactory;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
@@ -19,7 +20,6 @@ import org.openrdf.rio.RDFWriterRegistry;
 import org.openrdf.rio.Rio;
 
 import ch.tkuhn.hashuri.HashUriResource;
-import ch.tkuhn.nanopub.CustomTrigWriterFactory;
 
 public class TransformRdf {
 

@@ -4,6 +4,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Map;
 
+import org.nanopub.Nanopub;
+import org.nanopub.NanopubUtils;
 import org.openrdf.model.BNode;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
@@ -16,8 +18,6 @@ import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.Rio;
 
 import ch.tkuhn.hashuri.HashUriResource;
-import ch.tkuhn.nanopub.Nanopub;
-import ch.tkuhn.nanopub.NanopubUtils;
 
 public class RdfUtils {
 

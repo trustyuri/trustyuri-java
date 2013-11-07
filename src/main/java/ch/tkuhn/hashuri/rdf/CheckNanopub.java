@@ -2,11 +2,11 @@ package ch.tkuhn.hashuri.rdf;
 
 import java.util.List;
 
+import org.nanopub.Nanopub;
+import org.nanopub.NanopubUtils;
 import org.openrdf.model.Statement;
 
 import ch.tkuhn.hashuri.HashUriUtils;
-import ch.tkuhn.nanopub.Nanopub;
-import ch.tkuhn.nanopub.NanopubUtils;
 
 public class CheckNanopub {
 	

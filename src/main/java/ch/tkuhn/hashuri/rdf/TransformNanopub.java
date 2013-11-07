@@ -4,15 +4,15 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import org.nanopub.MalformedNanopubException;
+import org.nanopub.Nanopub;
+import org.nanopub.NanopubImpl;
+import org.nanopub.NanopubRdfHandler;
+import org.nanopub.NanopubUtils;
 import org.openrdf.model.URI;
 import org.openrdf.rio.RDFFormat;
 
 import ch.tkuhn.hashuri.HashUriResource;
-import ch.tkuhn.nanopub.MalformedNanopubException;
-import ch.tkuhn.nanopub.Nanopub;
-import ch.tkuhn.nanopub.NanopubImpl;
-import ch.tkuhn.nanopub.NanopubRdfHandler;
-import ch.tkuhn.nanopub.NanopubUtils;
 
 public class TransformNanopub {
 
