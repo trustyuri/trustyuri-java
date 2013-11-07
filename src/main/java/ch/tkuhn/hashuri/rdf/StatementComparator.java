@@ -16,6 +16,11 @@ public class StatementComparator implements Comparator<Statement> {
 
 	@Override
 	public int compare(Statement st1, Statement st2) {
+		return compareStatement(st1, st2);
+	}
+
+
+	static int compareStatement(Statement st1, Statement st2) {
 		int c;
 		c = compareContext(st1, st2);
 		if (c != 0) return c;
