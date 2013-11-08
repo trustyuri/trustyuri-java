@@ -23,13 +23,13 @@ public class SerStatementComparator implements Comparator<String> {
 		String[] parts1 = s1.split("\\t");
 		String[] parts2 = s2.split("\\t");
 		int c;
-		c = parts1[0].compareTo(parts2[0]);
+		c = unescape(parts1[0]).compareTo(unescape(parts2[0]));
 		if (c != 0) return c;
-		c = parts1[1].compareTo(parts2[1]);
+		c = unescape(parts1[1]).compareTo(unescape(parts2[1]));
 		if (c != 0) return c;
-		c = parts1[2].compareTo(parts2[2]);
+		c = unescape(parts1[2]).compareTo(unescape(parts2[2]));
 		if (c != 0) return c;
-		c = parts1[3].compareTo(parts2[3]);
+		c = unescape(parts1[3]).compareTo(unescape(parts2[3]));
 		if (c != 0) return c;
 		String o1 = "  ";
 		if (parts1.length > 4) o1 = parts1[4];
@@ -37,18 +37,18 @@ public class SerStatementComparator implements Comparator<String> {
 		if (parts2.length > 4) o2 = parts2[4];
 		int i11 = o1.indexOf(32);
 		int i21 = o2.indexOf(32);
-		String d1 = o1.substring(0, i11);
-		String d2 = o2.substring(0, i11);
+		String d1 = unescape(o1.substring(0, i11));
+		String d2 = unescape(o2.substring(0, i11));
 		c = d1.compareTo(d2);
 		if (c != 0) return c;
 		int i12 = o1.indexOf(32, i11+1);
 		int i22 = o2.indexOf(32, i21+1);
-		String l1 = o1.substring(i11+1, i12);
-		String l2 = o2.substring(i21+1, i22);
+		String l1 = unescape(o1.substring(i11+1, i12));
+		String l2 = unescape(o2.substring(i21+1, i22));
 		c = l1.compareTo(l2);
 		if (c != 0) return c;
-		String v1 = unescapeString(o1.substring(i12+1));
-		String v2 = unescapeString(o2.substring(i22+1));
+		String v1 = unescape(o1.substring(i12+1));
+		String v2 = unescape(o2.substring(i22+1));
 		return v1.compareTo(v2);
 	}
 
@@ -56,20 +56,20 @@ public class SerStatementComparator implements Comparator<String> {
 		String[] parts = string.split("\\t");
 		Resource context = null;
 		if (!parts[0].isEmpty()) {
-			context = new URIImpl(parts[0]);
+			context = new URIImpl(unescape(parts[0]));
 		}
-		Resource subj = new URIImpl(parts[1]);
-		URI pred = new URIImpl(parts[2]);
+		Resource subj = new URIImpl(unescape(parts[1]));
+		URI pred = new URIImpl(unescape(parts[2]));
 		Value obj = null;
 		if (!parts[3].isEmpty()) {
-			obj = new URIImpl(parts[3]);
+			obj = new URIImpl(unescape(parts[3]));
 		} else {
 			String o = parts[4];
 			int i1 = o.indexOf(32);
 			int i2 = o.indexOf(32, i1+1);
-			String d = o.substring(0, i1);
-			String l = o.substring(i1+1, i2);
-			String v = unescapeString(o.substring(i2+1));
+			String d = unescape(o.substring(0, i1));
+			String l = unescape(o.substring(i1+1, i2));
+			String v = unescape(o.substring(i2+1));
 			if (!d.isEmpty()) {
 				obj = new LiteralImpl(v, new URIImpl(d));
 			} else if (!l.isEmpty()) {
@@ -93,16 +93,16 @@ public class SerStatementComparator implements Comparator<String> {
 		} else if (context == null) {
 			sb.append("\t");
 		} else {
-			sb.append(context.stringValue() + "\t");
+			sb.append(escape(context.stringValue()) + "\t");
 		}
 		Resource subj = st.getSubject();
 		if (subj instanceof BNode) {
 			throw new RuntimeException("Unexpected blank node");
 		} else {
-			sb.append(subj.stringValue() + "\t");
+			sb.append(escape(subj.stringValue()) + "\t");
 		}
 		URI pred = st.getPredicate();
-		sb.append(pred.stringValue() + "\t");
+		sb.append(escape(pred.stringValue()) + "\t");
 		Value obj = st.getObject();
 		if (obj instanceof BNode) {
 			throw new RuntimeException("Unexpected blank node");
@@ -112,25 +112,25 @@ public class SerStatementComparator implements Comparator<String> {
 			if (objl.getDatatype() == null) {
 				sb.append(" ");
 			} else {
-				sb.append(objl.getDatatype().stringValue() + " ");
+				sb.append(escape(objl.getDatatype().stringValue()) + " ");
 			}
 			if (objl.getLanguage() == null) {
 				sb.append(" ");
 			} else {
-				sb.append(objl.getLanguage() + " ");
+				sb.append(escape(objl.getLanguage()) + " ");
 			}
-			sb.append(escapeString(obj.stringValue()));
+			sb.append(escape(obj.stringValue()));
 		} else {
-			sb.append(obj.stringValue());
+			sb.append(escape(obj.stringValue()));
 		}
 		return sb.toString();
 	}
 
-	private static final String escapeString(String s) {
+	private static final String escape(String s) {
 		return s.replaceAll("\\\\", "\\\\\\\\").replaceAll("\\n", "\\\\n").replaceAll("\\t", "\\\\t");
 	}
 
-	private static final String unescapeString(String s) {
+	private static final String unescape(String s) {
 		return s.replaceAll("\\\\t", "\t").replaceAll("\\\\n", "\n").replaceAll("\\\\\\\\", "\\");
 	}
 
