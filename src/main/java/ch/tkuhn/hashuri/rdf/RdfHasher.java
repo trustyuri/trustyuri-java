@@ -75,7 +75,7 @@ public class RdfHasher {
 	}
 
 	private static final String escapeString(String s) {
-		return s.replaceAll("\\\\", "\\\\\\\\").replaceAll("\\\n", "\\\\n");
+		return s.replaceAll("\\\\", "\\\\\\\\").replaceAll("\\n", "\\\\n");
 	}
 
 }
