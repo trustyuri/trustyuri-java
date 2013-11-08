@@ -31,8 +31,10 @@ public class SerStatementComparator implements Comparator<String> {
 		if (c != 0) return c;
 		c = parts1[3].compareTo(parts2[3]);
 		if (c != 0) return c;
-		String o1 = parts1[4];
-		String o2 = parts1[4];
+		String o1 = "  ";
+		if (parts1.length > 4) o1 = parts1[4];
+		String o2 = "  ";
+		if (parts2.length > 4) o2 = parts2[4];
 		int i11 = o1.indexOf(32);
 		int i21 = o2.indexOf(32);
 		String d1 = o1.substring(0, i11);
