@@ -47,6 +47,9 @@ public class RdfUtils {
 			return null;
 		} else if (resource instanceof URI) {
 			URI plainURI = (URI) resource;
+			if (plainURI.toString().matches(".*(\\n|\\t).*")) {
+				throw new RuntimeException("Newline or tab character in URI: " + plainURI.toString());
+			}
 			String suffix = getSuffix(plainURI, baseURI);
 			if (suffix == null && !plainURI.equals(baseURI)) {
 				return plainURI;
@@ -73,8 +76,12 @@ public class RdfUtils {
 	}
 
 	public static String normalize(URI uri, String hash) {
-		if (hash == null) return uri.toString();
-		return uri.toString().replaceAll(hash, " ");
+		String s = uri.toString();
+		if (s.matches(".*(\\n|\\t).*")) {
+			throw new RuntimeException("Newline or tab character in URI: " + s);
+		}
+		if (hash == null) return s;
+		return s.replaceAll(hash, " ");
 	}
 
 	public static int getBlankNodeNumber(BNode blankNode, Map<String,Integer> blankNodeMap) {

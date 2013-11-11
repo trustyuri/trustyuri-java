@@ -94,8 +94,10 @@ public class TransformLargeRdf2 {
 		sortTempDir.mkdir();
 		Comparator<String> cmp = new SerStatementComparator();
 		Charset cs = Charset.defaultCharset();
+		System.gc();
 		List<File> tempFiles = ExternalSort.sortInBatch(sortInFile, cmp, 1024, cs, sortTempDir, false);
 		ExternalSort.mergeSortedFiles(tempFiles, sortOutFile, cmp, cs);
+		sortInFile.delete();
 		sortTempDir.delete();
 
 		BufferedReader br = new BufferedReader(new FileReader(sortOutFile));
@@ -105,7 +107,6 @@ public class TransformLargeRdf2 {
 			RdfHasher.digest(st, md);
 		}
 		br.close();
-		sortInFile.delete();
 
 		String hash = RdfHasher.getHash(md);
 		String hashFileName = fileName;
