@@ -20,7 +20,6 @@ public class RdfFileContent implements RDFHandler {
 	
 	static Map<Value,Value> rdfEntityMap = new HashMap<>();
 
-	private RdfFilter filter = null;
 	private RDFFormat originalFormat = null;
 	private List<Pair<String,String>> namespaces;
 	private List<Statement> statements;
@@ -29,11 +28,6 @@ public class RdfFileContent implements RDFHandler {
 		this.originalFormat = originalFormat;
 	}
 
-	public RdfFileContent(RDFFormat originalFormat, RdfFilter filter) {
-		this.originalFormat = originalFormat;
-		this.filter = filter;
-	}
-	
 	@Override
 	public void startRDF() throws RDFHandlerException {
 		namespaces = new ArrayList<>();
@@ -76,9 +70,6 @@ public class RdfFileContent implements RDFHandler {
 				rdfEntityMap.put(context, context);
 			}
 			st = new ContextStatementImpl(subj, pred, obj, context);
-		}
-		if (filter != null && !filter.matches(context, subj, pred, obj)) {
-			return;
 		}
 
 		statements.add(st);

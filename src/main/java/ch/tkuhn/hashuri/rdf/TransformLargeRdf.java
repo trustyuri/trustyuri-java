@@ -1,17 +1,17 @@
 package ch.tkuhn.hashuri.rdf;
 
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 
-import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.rio.RDFFormat;
@@ -23,9 +23,9 @@ import org.openrdf.rio.helpers.RDFHandlerBase;
 
 import ch.tkuhn.hashuri.HashUriResource;
 
-public class TransformLargeRdf {
+import com.google.code.externalsorting.ExternalSort;
 
-	private static final int DEFAULT_TRIPLES_PER_PART = 10000000;
+public class TransformLargeRdf {
 
 	public static void main(String[] args) throws Exception {
 		File inputFile = new File(args[0]);
@@ -35,34 +35,20 @@ public class TransformLargeRdf {
 		} else {
 			baseName = inputFile.getName().replaceFirst("[.][^.]+$", "");
 		}
-		int triplesPerPart;
-		if (args.length > 2) {
-			triplesPerPart = new Integer(args[2]);
-		} else {
-			triplesPerPart = DEFAULT_TRIPLES_PER_PART;
-		}
-		TransformLargeRdf t = new TransformLargeRdf(inputFile, baseName, triplesPerPart);
+		TransformLargeRdf t = new TransformLargeRdf(inputFile, baseName);
 		t.transform();
 	}
 
-	private int triplesPerPart;
 	private File inputFile;
 	private String inputDir;
 	private String baseName;
-	private RdfFilter filter;
 	private MessageDigest md;
 	private URI baseUri;
 	private String fileName, ext;
-	private int step = 0;
-	private Map<String,Integer> blankNodeMap;
 
-	private ResourceComparator rcomp = new ResourceComparator();
-	private StatementComparator stcomp = new StatementComparator();
-
-	public TransformLargeRdf(File inputFile, String baseName, int triplesPerPart) {
+	public TransformLargeRdf(File inputFile, String baseName) {
 		this.inputFile = inputFile;
 		this.baseName = baseName;
-		this.triplesPerPart = triplesPerPart;
 	}
 
 	public URI transform() throws Exception {
@@ -82,38 +68,46 @@ public class TransformLargeRdf {
 			ext = "." + format.getFileExtensions().get(0);
 		}
 
-		blankNodeMap = new HashMap<>();
-		RdfSummary summary = RdfUtils.loadSummary(new HashUriResource(inputFile), baseUri, blankNodeMap);
-		List<Resource> contexts = summary.getContextList();
-		for (int cc = 0; cc < contexts.size(); cc++) {
-			URI uri = RdfPreprocessor.transformResource(contexts.get(cc), baseUri, blankNodeMap);
-			contexts.set(cc, uri);
-		}
-		Collections.sort(contexts, rcomp);
-		int i = 0;
-		blankNodeMap = new HashMap<>();
-		filter = new RdfFilter(baseUri, blankNodeMap);
-		for (Resource c : contexts) {
-			filter.addContext(c);
-			List<Resource> subjects = summary.getSubjectList(c);
-			for (int sc = 0; sc < subjects.size(); sc++) {
-				URI uri = RdfPreprocessor.transformResource(subjects.get(sc), baseUri, blankNodeMap);
-				subjects.set(sc, uri);
-			}
-			Collections.sort(subjects, rcomp);
-			for (Resource s : subjects) {
-				filter.addSubject(c, s);
-				i += summary.getCount(c, s);
-				if (i > triplesPerPart) {
-					transformPart();
-					step++;
-					i = 0;
-					blankNodeMap = new HashMap<>();
-					filter = new RdfFilter(baseUri, blankNodeMap);
+		InputStream in = r.getInputStream();
+		RDFParser p = Rio.createParser(format);
+		File sortInFile = new File(inputDir, fileName + ".temp.sort-in");
+		final FileOutputStream preOut = new FileOutputStream(sortInFile);
+		p.setRDFHandler(new RdfPreprocessor(new RDFHandlerBase() {
+			
+			@Override
+			public void handleStatement(Statement st) throws RDFHandlerException {
+				String s = SerStatementComparator.toString(st) + "\n";
+				try {
+					preOut.write(s.getBytes());
+				} catch (IOException ex) {
+					ex.printStackTrace();
 				}
 			}
+
+		}, baseUri));
+		p.parse(in, "");
+		in.close();
+		preOut.close();
+
+		File sortOutFile = new File(inputDir, fileName + ".temp.sort-out");
+		File sortTempDir = new File(inputDir, fileName + ".temp");
+		sortTempDir.mkdir();
+		Comparator<String> cmp = new SerStatementComparator();
+		Charset cs = Charset.defaultCharset();
+		System.gc();
+		List<File> tempFiles = ExternalSort.sortInBatch(sortInFile, cmp, 1024, cs, sortTempDir, false);
+		ExternalSort.mergeSortedFiles(tempFiles, sortOutFile, cmp, cs);
+		sortInFile.delete();
+		sortTempDir.delete();
+
+		BufferedReader br = new BufferedReader(new FileReader(sortOutFile));
+		String line;
+		while ((line = br.readLine()) != null) {
+			Statement st = SerStatementComparator.fromString(line);
+			RdfHasher.digest(st, md);
 		}
-		transformPart();
+		br.close();
+
 		String hash = RdfHasher.getHash(md);
 		String hashFileName = fileName;
 		if (hashFileName.length() == 0) {
@@ -126,42 +120,16 @@ public class TransformLargeRdf {
 		final HashAdder replacer = new HashAdder(baseUri, hash, writer, null);
 
 		replacer.startRDF();
-		int lastStep = step;
-		for (step = 0; step <= lastStep; step++) {
-			String f = fileName + ".temp" + step + ".nq";
-			File tempFile = new File(inputDir, f);
-			InputStream in = new FileInputStream(tempFile);
-			RDFParser p = Rio.createParser(RDFFormat.NQUADS);
-			p.setRDFHandler(new RDFHandlerBase() {
-
-				@Override
-				public void handleStatement(Statement st) throws RDFHandlerException {
-					replacer.handleStatement(st);
-				}
-
-			});
-			p.parse(in, "");
-			in.close();
-			tempFile.delete();
+		br = new BufferedReader(new FileReader(sortOutFile));
+		while ((line = br.readLine()) != null) {
+			Statement st = SerStatementComparator.fromString(line);
+			replacer.handleStatement(st);
 		}
+		br.close();
 		replacer.endRDF();
+		sortOutFile.delete();
 
 		return RdfUtils.getHashURI(baseUri, baseUri, hash, null);
-	}
-
-	private void transformPart() throws Exception {
-		RdfFileContent content = RdfUtils.load(new HashUriResource(inputFile), filter);
-		content = RdfPreprocessor.run(content, baseUri, blankNodeMap);
-		List<Statement> statements = content.getStatements();
-		Collections.sort(statements, stcomp);
-		for (Statement st : statements) {
-			RdfHasher.digest(st, md);
-		}
-		String f = fileName + ".temp" + step + ".nq";
-		OutputStream out = new FileOutputStream(new File(inputDir, f));
-		RDFWriter writer = Rio.createWriter(RDFFormat.NQUADS, out);
-		content.propagate(writer);
-		out.close();
 	}
 
 }

@@ -21,20 +21,6 @@ public class RdfPreprocessor implements RDFHandler {
 	private String hash;
 	private Map<String,Integer> blankNodeMap;
 
-	public static RdfFileContent run(RdfFileContent content, URI baseUri,
-			Map<String,Integer> blankNodeMap) throws RDFHandlerException {
-		RdfFileContent p = new RdfFileContent(content.getOriginalFormat());
-		content.propagate(new RdfPreprocessor(p, baseUri, blankNodeMap));
-		return p;
-	}
-
-	public static RdfFileContent run(RdfFileContent content, String hash,
-			Map<String,Integer> blankNodeMap) throws RDFHandlerException {
-		RdfFileContent p = new RdfFileContent(content.getOriginalFormat());
-		content.propagate(new RdfPreprocessor(p, hash, blankNodeMap));
-		return p;
-	}
-
 	public static RdfFileContent run(RdfFileContent content, URI baseUri) throws RDFHandlerException {
 		RdfFileContent p = new RdfFileContent(content.getOriginalFormat());
 		content.propagate(new RdfPreprocessor(p, baseUri));
@@ -119,7 +105,7 @@ public class RdfPreprocessor implements RDFHandler {
 		nestedHandler.handleComment(comment);
 	}
 
-	public static Statement preprocess(Statement st, URI baseUri, String hash, Map<String,Integer> blankNodeMap) {
+	private static Statement preprocess(Statement st, URI baseUri, String hash, Map<String,Integer> blankNodeMap) {
 		Resource context = null;
 		if (st.getContext() != null) {
 			context = transform(st.getContext(), baseUri, hash, blankNodeMap);
@@ -133,16 +119,9 @@ public class RdfPreprocessor implements RDFHandler {
 		return new ContextStatementImpl(subject, predicate, object, context);
 	}
 
-	public static URI transform(Resource r, URI baseUri, String hash, Map<String,Integer> blankNodeMap) {
+	private static URI transform(Resource r, URI baseUri, String hash, Map<String,Integer> blankNodeMap) {
 		if (baseUri == null) {
 			return new URIImpl(RdfUtils.normalize((URI) r, hash));
-		}
-		return RdfUtils.getHashURI(r, baseUri, " ", blankNodeMap);
-	}
-
-	public static URI transformResource(Resource r, URI baseUri, Map<String,Integer> blankNodeMap) {
-		if (r instanceof URI && ((URI) r).toString().indexOf(" ") > -1) {
-			return (URI) r;
 		}
 		return RdfUtils.getHashURI(r, baseUri, " ", blankNodeMap);
 	}

@@ -111,36 +111,8 @@ public class RdfUtils {
 		return content;
 	}
 
-	public static RdfFileContent load(InputStream in, RDFFormat format, RdfFilter filter) throws Exception {
-		RDFParser p = Rio.createParser(format);
-		RdfFileContent content = new RdfFileContent(format, filter);
-		p.setRDFHandler(content);
-		p.parse(in, "");
-		in.close();
-		return content;
-	}
-
-	public static RdfSummary loadSummary(InputStream in, RDFFormat format, URI baseUri,
-			Map<String,Integer> blankNodeMap) throws Exception {
-		RDFParser p = Rio.createParser(format);
-		RdfSummary summary = new RdfSummary(format, baseUri, blankNodeMap);
-		p.setRDFHandler(summary);
-		p.parse(in, "");
-		in.close();
-		return summary;
-	}
-
 	public static RdfFileContent load(HashUriResource r) throws Exception {
 		return load(r.getInputStream(), r.getFormat(RDFFormat.TURTLE));
-	}
-
-	public static RdfFileContent load(HashUriResource r, RdfFilter filter) throws Exception {
-		return load(r.getInputStream(), r.getFormat(RDFFormat.TURTLE), filter);
-	}
-
-	public static RdfSummary loadSummary(HashUriResource r, URI baseUri,
-			Map<String,Integer> blankNodeMap) throws Exception {
-		return loadSummary(r.getInputStream(), r.getFormat(RDFFormat.TURTLE), baseUri, blankNodeMap);
 	}
 
 	public static void writeNanopub(Nanopub nanopub, OutputStream out, RDFFormat format)

@@ -45,7 +45,7 @@ public class TransformLargeRdfTest {
 	public void test(String preName, String baseUri, String name) throws Exception {
 		File preFile = new File(testDir.getRoot(), preName);
 		FileUtils.copyFile(new File("src/main/resources/examples/" + preName), preFile);
-		TransformLargeRdf.main(new String[] {preFile.getAbsolutePath(), baseUri, "1"});
+		TransformLargeRdf.main(new String[] {preFile.getAbsolutePath(), baseUri});
 		File file = new File(testDir.getRoot(), name);
 		assert file.exists();
 		CheckFile.main(new String[] {file.getAbsolutePath()});
