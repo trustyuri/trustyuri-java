@@ -127,11 +127,11 @@ public class SerStatementComparator implements Comparator<String> {
 	}
 
 	private static String escape(String s) {
-		return s.replaceAll("\\\\", "\\\\\\\\").replaceAll("\\n", "\\\\n").replaceAll("\\t", "\\\\t");
+		return s.replaceAll("\\\\", "\\\\\\\\").replaceAll("\\n", "\\\\n").replaceAll("\\r", "\\\\r").replaceAll("\\t", "\\\\t");
 	}
 
 	private static String unescape(String s) {
-		return s.replaceAll("\\\\t", "\t").replaceAll("\\\\n", "\n").replaceAll("\\\\\\\\", "\\");
+		return s.replaceAll("\\\\t", "\t").replaceAll("\\\\r", "\r").replaceAll("\\\\n", "\n").replaceAll("\\\\\\\\", "\\");
 	}
 
 }
