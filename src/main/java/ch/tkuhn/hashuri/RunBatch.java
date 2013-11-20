@@ -16,8 +16,6 @@ public class RunBatch {
 
 		BufferedReader reader = new BufferedReader(new FileReader(batchFile));
 		String line;
-		System.gc();
-		Thread.sleep(1000);
 
 		while ((line = reader.readLine()) != null) {
 			line = line.trim();
