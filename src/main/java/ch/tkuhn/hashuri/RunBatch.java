@@ -25,21 +25,25 @@ public class RunBatch {
 			String[] cmdArgs = line.substring(line.indexOf(' ')+1).split("\\s+");
 			System.gc();
 			long ms = System.nanoTime();
-			if (cmd.equals("CheckFile")) {
-				CheckFile.main(cmdArgs);
-			} else if (cmd.equals("ProcessFile")) {
-				ProcessFile.main(cmdArgs);
-			} else if (cmd.equals("TransformRdf")) {
-				TransformRdf.main(cmdArgs);
-			} else if (cmd.equals("TransformLargeRdf")) {
-				TransformLargeRdf.main(cmdArgs);
-			} else if (cmd.equals("TransformNanopub")) {
-				TransformNanopub.main(cmdArgs);
-			} else if (cmd.equals("CheckNanopubViaSparql")) {
-				CheckNanopubViaSparql.main(cmdArgs);
-			} else {
-				System.err.println("ERROR: Unrecognized command " + cmd);
-				System.exit(1);
+			try {
+				if (cmd.equals("CheckFile")) {
+					CheckFile.main(cmdArgs);
+				} else if (cmd.equals("ProcessFile")) {
+					ProcessFile.main(cmdArgs);
+				} else if (cmd.equals("TransformRdf")) {
+					TransformRdf.main(cmdArgs);
+				} else if (cmd.equals("TransformLargeRdf")) {
+					TransformLargeRdf.main(cmdArgs);
+				} else if (cmd.equals("TransformNanopub")) {
+					TransformNanopub.main(cmdArgs);
+				} else if (cmd.equals("CheckNanopubViaSparql")) {
+					CheckNanopubViaSparql.main(cmdArgs);
+				} else {
+					System.err.println("ERROR: Unrecognized command " + cmd);
+					System.exit(1);
+				}
+			} catch (Exception ex) {
+				ex.printStackTrace();
 			}
 			long t = System.nanoTime() - ms;
 			System.out.println("Time in seconds: " + t/1000000000.0);
