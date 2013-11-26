@@ -23,7 +23,6 @@ public class RunBatch {
 			System.err.println("COMMAND: " + line);
 			String cmd = line.replaceFirst("^([^ ]+) .*$", "$1");
 			String[] cmdArgs = line.substring(line.indexOf(' ')+1).split("\\s+");
-			System.gc();
 			long ms = System.nanoTime();
 			try {
 				if (cmd.equals("CheckFile")) {
