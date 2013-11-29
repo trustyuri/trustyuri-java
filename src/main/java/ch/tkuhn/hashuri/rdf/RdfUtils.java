@@ -16,6 +16,7 @@ import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.RDFParser;
 import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.Rio;
+import org.openrdf.rio.helpers.RDFaParserSettings;
 
 import ch.tkuhn.hashuri.HashUriResource;
 
@@ -104,6 +105,7 @@ public class RdfUtils {
 
 	public static RdfFileContent load(InputStream in, RDFFormat format) throws Exception {
 		RDFParser p = Rio.createParser(format);
+		p.getParserConfig().set(RDFaParserSettings.FAIL_ON_RDFA_UNDEFINED_PREFIXES, true);
 		RdfFileContent content = new RdfFileContent(format);
 		p.setRDFHandler(content);
 		p.parse(in, "");

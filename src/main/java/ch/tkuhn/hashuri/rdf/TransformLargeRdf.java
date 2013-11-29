@@ -20,6 +20,7 @@ import org.openrdf.rio.RDFParser;
 import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.Rio;
 import org.openrdf.rio.helpers.RDFHandlerBase;
+import org.openrdf.rio.helpers.RDFaParserSettings;
 
 import ch.tkuhn.hashuri.HashUriResource;
 
@@ -70,6 +71,7 @@ public class TransformLargeRdf {
 
 		InputStream in = r.getInputStream();
 		RDFParser p = Rio.createParser(format);
+		p.getParserConfig().set(RDFaParserSettings.FAIL_ON_RDFA_UNDEFINED_PREFIXES, true);
 		File sortInFile = new File(inputDir, fileName + ".temp.sort-in");
 		final FileOutputStream preOut = new FileOutputStream(sortInFile);
 		p.setRDFHandler(new RdfPreprocessor(new RDFHandlerBase() {

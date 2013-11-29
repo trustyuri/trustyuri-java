@@ -19,11 +19,11 @@ public class RunBatch {
 
 		while ((line = reader.readLine()) != null) {
 			line = line.trim();
-			if (line.charAt(0) == '#') continue;
-			System.err.println("COMMAND: " + line);
+			if (line.isEmpty() || line.charAt(0) == '#') continue;
+			System.out.println("COMMAND: " + line);
 			String cmd = line.replaceFirst("^([^ ]+) .*$", "$1");
 			String[] cmdArgs = line.substring(line.indexOf(' ')+1).split("\\s+");
-			long ms = System.nanoTime();
+			long ns = System.nanoTime();
 			try {
 				if (cmd.equals("CheckFile")) {
 					CheckFile.main(cmdArgs);
@@ -44,7 +44,7 @@ public class RunBatch {
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
-			long t = System.nanoTime() - ms;
+			long t = System.nanoTime() - ns;
 			System.out.println("Time in seconds: " + t/1000000000.0);
 			System.out.println("---");
 		}
