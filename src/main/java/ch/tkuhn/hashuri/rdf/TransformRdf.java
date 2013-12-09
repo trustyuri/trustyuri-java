@@ -114,7 +114,7 @@ public class TransformRdf {
 	private static void addToNamespaceMap(Value v, URI baseURI, String hash, Map<String,String> ns) {
 		if (!(v instanceof URI)) return;
 		String nanopubURI = RdfUtils.getHashURIString(baseURI, hash);
-		String s = v.toString().replaceAll(" ", hash);
+		String s = v.toString().replace(" ", hash);
 		if (!s.startsWith(nanopubURI)) return;
 		String suffix = s.substring(nanopubURI.length());
 		if (suffix.matches("\\.\\..*")) {

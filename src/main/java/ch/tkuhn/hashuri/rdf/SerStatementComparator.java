@@ -126,12 +126,12 @@ public class SerStatementComparator implements Comparator<String> {
 		return sb.toString();
 	}
 
-	private static String escape(String s) {
-		return s.replaceAll("\\\\", "\\\\\\\\").replaceAll("\\n", "\\\\n").replaceAll("\\r", "\\\\r").replaceAll("\\t", "\\\\t");
+	public static String escape(String s) {
+		return s.replace("\\", "\\\\").replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t");
 	}
 
-	private static String unescape(String s) {
-		return s.replaceAll("\\\\t", "\t").replaceAll("\\\\r", "\r").replaceAll("\\\\n", "\n").replaceAll("\\\\\\\\", "\\");
+	public static String unescape(String s) {
+		return s.replace("\\t", "\t").replace("\\r", "\r").replace("\\n", "\n").replace("\\\\", "\\");
 	}
 
 }

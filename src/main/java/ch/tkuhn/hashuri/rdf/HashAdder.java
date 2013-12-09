@@ -75,7 +75,7 @@ public class HashAdder implements RDFHandler {
 		} else if (r instanceof BNode) {
 			throw new RuntimeException("Unexpected blank node encountered");
 		} else {
-			return new URIImpl(r.toString().replaceAll(" ", hash));
+			return new URIImpl(r.toString().replace(" ", hash));
 		}
 	}
 

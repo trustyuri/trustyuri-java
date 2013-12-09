@@ -82,7 +82,7 @@ public class RdfUtils {
 			throw new RuntimeException("Newline or tab character in URI: " + s);
 		}
 		if (hash == null) return s;
-		return s.replaceAll(hash, " ");
+		return s.replace(hash, " ");
 	}
 
 	public static int getBlankNodeNumber(BNode blankNode, Map<String,Integer> blankNodeMap) {
