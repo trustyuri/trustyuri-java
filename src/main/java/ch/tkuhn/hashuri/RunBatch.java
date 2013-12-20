@@ -41,7 +41,7 @@ public class RunBatch {
 					System.err.println("ERROR: Unrecognized command " + cmd);
 					System.exit(1);
 				}
-			} catch (Exception ex) {
+			} catch (Throwable ex) {
 				ex.printStackTrace();
 			}
 			long t = System.nanoTime() - ns;
