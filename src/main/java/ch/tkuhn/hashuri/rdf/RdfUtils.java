@@ -78,7 +78,7 @@ public class RdfUtils {
 
 	public static String normalize(URI uri, String hash) {
 		String s = uri.toString();
-		if (s.indexOf('\n') < 0 || s.indexOf('\t') < 0) {
+		if (s.indexOf('\n') > -1 || s.indexOf('\t') > -1) {
 			throw new RuntimeException("Newline or tab character in URI: " + s);
 		}
 		if (hash == null) return s;
