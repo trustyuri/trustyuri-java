@@ -10,6 +10,7 @@ import java.nio.file.Files;
 
 import ch.tkuhn.hashuri.file.ProcessFile;
 import ch.tkuhn.hashuri.rdf.CheckNanopubViaSparql;
+import ch.tkuhn.hashuri.rdf.CheckSortedRdf;
 import ch.tkuhn.hashuri.rdf.TransformLargeRdf;
 import ch.tkuhn.hashuri.rdf.TransformNanopub;
 import ch.tkuhn.hashuri.rdf.TransformRdf;
@@ -53,6 +54,8 @@ public class RunBatch {
 					TransformRdf.main(cmdArgs);
 				} else if (cmd.equals("TransformLargeRdf")) {
 					TransformLargeRdf.main(cmdArgs);
+				} else if (cmd.equals("CheckSortedRdf")) {
+					CheckSortedRdf.main(cmdArgs);
 				} else if (cmd.equals("TransformNanopub")) {
 					TransformNanopub.main(cmdArgs);
 				} else if (cmd.equals("CheckNanopubViaSparql")) {
