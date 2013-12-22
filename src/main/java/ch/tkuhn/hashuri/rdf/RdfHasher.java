@@ -54,9 +54,7 @@ public class RdfHasher {
 	}
 
 	private static String valueToString(Value v) {
-		if (v instanceof BNode) {
-			throw new RuntimeException("Unexpected blank node encountered");
-		} else if (v instanceof URI) {
+		if (v instanceof URI) {
 			return ((URI) v).toString() + "\n";
 		} else if (v instanceof Literal) {
 			Literal l = (Literal) v;
@@ -67,6 +65,8 @@ public class RdfHasher {
 			} else {
 				return "#" + escapeString(l.stringValue()) + "\n";
 			}
+		} else if (v instanceof BNode) {
+			throw new RuntimeException("Unexpected blank node encountered");
 		} else if (v == null) {
 			return "\n";
 		} else {

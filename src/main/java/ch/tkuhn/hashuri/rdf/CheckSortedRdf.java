@@ -1,7 +1,8 @@
 package ch.tkuhn.hashuri.rdf;
 
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.security.MessageDigest;
 
 import org.openrdf.model.Statement;
@@ -51,7 +52,6 @@ public class CheckSortedRdf {
 		}
 		RDFFormat format = r.getFormat(RDFFormat.TURTLE);
 
-		InputStream in = r.getInputStream();
 		RDFParser p = Rio.createParser(format);
 		previous = null;
 		p.getParserConfig().set(RDFaParserSettings.FAIL_ON_RDFA_UNDEFINED_PREFIXES, true);
@@ -67,8 +67,9 @@ public class CheckSortedRdf {
 			}
 
 		}, r.getHash()));
-		p.parse(in, "");
-		in.close();
+		BufferedReader reader = new BufferedReader(new InputStreamReader(r.getInputStream()), 64*1024);
+		p.parse(reader, "");
+		reader.close();
 
 		String hash = RdfHasher.getHash(md);
 		return hash.equals(r.getHash());

@@ -5,7 +5,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
@@ -69,7 +69,6 @@ public class TransformLargeRdf {
 			ext = "." + format.getFileExtensions().get(0);
 		}
 
-		InputStream in = r.getInputStream();
 		RDFParser p = Rio.createParser(format);
 		p.getParserConfig().set(RDFaParserSettings.FAIL_ON_RDFA_UNDEFINED_PREFIXES, true);
 		File sortInFile = new File(inputDir, fileName + ".temp.sort-in");
@@ -87,8 +86,9 @@ public class TransformLargeRdf {
 			}
 
 		}, baseUri));
-		p.parse(in, "");
-		in.close();
+		BufferedReader reader = new BufferedReader(new InputStreamReader(r.getInputStream()), 64*1024);
+		p.parse(reader, "");
+		reader.close();
 		preOut.close();
 
 		File sortOutFile = new File(inputDir, fileName + ".temp.sort-out");
