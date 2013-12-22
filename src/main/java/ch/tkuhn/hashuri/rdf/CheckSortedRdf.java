@@ -68,8 +68,11 @@ public class CheckSortedRdf {
 
 		}, r.getHash()));
 		BufferedReader reader = new BufferedReader(new InputStreamReader(r.getInputStream()), 64*1024);
-		p.parse(reader, "");
-		reader.close();
+		try {
+			p.parse(reader, "");
+		} finally {
+			reader.close();
+		}
 
 		String hash = RdfHasher.getHash(md);
 		return hash.equals(r.getHash());

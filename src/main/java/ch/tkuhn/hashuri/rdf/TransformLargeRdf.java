@@ -87,9 +87,12 @@ public class TransformLargeRdf {
 
 		}, baseUri));
 		BufferedReader reader = new BufferedReader(new InputStreamReader(r.getInputStream()), 64*1024);
-		p.parse(reader, "");
-		reader.close();
-		preOut.close();
+		try {
+			p.parse(reader, "");
+		} finally {
+			reader.close();
+			preOut.close();
+		}
 
 		File sortOutFile = new File(inputDir, fileName + ".temp.sort-out");
 		File sortTempDir = new File(inputDir, fileName + ".temp");
