@@ -9,21 +9,21 @@
 @prefix ex: <http://example.com/> .
 
 this: {
-	this: a np:Nanopublication ;
-		np:hasAssertion sub:Ass ;
+	this: np:hasAssertion sub:Ass ;
 		np:hasProvenance sub:Prov ;
-		np:hasPublicationInfo sub:Info .
+		np:hasPublicationInfo sub:Info ;
+		a np:Nanopublication .
 }
 
 sub:Ass {
 	ex:mosquito ex:transmits ex:malaria .
 }
 
-sub:Prov {
-	this: swan:citesAsSupportiveEvidence <http://dx.doi.org/10.3233/ISU-2010-0613> .
+sub:Info {
+	this: dc:created "2013-02-25T14:33:21+01:00"^^xsd:dateTime ;
+		pav:authoredBy <http://orcid.org/0000-0002-1267-0234> .
 }
 
-sub:Info {
-	this: pav:authoredBy <http://orcid.org/0000-0002-1267-0234> ;
-		dc:created "2013-02-25T14:33:21+01:00"^^xsd:dateTime .
+sub:Prov {
+	this: swan:citesAsSupportiveEvidence <http://dx.doi.org/10.3233/ISU-2010-0613> .
 }

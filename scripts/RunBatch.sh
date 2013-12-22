@@ -4,7 +4,6 @@
 # - RUN_VIA: If set to "MAVEN", uses Maven to run Java (sometimes faster)
 # - JAVA_OPTS: Can be used to set Java command line options
 # - AUTO_RESUME: If set to "ON", resumes after OutOfMemoryErrors
-#
 
 CLASS=ch.tkuhn.hashuri.RunBatch
 

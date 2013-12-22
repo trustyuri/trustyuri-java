@@ -4,8 +4,7 @@
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix pav: <http://swan.mindinformatics.org/ontologies/1.2/pav/> .
 
-<http://purl.org/hashuri/examples/turtle2.RAiYxMrJ7r0zUPEp3IvA07bcyE3v-I26uzw6GWpFtD36o> dc:title "Turtle example 2" .
+<http://purl.org/hashuri/examples/turtle2.RAiYxMrJ7r0zUPEp3IvA07bcyE3v-I26uzw6GWpFtD36o> dc:title "Turtle example 2" ;
+	pav:authoredBy blank:1 .
 
 blank:1 foaf:name "Tobias Kuhn" .
-
-<http://purl.org/hashuri/examples/turtle2.RAiYxMrJ7r0zUPEp3IvA07bcyE3v-I26uzw6GWpFtD36o> pav:authoredBy blank:1 .

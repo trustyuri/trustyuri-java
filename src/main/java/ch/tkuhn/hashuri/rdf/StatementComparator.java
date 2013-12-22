@@ -20,7 +20,7 @@ public class StatementComparator implements Comparator<Statement> {
 	}
 
 
-	private static int compareStatement(Statement st1, Statement st2) {
+	public static int compareStatement(Statement st1, Statement st2) {
 		int c;
 		c = compareContext(st1, st2);
 		if (c != 0) return c;
