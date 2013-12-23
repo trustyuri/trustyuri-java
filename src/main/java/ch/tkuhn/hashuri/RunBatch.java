@@ -8,15 +8,8 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 
-import ch.tkuhn.hashuri.file.ProcessFile;
-import ch.tkuhn.hashuri.rdf.CheckNanopubViaSparql;
-import ch.tkuhn.hashuri.rdf.CheckSortedRdf;
-import ch.tkuhn.hashuri.rdf.TransformLargeRdf;
-import ch.tkuhn.hashuri.rdf.TransformNanopub;
-import ch.tkuhn.hashuri.rdf.TransformRdf;
-
 public class RunBatch {
-	
+
 	public static void main(String[] args) throws Exception {
 		String batchFile = args[0];
 
@@ -42,28 +35,10 @@ public class RunBatch {
 			if (startFrom > lineNumber) continue;
 			writeFile(runningFile, lineNumber + "");
 			System.out.println("COMMAND: " + line);
-			String cmd = line.replaceFirst("^([^ ]+) .*$", "$1");
-			String[] cmdArgs = line.substring(line.indexOf(' ')+1).split("\\s+");
+			String[] cmd = line.split("\\s+");
 			long ns = System.nanoTime();
 			try {
-				if (cmd.equals("CheckFile")) {
-					CheckFile.main(cmdArgs);
-				} else if (cmd.equals("ProcessFile")) {
-					ProcessFile.main(cmdArgs);
-				} else if (cmd.equals("TransformRdf")) {
-					TransformRdf.main(cmdArgs);
-				} else if (cmd.equals("TransformLargeRdf")) {
-					TransformLargeRdf.main(cmdArgs);
-				} else if (cmd.equals("CheckSortedRdf")) {
-					CheckSortedRdf.main(cmdArgs);
-				} else if (cmd.equals("TransformNanopub")) {
-					TransformNanopub.main(cmdArgs);
-				} else if (cmd.equals("CheckNanopubViaSparql")) {
-					CheckNanopubViaSparql.main(cmdArgs);
-				} else {
-					System.err.println("ERROR: Unrecognized command " + cmd);
-					System.exit(1);
-				}
+				Run.run(cmd);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			} catch (OutOfMemoryError err) {
