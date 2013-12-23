@@ -27,6 +27,9 @@ To generate a single jar file that includes all dependencies:
 
     $ mvn compile assembly:single
 
+(**Problem: this does not work, because Maven gives many "already added, skipping" messages
+and then the required Sesame parser factories are not found...**)
+
 You may want to give the resulting jar file a shorter name:
 
     $ mv target/hashuri-1.0-SNAPSHOT-jar-with-dependencies.jar hashuri.jar
