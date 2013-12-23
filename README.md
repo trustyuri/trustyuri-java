@@ -23,17 +23,6 @@ To build this package, simply run the script `build.sh` (requires Maven):
 
     $ scripts/build.sh
 
-To generate a single jar file that includes all dependencies:
-
-    $ mvn compile assembly:single
-
-(**Problem: this does not work, because Maven gives many "already added, skipping" messages
-and then the required Sesame parser factories are not found...**)
-
-You may want to give the resulting jar file a shorter name:
-
-    $ mv target/hashuri-1.0-SNAPSHOT-jar-with-dependencies.jar hashuri.jar
-
 
 Run
 ---
@@ -54,7 +43,22 @@ For nanopublications you can use the following command:
 
     $ scripts/TransformNanopub.sh [FILE]
 
-If you have generated a single jar file (see above), you can run these commands also like this:
+
+Run with Single JAR File
+------------------------
+
+*This should work in theory, but in practice it doesn't. Maven gives many "already added, skipping"
+messages and then when running the commands the required Sesame parser factories are not found...*
+
+To generate a single jar file that includes all dependencies:
+
+    $ mvn compile assembly:single
+
+You may want to give the resulting jar file a shorter name:
+
+    $ mv target/hashuri-1.0-SNAPSHOT-jar-with-dependencies.jar hashuri.jar
+
+Then the commands can be run like this:
 
     $ java -jar hashuri.jar CheckFile [FILE]
 
