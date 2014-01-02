@@ -3,6 +3,7 @@ package ch.tkuhn.hashuri;
 import java.util.Arrays;
 
 import ch.tkuhn.hashuri.file.ProcessFile;
+import ch.tkuhn.hashuri.rdf.CheckLargeRdf;
 import ch.tkuhn.hashuri.rdf.CheckNanopubViaSparql;
 import ch.tkuhn.hashuri.rdf.CheckSortedRdf;
 import ch.tkuhn.hashuri.rdf.TransformLargeRdf;
@@ -22,6 +23,8 @@ public class Run {
 			CheckFile.main(cmdArgs);
 		} else if (cmd.equals("ProcessFile")) {
 			ProcessFile.main(cmdArgs);
+		} else if (cmd.equals("CheckLargeRdf")) {
+			CheckLargeRdf.main(cmdArgs);
 		} else if (cmd.equals("TransformRdf")) {
 			TransformRdf.main(cmdArgs);
 		} else if (cmd.equals("TransformLargeRdf")) {
