@@ -1,5 +1,7 @@
 package ch.tkuhn.hashuri.rdf;
 
+import java.io.File;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -25,7 +27,10 @@ public class CheckSortedRdfTest {
 	}
 
 	public void test(String filename) throws Exception {
-		CheckSortedRdf.main(new String[] {"src/main/resources/examples/" + filename});
+		File file = new File("src/main/resources/examples/" + filename);
+		CheckSortedRdf c = new CheckSortedRdf(file);
+		boolean valid = c.check();
+		assert valid;
 	}
 
 }

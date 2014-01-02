@@ -6,9 +6,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import ch.tkuhn.hashuri.CheckFile;
-
-public class CheckRdfTest {
+public class CheckLargeRdfTest {
 
 	@Rule
 	public TemporaryFolder testDir = new TemporaryFolder();
@@ -30,7 +28,7 @@ public class CheckRdfTest {
 
 	public void test(String filename) throws Exception {
 		File file = new File("src/main/resources/examples/" + filename);
-		CheckFile c = new CheckFile(file);
+		CheckLargeRdf c = new CheckLargeRdf(file);
 		boolean valid = c.check();
 		assert valid;
 	}
