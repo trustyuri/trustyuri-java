@@ -22,6 +22,8 @@ while true; do
 
   else
 
+    cd $HASHURIJAVADIR
+
     if [ ! -f target/hashuri-*.jar ]; then
       echo "hashuri-*.jar not found: Run scripts/build.sh first."
       exit 1
