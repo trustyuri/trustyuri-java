@@ -18,7 +18,7 @@ import org.openrdf.rio.RDFHandlerException;
 
 public class RdfFileContent implements RDFHandler {
 	
-	static Map<Value,Value> rdfEntityMap = new HashMap<>();
+	private Map<Value,Value> rdfEntityMap = new HashMap<>();
 
 	private RDFFormat originalFormat = null;
 	private List<Pair<String,String>> namespaces;
