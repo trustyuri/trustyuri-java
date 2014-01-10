@@ -29,6 +29,10 @@ public class SerStatementComparator implements Comparator<String> {
 		if (c != 0) return c;
 		c = parts1[2].compareTo(parts2[2]);
 		if (c != 0) return c;
+		boolean objuri1 = !parts1[3].isEmpty();
+		boolean objuri2 = !parts2[3].isEmpty();
+		if (objuri1 && !objuri2) return -1;
+		if (!objuri1 && objuri2) return 1;
 		c = parts1[3].compareTo(parts2[3]);
 		if (c != 0) return c;
 		String o1 = "  ";
