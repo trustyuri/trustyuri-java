@@ -7,7 +7,8 @@ not been accidentally or deliberately modified. This is an examle of a hash-URI:
 
 > http://example.org/np1.RAcbjcRIQozo2wBMq4WcCYkFAjRz0AX-Ux3PquZZrC68s
 
-See the hash-URI specification (work in progress): https://github.com/tkuhn/hashuri-spec
+See the [hash-URI specification](https://github.com/tkuhn/hashuri-spec) and the
+[preprint article](http://arxiv.org/abs/1401.5775) describing the approach.
 
 
 Examples
