@@ -20,7 +20,14 @@ See the [examples](src/main/resources/examples).
 Build
 -----
 
-To build this package, simply run the script `build.sh` (requires Maven):
+Assuming that you have Maven installed, you can build this package as follows. First compile
+and install nanopub-java (this package is not yet in a Maven repository):
+
+    $ git clone git@github.com:Nanopublication/nanopub-java.git
+    $ cd nanopub-java
+    $ mvn install
+
+Then you can run the script `build.sh` of this package:
 
     $ scripts/build.sh
 
