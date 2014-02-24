@@ -1,12 +1,9 @@
 trustyuri-java
 ==============
 
-This code generates and checks _trusty URIs_, which contain cryptographic hash
-values that can be used to verify the respective content. This is an examle of
-a trusty URI:
-
-> http://example.org/r1.RAcbjcRIQozo2wBMq4WcCYkFAjRz0AX-Ux3PquZZrC68s
-
+This is a Java library to generate and check _trusty URIs_ (previously called
+_hash-URIs_). Trusty URIs contain cryptographic hash values that can be used to
+verify the respective content.
 See the [trusty URI specification](https://github.com/trustyuri/trustyuri-spec)
 and the [preprint article](http://arxiv.org/abs/1401.5775) describing the
 approach.
@@ -75,4 +72,4 @@ Then the commands can be run like this:
 License
 -------
 
-hashuri-java is free software under the MIT License. See LICENSE.txt.
+trustyuri-java is free software under the MIT License. See LICENSE.txt.
