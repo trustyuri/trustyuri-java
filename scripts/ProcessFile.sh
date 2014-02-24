@@ -4,23 +4,23 @@
 # - RUN_VIA: If set to "MAVEN", uses Maven to run Java (sometimes faster)
 # - JAVA_OPTS: Can be used to set Java command line options
 
-CLASS=ch.tkuhn.hashuri.file.ProcessFile
+CLASS=net.trustyuri.file.ProcessFile
 
 DIR=`pwd`
 cd "$( dirname "${BASH_SOURCE[0]}" )"
 cd ..
-HASHURIJAVADIR=`pwd`
+TRUSTYURIJAVADIR=`pwd`
 
 if [ "$RUN_VIA" = "MAVEN" ]; then
 
   cd $DIR
 
-  mvn -q -e -f $HASHURIJAVADIR/pom.xml exec:java -Dexec.mainClass="$CLASS" -Dexec.args="$*"
+  mvn -q -e -f $TRUSTYURIJAVADIR/pom.xml exec:java -Dexec.mainClass="$CLASS" -Dexec.args="$*"
 
 else
 
-  if [ ! -f target/hashuri-*.jar ]; then
-    echo "hashuri-*.jar not found: Run scripts/build.sh first."
+  if [ ! -f target/trustyuri-*.jar ]; then
+    echo "trustyuri-*.jar not found: Run scripts/build.sh first."
     exit 1
   fi
 
@@ -29,7 +29,7 @@ else
     exit 1
   fi
 
-  CP=$(cat classpath.txt):$HASHURIJAVADIR/$(ls target/hashuri-*.jar)
+  CP=$(cat classpath.txt):$TRUSTYURIJAVADIR/$(ls target/trustyuri-*.jar)
 
   cd $DIR
 

@@ -62,11 +62,11 @@ To generate a single jar file that includes all dependencies:
 
 You may want to give the resulting jar file a shorter name:
 
-    $ mv target/hashuri-1.0-SNAPSHOT-jar-with-dependencies.jar hashuri.jar
+    $ mv target/trustyuri-1.0-SNAPSHOT-jar-with-dependencies.jar hashuri.jar
 
 Then the commands can be run like this:
 
-    $ java -jar hashuri.jar CheckFile [FILE]
+    $ java -jar trustyuri.jar CheckFile [FILE]
 
 
 License
