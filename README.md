@@ -1,14 +1,15 @@
-hashuri-java
-============
+trustyuri-java
+==============
 
-This code generates and checks URIs that represent content such as plain bytes or RDF data, and
-contain a cryptographic hash value. This hash can be used to check that the respective content has
-not been accidentally or deliberately modified. This is an examle of a hash-URI:
+This code generates and checks _trusty URIs_, which contain cryptographic hash
+values that can be used to verify the respective content. This is an examle of
+a trusty URI:
 
-> http://example.org/np1.RAcbjcRIQozo2wBMq4WcCYkFAjRz0AX-Ux3PquZZrC68s
+> http://example.org/r1.RAcbjcRIQozo2wBMq4WcCYkFAjRz0AX-Ux3PquZZrC68s
 
-See the [hash-URI specification](https://github.com/tkuhn/hashuri-spec) and the
-[preprint article](http://arxiv.org/abs/1401.5775) describing the approach.
+See the [trusty URI specification](https://github.com/trustyuri/trustyuri-spec)
+and the [preprint article](http://arxiv.org/abs/1401.5775) describing the
+approach.
 
 
 Examples
@@ -35,7 +36,7 @@ Then you can run the script `build.sh` of this package:
 Run
 ---
 
-Run the following command to check a file or URL with a hash-URI:
+Run the following command to check a file or URL with a trusty URI:
 
     $ scripts/CheckFile.sh [FILE-OR-URL]
 
@@ -55,8 +56,8 @@ For nanopublications you can use the following command:
 Run with Single JAR File
 ------------------------
 
-*This should work in theory, but in practice it doesn't. Maven gives many "already added, skipping"
-messages and then when running the commands the required Sesame parser factories are not found...*
+**This should work in theory, but in practice it doesn't. Maven gives many "already added, skipping"
+messages and then when running the commands the required Sesame parser factories are not found...**
 
 To generate a single jar file that includes all dependencies:
 
