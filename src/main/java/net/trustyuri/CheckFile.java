@@ -36,10 +36,9 @@ public class CheckFile {
 	}
 
 	public boolean check() throws Exception {
-		String algorithmID = r.getHash().substring(0, 2);
-		TrustyUriModule module = ModuleDirectory.getModule(algorithmID);
+		TrustyUriModule module = ModuleDirectory.getModule(r.getModuleId());
 		if (module == null) {
-			throw new RuntimeException("ERROR: Not a trusty URI or unknown algorithm");
+			throw new RuntimeException("ERROR: Not a trusty URI or unknown module");
 		}
 		return module.hasCorrectHash(r);
 	}

@@ -21,7 +21,6 @@ import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.RDFWriterRegistry;
 import org.openrdf.rio.Rio;
 
-
 public class TransformRdf {
 
 	static {

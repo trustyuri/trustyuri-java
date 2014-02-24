@@ -85,6 +85,10 @@ public class TrustyUriResource {
 		return hash;
 	}
 
+	public String getModuleId() {
+		return hash.substring(0, 2);
+	}
+
 	public RDFFormat getFormat(RDFFormat defaultFormat) {
 		RDFFormat format = RDFFormat.forMIMEType(getMimetype());
 		if (format == null) {

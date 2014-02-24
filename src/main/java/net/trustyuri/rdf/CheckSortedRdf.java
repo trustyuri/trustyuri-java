@@ -42,12 +42,12 @@ public class CheckSortedRdf {
 		md = RdfHasher.getDigest();
 		r = new TrustyUriResource(file);
 		if (r.getHash() == null) {
-			System.out.println("ERROR: Not a trusty URI or unknown algorithm");
+			System.out.println("ERROR: Not a trusty URI or unknown module");
 			System.exit(1);
 		}
-		String algorithmID = r.getHash().substring(0, 2);
-		if (!algorithmID.equals(RdfModule.MODULE_ID)) {
-			System.out.println("ERROR: Unsupported algorithm: " + algorithmID +
+		String moduleId = r.getModuleId();
+		if (!moduleId.equals(RdfModule.MODULE_ID)) {
+			System.out.println("ERROR: Unsupported module: " + moduleId +
 					" (this function only supports " + RdfModule.MODULE_ID + ")");
 			System.exit(1);
 		}

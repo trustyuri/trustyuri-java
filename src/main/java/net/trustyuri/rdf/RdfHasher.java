@@ -13,7 +13,6 @@ import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 
-
 public class RdfHasher {
 
 	private static final boolean DEBUG = false;

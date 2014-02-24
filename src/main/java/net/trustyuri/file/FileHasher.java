@@ -7,7 +7,6 @@ import java.security.NoSuchAlgorithmException;
 
 import net.trustyuri.TrustyUriUtils;
 
-
 public class FileHasher {
 
 	public FileHasher() {

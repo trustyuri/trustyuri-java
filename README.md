@@ -37,7 +37,7 @@ Run the following command to check a file or URL with a trusty URI:
 
     $ scripts/CheckFile.sh [FILE-OR-URL]
 
-The following command adds a hash to a local file using algorithm `FA`:
+The following command adds a hash to a local file using module `FA`:
 
     $ scripts/ProcessFile.sh [FILE]
 
