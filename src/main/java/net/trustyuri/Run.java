@@ -10,7 +10,6 @@ import net.trustyuri.rdf.TransformLargeRdf;
 import net.trustyuri.rdf.TransformNanopub;
 import net.trustyuri.rdf.TransformRdf;
 
-
 public class Run {
 
 	public static void main(String[] args) throws Exception {

@@ -17,12 +17,12 @@ public class TrustyUriUtils {
 	}
 
 	public static boolean isPotentialTrustyUri(URI uri) {
-		String d = getTrustyUriTail(uri.toString());
-		if (d == null) return false;
-		String id = d.substring(0, 2);
+		String t = getTrustyUriTail(uri.toString());
+		if (t == null) return false;
+		String id = t.substring(0, 2);
 		TrustyUriModule module = ModuleDirectory.getModule(id);
 		if (module == null) return false;
-		int l = d.substring(2).length();
+		int l = t.substring(2).length();
 		return l == module.getHashLength();
 	}
 
@@ -31,10 +31,10 @@ public class TrustyUriUtils {
 	}
 
 	public static String getNiUri(String s, boolean withAuthority) {
-		String d = getTrustyUriTail(s);
-		if (d == null) return null;
-		String moduleId = d.substring(0, 2);
-		String hash = d.substring(2);
+		String t = getTrustyUriTail(s);
+		if (t == null) return null;
+		String moduleId = t.substring(0, 2);
+		String hash = t.substring(2);
 		TrustyUriModule module = ModuleDirectory.getModule(moduleId);
 		String tail = "/" + module.getAlgorithmId() + ";" + hash + "?module=" + moduleId;
 		if (withAuthority) {

@@ -23,8 +23,8 @@ public class TrustyUriResource {
 
 	public TrustyUriResource(String mimetype, File file) throws FileNotFoundException {
 		String n = file.toString();
-		String h = TrustyUriUtils.getTrustyUriTail(n);
-		init(n, mimetype, new FileInputStream(file), h);
+		String t = TrustyUriUtils.getTrustyUriTail(n);
+		init(n, mimetype, new FileInputStream(file), t);
 	}
 
 	public TrustyUriResource(File file, String hash) throws FileNotFoundException {
@@ -34,8 +34,8 @@ public class TrustyUriResource {
 
 	public TrustyUriResource(File file) throws FileNotFoundException {
 		String n = file.toString();
-		String h = TrustyUriUtils.getTrustyUriTail(n);
-		init(n, TrustyUriUtils.getMimetype(n), new FileInputStream(file), h);
+		String t = TrustyUriUtils.getTrustyUriTail(n);
+		init(n, TrustyUriUtils.getMimetype(n), new FileInputStream(file), t);
 	}
 
 	public TrustyUriResource(String mimetype, URL url, String hash) throws IOException {
@@ -46,8 +46,8 @@ public class TrustyUriResource {
 	public TrustyUriResource(String mimetype, URL url) throws IOException {
 		String n = url.toString();
 		URLConnection conn = url.openConnection();
-		String h = TrustyUriUtils.getTrustyUriTail(n);
-		init(n, mimetype, conn.getInputStream(), h);
+		String t = TrustyUriUtils.getTrustyUriTail(n);
+		init(n, mimetype, conn.getInputStream(), t);
 	}
 
 	public TrustyUriResource(URL url, String hash) throws IOException {
@@ -58,8 +58,8 @@ public class TrustyUriResource {
 	public TrustyUriResource(URL url) throws IOException {
 		String n = url.toString();
 		URLConnection conn = url.openConnection();
-		String h = TrustyUriUtils.getTrustyUriTail(n);
-		init(n, conn.getContentType(), conn.getInputStream(), h);
+		String t = TrustyUriUtils.getTrustyUriTail(n);
+		init(n, conn.getContentType(), conn.getInputStream(), t);
 	}
 
 	private void init(String filename, String mimetype, InputStream in, String hash) {
