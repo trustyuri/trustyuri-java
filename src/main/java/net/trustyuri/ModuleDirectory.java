@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.trustyuri.file.FileModule;
+import net.trustyuri.rdf.RdfGraphModule;
 import net.trustyuri.rdf.RdfModule;
 
 
@@ -14,8 +15,9 @@ public class ModuleDirectory {
 	private static Map<String,TrustyUriModule> modules = new HashMap<>();
 
 	static {
-		addModule(new RdfModule());
 		addModule(new FileModule());
+		addModule(new RdfModule());
+		addModule(new RdfGraphModule());
 	}
 
 	public static TrustyUriModule getModule(String moduleId) {

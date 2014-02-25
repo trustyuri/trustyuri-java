@@ -23,6 +23,8 @@ import org.openrdf.rio.Rio;
 
 public class TransformRdf {
 
+	// TODO Use RB module by default if trusty URI represents a single RDF graph
+
 	static {
 		RDFWriterRegistry.getInstance().add(new CustomTrigWriterFactory());
 	}
@@ -97,7 +99,7 @@ public class TransformRdf {
 		return baseURI;
 	}
 
-	private static Map<String,String> makeNamespaceMap(List<Statement> statements, URI baseURI, String hash) {
+	static Map<String,String> makeNamespaceMap(List<Statement> statements, URI baseURI, String hash) {
 		Map<String,String> ns = new HashMap<>();
 		if (baseURI == null) return ns;
 		String u = RdfUtils.getTrustyUriString(baseURI, hash);
@@ -111,16 +113,16 @@ public class TransformRdf {
 		return ns;
 	}
 
-	private static void addToNamespaceMap(Value v, URI baseURI, String hash, Map<String,String> ns) {
+	static void addToNamespaceMap(Value v, URI baseURI, String hash, Map<String,String> ns) {
 		if (!(v instanceof URI)) return;
-		String nanopubURI = RdfUtils.getTrustyUriString(baseURI, hash);
+		String uri = RdfUtils.getTrustyUriString(baseURI, hash);
 		String s = v.toString().replace(" ", hash);
-		if (!s.startsWith(nanopubURI)) return;
-		String suffix = s.substring(nanopubURI.length());
+		if (!s.startsWith(uri)) return;
+		String suffix = s.substring(uri.length());
 		if (suffix.matches("\\.\\..*")) {
-			ns.put("blank", nanopubURI + "..");
+			ns.put("blank", uri + "..");
 		} else if (suffix.matches("[^A-Za-z0-9\\-_].*")) {
-			ns.put("sub", nanopubURI + suffix.charAt(0));
+			ns.put("sub", uri + suffix.charAt(0));
 		}
 	}
 
