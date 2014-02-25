@@ -43,11 +43,17 @@ public class RdfPreprocessor implements RDFHandler {
 
 	private static List<Statement> run(List<Statement> statements, URI baseUri, String hash) {
 		List<Statement> r = new ArrayList<>();
-		Map<String,Integer> blankNodeMap = new HashMap<>();
+		RdfPreprocessor obj = new RdfPreprocessor(baseUri, hash);
 		for (Statement st : statements) {
-			r.add(preprocess(st, baseUri, hash, blankNodeMap));
+			r.add(obj.preprocess(st));
 		}
 		return r;
+	}
+
+	private RdfPreprocessor(URI baseUri, String hash) {
+		this.baseUri = baseUri;
+		this.hash = hash;
+		this.blankNodeMap = new HashMap<>();
 	}
 
 	public RdfPreprocessor(RDFHandler nestedHandler, URI baseUri) {
@@ -96,8 +102,7 @@ public class RdfPreprocessor implements RDFHandler {
 
 	@Override
 	public void handleStatement(Statement st) throws RDFHandlerException {
-		Statement n = preprocess(st, baseUri, hash, blankNodeMap);
-		nestedHandler.handleStatement(n);
+		nestedHandler.handleStatement(preprocess(st));
 	}
 
 	@Override
@@ -105,21 +110,21 @@ public class RdfPreprocessor implements RDFHandler {
 		nestedHandler.handleComment(comment);
 	}
 
-	private static Statement preprocess(Statement st, URI baseUri, String hash, Map<String,Integer> blankNodeMap) {
+	private Statement preprocess(Statement st) {
 		Resource context = null;
 		if (st.getContext() != null) {
-			context = transform(st.getContext(), baseUri, hash, blankNodeMap);
+			context = transform(st.getContext());
 		}
-		Resource subject = transform(st.getSubject(), baseUri, hash, blankNodeMap);
-		URI predicate = transform(st.getPredicate(), baseUri, hash, blankNodeMap);
+		Resource subject = transform(st.getSubject());
+		URI predicate = transform(st.getPredicate());
 		Value object = st.getObject();
 		if (object instanceof Resource) {
-			object = transform((Resource) object, baseUri, hash, blankNodeMap);
+			object = transform((Resource) object);
 		}
 		return new ContextStatementImpl(subject, predicate, object, context);
 	}
 
-	private static URI transform(Resource r, URI baseUri, String hash, Map<String,Integer> blankNodeMap) {
+	private URI transform(Resource r) {
 		if (baseUri == null) {
 			return new URIImpl(RdfUtils.normalize((URI) r, hash));
 		}
