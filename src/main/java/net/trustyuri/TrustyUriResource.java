@@ -86,7 +86,7 @@ public class TrustyUriResource {
 	}
 
 	public String getModuleId() {
-		return hash.substring(0, 2);
+		return TrustyUriUtils.getModuleId(hash);
 	}
 
 	public RDFFormat getFormat(RDFFormat defaultFormat) {
