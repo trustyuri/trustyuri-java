@@ -43,7 +43,11 @@ public class RdfUtils {
 		return getTrustyUriString(baseUri, hash, null);
 	}
 
-	public static URI getTrustyUri(Resource resource, URI baseUri, String hash, Map<String,Integer> blankNodeMap) {
+	public static URI getTrustyUri(URI baseUri, String hash) {
+		return new URIImpl(getTrustyUriString(baseUri, hash, null));
+	}
+
+	public static URI getUri(Resource resource, URI baseUri, String hash, Map<String,Integer> blankNodeMap) {
 		if (resource == null) {
 			return null;
 		} else if (resource instanceof URI) {

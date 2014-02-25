@@ -130,7 +130,7 @@ public class RdfPreprocessor implements RDFHandler {
 		if (baseUri == null) {
 			return new URIImpl(RdfUtils.normalize((URI) r, hash));
 		}
-		return RdfUtils.getTrustyUri(r, baseUri, " ", blankNodeMap);
+		return RdfUtils.getUri(r, baseUri, " ", blankNodeMap);
 	}
 
 }

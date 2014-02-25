@@ -66,7 +66,7 @@ public class TransformRdf {
 		Map<String,String> ns = makeNamespaceMap(content.getStatements(), baseURI, hash);
 		content.propagate(new HashAdder(baseURI, hash, writer, ns));
 		out.close();
-		return RdfUtils.getTrustyUri(baseURI, baseURI, hash, null);
+		return RdfUtils.getTrustyUri(baseURI, hash);
 	}
 
 	public static URI transform(RdfFileContent content, RDFHandler handler, String baseName) throws Exception {
@@ -75,7 +75,7 @@ public class TransformRdf {
 		String hash = RdfHasher.makeHash(content.getStatements());
 		Map<String,String> ns = makeNamespaceMap(content.getStatements(), baseURI, hash);
 		content.propagate(new HashAdder(baseURI, hash, handler, ns));
-		return RdfUtils.getTrustyUri(baseURI, baseURI, hash, null);
+		return RdfUtils.getTrustyUri(baseURI, hash);
 	}
 
 	public static URI transform(InputStream in, RDFFormat format, OutputStream out, String baseName) throws Exception {
@@ -88,7 +88,7 @@ public class TransformRdf {
 		HashAdder replacer = new HashAdder(baseURI, hash, writer, ns);
 		content.propagate(replacer);
 		out.close();
-		return RdfUtils.getTrustyUri(baseURI, baseURI, hash, null);
+		return RdfUtils.getTrustyUri(baseURI, hash);
 	}
 
 	static URI getBaseURI(String baseName) {

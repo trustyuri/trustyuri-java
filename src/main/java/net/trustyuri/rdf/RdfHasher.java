@@ -47,7 +47,7 @@ public class RdfHasher {
 	}
 
 	public static String makeGraphHash(List<Statement> statements, URI baseUri) throws Exception {
-		URI graphUri = RdfUtils.getTrustyUri(baseUri, baseUri, " ", null);
+		URI graphUri = RdfUtils.getTrustyUri(baseUri, " ");
 		List<Statement> graph = new ArrayList<Statement>();
 		for (Statement st : statements) {
 			Resource c = st.getContext();

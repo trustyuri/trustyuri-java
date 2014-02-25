@@ -135,7 +135,7 @@ public class TransformLargeRdf {
 		replacer.endRDF();
 		sortOutFile.delete();
 
-		return RdfUtils.getTrustyUri(baseUri, baseUri, hash, null);
+		return RdfUtils.getTrustyUri(baseUri, hash);
 	}
 
 }
