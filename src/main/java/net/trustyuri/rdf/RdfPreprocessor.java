@@ -16,6 +16,8 @@ import org.openrdf.rio.RDFHandlerException;
 
 public class RdfPreprocessor implements RDFHandler {
 
+	// TODO check that already hashed graphs are not changed
+
 	private RDFHandler nestedHandler;
 	private URI baseUri;
 	private String hash;

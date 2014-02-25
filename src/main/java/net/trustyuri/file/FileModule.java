@@ -1,9 +1,9 @@
 package net.trustyuri.file;
 
-import net.trustyuri.TrustyUriModule;
+import net.trustyuri.AbstractTrustyUriModule;
 import net.trustyuri.TrustyUriResource;
 
-public class FileModule implements TrustyUriModule {
+public class FileModule extends AbstractTrustyUriModule {
 
 	public static final String MODULE_ID = "FA";
 

@@ -1,9 +1,9 @@
 package net.trustyuri.rdf;
 
-import net.trustyuri.TrustyUriModule;
+import net.trustyuri.AbstractTrustyUriModule;
 import net.trustyuri.TrustyUriResource;
 
-public class RdfModule implements TrustyUriModule {
+public class RdfModule extends AbstractTrustyUriModule {
 
 	public static final String MODULE_ID = "RA";
 

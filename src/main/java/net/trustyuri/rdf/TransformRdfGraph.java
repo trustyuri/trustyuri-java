@@ -17,7 +17,6 @@ import org.openrdf.rio.Rio;
 
 public class TransformRdfGraph {
 
-	// TODO check that already hashed graphs are not changed
 	// TODO only transform blank nodes that appear within the given graph
 
 	static {
