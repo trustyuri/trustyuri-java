@@ -17,6 +17,7 @@ import org.openrdf.model.Value;
 
 public class RdfHasher {
 
+	// TODO Make this a command line argument:
 	private static final boolean DEBUG = false;
 
 	private RdfHasher() {}  // no instances allowed

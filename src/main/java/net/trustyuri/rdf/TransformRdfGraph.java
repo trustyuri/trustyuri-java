@@ -33,7 +33,7 @@ public class TransformRdfGraph {
 			baseUris[i] = new URIImpl(args[i+1]);
 		}
 		RdfFileContent content = RdfUtils.load(new TrustyUriResource(inputFile));
-		String outputFilePath = inputFile.getPath().replaceFirst("[.][^.]+$", "") + "x";
+		String outputFilePath = inputFile.getPath().replaceFirst("[.][^.]+$", "") + ".t";
 		RDFFormat format = content.getOriginalFormat();
 		if (!format.getFileExtensions().isEmpty()) {
 			outputFilePath += "." + format.getFileExtensions().get(0);
