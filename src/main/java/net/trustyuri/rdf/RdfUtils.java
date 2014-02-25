@@ -43,28 +43,43 @@ public class RdfUtils {
 		return getTrustyUriString(baseUri, hash, null);
 	}
 
+	public static URI getTrustyUri(URI baseUri, String hash, String suffix) {
+		return new URIImpl(getTrustyUriString(baseUri, hash, suffix));
+	}
+
 	public static URI getTrustyUri(URI baseUri, String hash) {
 		return new URIImpl(getTrustyUriString(baseUri, hash, null));
 	}
 
-	public static URI getUri(Resource resource, URI baseUri, String hash, Map<String,Integer> blankNodeMap) {
+	public static URI getPreUri(Resource resource, URI baseUri, Map<String,Integer> bnodeMap, boolean frozen) {
 		if (resource == null) {
-			return null;
+			throw new RuntimeException("Resource is null");
 		} else if (resource instanceof URI) {
 			URI plainUri = (URI) resource;
 			if (plainUri.toString().matches(".*(\\n|\\t).*")) {
 				throw new RuntimeException("Newline or tab character in URI: " + plainUri.toString());
 			}
+			// TODO Add option to disable suffixes appended to trusty URIs
 			String suffix = getSuffix(plainUri, baseUri);
 			if (suffix == null && !plainUri.equals(baseUri)) {
 				return plainUri;
+			} else if (frozen) {
+				return null;
+			} else {
+				return getTrustyUri(baseUri, " ", suffix);
 			}
-			return new URIImpl(getTrustyUriString(baseUri, hash, suffix));
 		} else {
-			BNode blankNode = (BNode) resource;
-			int n = getBlankNodeNumber(blankNode, blankNodeMap);
-			return new URIImpl(expandBaseUri(baseUri) + hash + ".." + n);
+			if (frozen) {
+				return null;
+			} else {
+				return getSkolemizedUri((BNode) resource, baseUri, bnodeMap);
+			}
 		}
+	}
+
+	private static URI getSkolemizedUri(BNode bnode, URI baseUri, Map<String,Integer> bnodeMap) {
+		int n = getBlankNodeNumber(bnode, bnodeMap);
+		return new URIImpl(expandBaseUri(baseUri) + " .." + n);
 	}
 
 	private static String getSuffix(URI plainUri, URI baseUri) {
@@ -89,12 +104,12 @@ public class RdfUtils {
 		return s.replace(hash, " ");
 	}
 
-	public static int getBlankNodeNumber(BNode blankNode, Map<String,Integer> blankNodeMap) {
+	private static int getBlankNodeNumber(BNode blankNode, Map<String,Integer> bnodeMap) {
 		String id = blankNode.getID();
-		Integer n = blankNodeMap.get(id);
+		Integer n = bnodeMap.get(id);
 		if (n == null) {
-			n = blankNodeMap.size()+1;
-			blankNodeMap.put(id, n);
+			n = bnodeMap.size()+1;
+			bnodeMap.put(id, n);
 		}
 		return n;
 	}

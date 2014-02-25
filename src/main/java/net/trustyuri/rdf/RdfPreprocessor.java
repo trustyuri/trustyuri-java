@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.trustyuri.ModuleDirectory;
+import net.trustyuri.TrustyUriModule;
+
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
@@ -22,6 +25,7 @@ public class RdfPreprocessor implements RDFHandler {
 	private URI baseUri;
 	private String hash;
 	private Map<String,Integer> blankNodeMap;
+	private TrustyUriModule moduleRB;
 
 	public static RdfFileContent run(RdfFileContent content, URI baseUri) throws RDFHandlerException {
 		RdfFileContent p = new RdfFileContent(content.getOriginalFormat());
@@ -55,7 +59,7 @@ public class RdfPreprocessor implements RDFHandler {
 	private RdfPreprocessor(URI baseUri, String hash) {
 		this.baseUri = baseUri;
 		this.hash = hash;
-		this.blankNodeMap = new HashMap<>();
+		init();
 	}
 
 	public RdfPreprocessor(RDFHandler nestedHandler, URI baseUri) {
@@ -71,9 +75,7 @@ public class RdfPreprocessor implements RDFHandler {
 		this.baseUri = baseUri;
 		this.hash = null;
 		this.blankNodeMap = blankNodeMap;
-		if (blankNodeMap == null) {
-			this.blankNodeMap = new HashMap<>();
-		}
+		init();
 	}
 
 	public RdfPreprocessor(RDFHandler nestedHandler, String hash, Map<String,Integer> blankNodeMap) {
@@ -81,9 +83,14 @@ public class RdfPreprocessor implements RDFHandler {
 		this.baseUri = null;
 		this.hash = hash;
 		this.blankNodeMap = blankNodeMap;
+		init();
+	}
+
+	private void init() {
 		if (blankNodeMap == null) {
 			this.blankNodeMap = new HashMap<>();
 		}
+		moduleRB = ModuleDirectory.getModule(RdfGraphModule.MODULE_ID);
 	}
 
 	@Override
@@ -113,24 +120,34 @@ public class RdfPreprocessor implements RDFHandler {
 	}
 
 	private Statement preprocess(Statement st) {
-		Resource context = null;
-		if (st.getContext() != null) {
-			context = transform(st.getContext());
+		Resource context = st.getContext();
+		URI trustyGraph = null;
+		if (context != null) {
+			if (context instanceof URI && moduleRB.matches((URI) context)) {
+				trustyGraph = (URI) context;
+			}
+			context = transform(context, trustyGraph);
 		}
-		Resource subject = transform(st.getSubject());
-		URI predicate = transform(st.getPredicate());
+		Resource subject = transform(st.getSubject(), trustyGraph);
+		URI predicate = transform(st.getPredicate(), trustyGraph);
 		Value object = st.getObject();
 		if (object instanceof Resource) {
-			object = transform((Resource) object);
+			object = transform((Resource) object, trustyGraph);
 		}
 		return new ContextStatementImpl(subject, predicate, object, context);
 	}
 
-	private URI transform(Resource r) {
+	private URI transform(Resource r, URI trustyGraph) {
 		if (baseUri == null) {
 			return new URIImpl(RdfUtils.normalize((URI) r, hash));
 		}
-		return RdfUtils.getUri(r, baseUri, " ", blankNodeMap);
+		URI uri = RdfUtils.getPreUri(r, baseUri, blankNodeMap, trustyGraph != null);
+		if (uri == null) {
+			// TODO Allow for 'force' option; URI might only look like a trusty URI...
+			throw new RuntimeException("Transformation would break existing trusty URI graph: " +
+					trustyGraph);
+		}
+		return uri;
 	}
 
 }
