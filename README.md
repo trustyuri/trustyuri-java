@@ -49,24 +49,8 @@ For nanopublications you can use the following command:
 
     $ scripts/TransformNanopub.sh [FILE]
 
-
-Run with Single JAR File
-------------------------
-
-**This should work in theory, but in practice it doesn't. Maven gives many "already added, skipping"
-messages and then when running the commands the required Sesame parser factories are not found...**
-
-To generate a single jar file that includes all dependencies:
-
-    $ mvn compile assembly:single
-
-You may want to give the resulting jar file a shorter name:
-
-    $ mv target/trustyuri-1.0-SNAPSHOT-jar-with-dependencies.jar hashuri.jar
-
-Then the commands can be run like this:
-
-    $ java -jar trustyuri.jar CheckFile [FILE]
+Running from a single JAR file should be possible, but does not work at the moment,
+see [Issue 2](https://github.com/trustyuri/trustyuri-java/issues/2).
 
 
 License
