@@ -44,10 +44,12 @@ public class RdfUtils {
 	}
 
 	public static URI getTrustyUri(URI baseUri, String hash, String suffix) {
+		if (baseUri == null) return null;
 		return new URIImpl(getTrustyUriString(baseUri, hash, suffix));
 	}
 
 	public static URI getTrustyUri(URI baseUri, String hash) {
+		if (baseUri == null) return null;
 		return new URIImpl(getTrustyUriString(baseUri, hash, null));
 	}
 

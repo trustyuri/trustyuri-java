@@ -42,13 +42,13 @@ public class TransformRdf {
 	}
 
 	public static URI transform(RdfFileContent content, String outputDir, String baseName) throws Exception {
-		URI baseURI = getBaseURI(baseName);
+		URI baseUri = getBaseURI(baseName);
 		String name = baseName;
 		if (baseName.indexOf("/") > 0) {
 			name = baseName.replaceFirst("^.*[^A-Za-z0-9.\\-_]([A-Za-z0-9.\\-_]*)$", "$1");
 		}
 
-		content = RdfPreprocessor.run(content, baseURI);
+		content = RdfPreprocessor.run(content, baseUri);
 		String hash = RdfHasher.makeHash(content.getStatements());
 		RDFFormat format = content.getOriginalFormat();
 		String fileName = name;
@@ -63,37 +63,37 @@ public class TransformRdf {
 		}
 		OutputStream out = new FileOutputStream(new File(outputDir, fileName));
 		RDFWriter writer = Rio.createWriter(format, out);
-		Map<String,String> ns = makeNamespaceMap(content.getStatements(), baseURI, hash);
-		content.propagate(new HashAdder(baseURI, hash, writer, ns));
+		Map<String,String> ns = makeNamespaceMap(content.getStatements(), baseUri, hash);
+		content.propagate(new HashAdder(baseUri, hash, writer, ns));
 		out.close();
-		return RdfUtils.getTrustyUri(baseURI, hash);
+		return RdfUtils.getTrustyUri(baseUri, hash);
 	}
 
 	public static URI transform(RdfFileContent content, RDFHandler handler, String baseName) throws Exception {
-		URI baseURI = getBaseURI(baseName);
-		content = RdfPreprocessor.run(content, baseURI);
+		URI baseUri = getBaseURI(baseName);
+		content = RdfPreprocessor.run(content, baseUri);
 		String hash = RdfHasher.makeHash(content.getStatements());
-		Map<String,String> ns = makeNamespaceMap(content.getStatements(), baseURI, hash);
-		content.propagate(new HashAdder(baseURI, hash, handler, ns));
-		return RdfUtils.getTrustyUri(baseURI, hash);
+		Map<String,String> ns = makeNamespaceMap(content.getStatements(), baseUri, hash);
+		content.propagate(new HashAdder(baseUri, hash, handler, ns));
+		return RdfUtils.getTrustyUri(baseUri, hash);
 	}
 
 	public static URI transform(InputStream in, RDFFormat format, OutputStream out, String baseName) throws Exception {
-		URI baseURI = getBaseURI(baseName);
+		URI baseUri = getBaseURI(baseName);
 		RdfFileContent content = RdfUtils.load(in, format);
-		content = RdfPreprocessor.run(content, baseURI);
+		content = RdfPreprocessor.run(content, baseUri);
 		String hash = RdfHasher.makeHash(content.getStatements());
 		RDFWriter writer = Rio.createWriter(format, out);
-		Map<String,String> ns = makeNamespaceMap(content.getStatements(), baseURI, hash);
-		HashAdder replacer = new HashAdder(baseURI, hash, writer, ns);
+		Map<String,String> ns = makeNamespaceMap(content.getStatements(), baseUri, hash);
+		HashAdder replacer = new HashAdder(baseUri, hash, writer, ns);
 		content.propagate(replacer);
 		out.close();
-		return RdfUtils.getTrustyUri(baseURI, hash);
+		return RdfUtils.getTrustyUri(baseUri, hash);
 	}
 
 	static URI getBaseURI(String baseName) {
 		URI baseURI = null;
-		if (baseName.indexOf("/") > 0) {
+		if (baseName.indexOf("://") > 0) {
 			baseURI = new URIImpl(baseName);
 		}
 		return baseURI;
