@@ -1,9 +1,13 @@
 package net.trustyuri.rdf;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import net.trustyuri.TrustyUriResource;
 
@@ -28,9 +32,19 @@ public class TransformRdfGraph {
 			throw new Exception("Not enough arguments: <file> <graph-uri1> (<graph-uri2> ...)");
 		}
 		File inputFile = new File(args[0]);
-		URI[] baseUris = new URI[args.length-1];
-		for (int i = 0 ; i < baseUris.length ; i++) {
-			baseUris[i] = new URIImpl(args[i+1]);
+		List<URI> baseUris = new ArrayList<URI>();
+		for (int i = 1 ; i < args.length ; i++) {
+			String arg = args[i];
+			if (arg.contains("://")) {
+				baseUris.add(new URIImpl(arg));
+			} else {
+				BufferedReader reader = new BufferedReader(new FileReader(arg));
+				String line;
+				while ((line = reader.readLine()) != null) {
+				   baseUris.add(new URIImpl(line));
+				}
+				reader.close();
+			}
 		}
 		RdfFileContent content = RdfUtils.load(new TrustyUriResource(inputFile));
 		String outputFilePath = inputFile.getPath().replaceFirst("[.][^.]+$", "") + ".t";
@@ -38,7 +52,7 @@ public class TransformRdfGraph {
 		if (!format.getFileExtensions().isEmpty()) {
 			outputFilePath += "." + format.getFileExtensions().get(0);
 		}
-		transform(content, new File(outputFilePath), baseUris);
+		transform(content, new File(outputFilePath), baseUris.toArray(new URI[baseUris.size()]));
 	}
 
 	public static void transform(RdfFileContent content, File outputFile, URI... baseUris) throws Exception {
