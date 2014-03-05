@@ -49,7 +49,7 @@ public class TransformRdf {
 		}
 
 		content = RdfPreprocessor.run(content, baseUri);
-		String hash = RdfHasher.makeHash(content.getStatements());
+		String artifactCode = RdfHasher.makeArtifactCode(content.getStatements());
 		RDFFormat format = content.getOriginalFormat();
 		String fileName = name;
 		String ext = "";
@@ -57,38 +57,38 @@ public class TransformRdf {
 			ext = "." + format.getFileExtensions().get(0);
 		}
 		if (fileName.length() == 0) {
-			fileName = hash + ext;
+			fileName = artifactCode + ext;
 		} else {
-			fileName += "." + hash + ext;
+			fileName += "." + artifactCode + ext;
 		}
 		OutputStream out = new FileOutputStream(new File(outputDir, fileName));
 		RDFWriter writer = Rio.createWriter(format, out);
-		Map<String,String> ns = makeNamespaceMap(content.getStatements(), baseUri, hash);
-		content.propagate(new HashAdder(baseUri, hash, writer, ns));
+		Map<String,String> ns = makeNamespaceMap(content.getStatements(), baseUri, artifactCode);
+		content.propagate(new HashAdder(baseUri, artifactCode, writer, ns));
 		out.close();
-		return RdfUtils.getTrustyUri(baseUri, hash);
+		return RdfUtils.getTrustyUri(baseUri, artifactCode);
 	}
 
 	public static URI transform(RdfFileContent content, RDFHandler handler, String baseName) throws Exception {
 		URI baseUri = getBaseURI(baseName);
 		content = RdfPreprocessor.run(content, baseUri);
-		String hash = RdfHasher.makeHash(content.getStatements());
-		Map<String,String> ns = makeNamespaceMap(content.getStatements(), baseUri, hash);
-		content.propagate(new HashAdder(baseUri, hash, handler, ns));
-		return RdfUtils.getTrustyUri(baseUri, hash);
+		String artifactCode = RdfHasher.makeArtifactCode(content.getStatements());
+		Map<String,String> ns = makeNamespaceMap(content.getStatements(), baseUri, artifactCode);
+		content.propagate(new HashAdder(baseUri, artifactCode, handler, ns));
+		return RdfUtils.getTrustyUri(baseUri, artifactCode);
 	}
 
 	public static URI transform(InputStream in, RDFFormat format, OutputStream out, String baseName) throws Exception {
 		URI baseUri = getBaseURI(baseName);
 		RdfFileContent content = RdfUtils.load(in, format);
 		content = RdfPreprocessor.run(content, baseUri);
-		String hash = RdfHasher.makeHash(content.getStatements());
+		String artifactCode = RdfHasher.makeArtifactCode(content.getStatements());
 		RDFWriter writer = Rio.createWriter(format, out);
-		Map<String,String> ns = makeNamespaceMap(content.getStatements(), baseUri, hash);
-		HashAdder replacer = new HashAdder(baseUri, hash, writer, ns);
+		Map<String,String> ns = makeNamespaceMap(content.getStatements(), baseUri, artifactCode);
+		HashAdder replacer = new HashAdder(baseUri, artifactCode, writer, ns);
 		content.propagate(replacer);
 		out.close();
-		return RdfUtils.getTrustyUri(baseUri, hash);
+		return RdfUtils.getTrustyUri(baseUri, artifactCode);
 	}
 
 	static URI getBaseURI(String baseName) {
@@ -99,24 +99,24 @@ public class TransformRdf {
 		return baseURI;
 	}
 
-	static Map<String,String> makeNamespaceMap(List<Statement> statements, URI baseURI, String hash) {
+	static Map<String,String> makeNamespaceMap(List<Statement> statements, URI baseURI, String artifactCode) {
 		Map<String,String> ns = new HashMap<>();
 		if (baseURI == null) return ns;
-		String u = RdfUtils.getTrustyUriString(baseURI, hash);
+		String u = RdfUtils.getTrustyUriString(baseURI, artifactCode);
 		ns.put("this", u);
 		for (Statement st : statements) {
-			addToNamespaceMap(st.getSubject(), baseURI, hash, ns);
-			addToNamespaceMap(st.getPredicate(), baseURI, hash, ns);
-			addToNamespaceMap(st.getObject(), baseURI, hash, ns);
-			addToNamespaceMap(st.getContext(), baseURI, hash, ns);
+			addToNamespaceMap(st.getSubject(), baseURI, artifactCode, ns);
+			addToNamespaceMap(st.getPredicate(), baseURI, artifactCode, ns);
+			addToNamespaceMap(st.getObject(), baseURI, artifactCode, ns);
+			addToNamespaceMap(st.getContext(), baseURI, artifactCode, ns);
 		}
 		return ns;
 	}
 
-	static void addToNamespaceMap(Value v, URI baseURI, String hash, Map<String,String> ns) {
+	static void addToNamespaceMap(Value v, URI baseURI, String artifactCode, Map<String,String> ns) {
 		if (!(v instanceof URI)) return;
-		String uri = RdfUtils.getTrustyUriString(baseURI, hash);
-		String s = v.toString().replace(" ", hash);
+		String uri = RdfUtils.getTrustyUriString(baseURI, artifactCode);
+		String s = v.toString().replace(" ", artifactCode);
 		if (!s.startsWith(uri)) return;
 		String suffix = s.substring(uri.length());
 		if (suffix.matches("\\.\\..*")) {

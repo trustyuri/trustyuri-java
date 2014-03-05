@@ -22,11 +22,11 @@ public class RdfHasher {
 
 	private RdfHasher() {}  // no instances allowed
 
-	public static String makeHash(List<Statement> statements) {
-		return getHash(digest(statements));
+	public static String makeArtifactCode(List<Statement> statements) {
+		return getArtifactCode(digest(statements));
 	}
 
-	public static String makeGraphHash(List<Statement> statements) throws Exception {
+	public static String makeGraphArtifactCode(List<Statement> statements) throws Exception {
 		URI graphUri = null;
 		List<Statement> graph = new ArrayList<Statement>();
 		for (Statement st : statements) {
@@ -44,10 +44,10 @@ public class RdfHasher {
 		if (graph.size() == 0) {
 			throw new Exception("Graph not found");
 		}
-		return getGraphHash(digest(graph));
+		return getGraphArtifactCode(digest(graph));
 	}
 
-	public static String makeGraphHash(List<Statement> statements, URI baseUri) throws Exception {
+	public static String makeGraphArtifactCode(List<Statement> statements, URI baseUri) throws Exception {
 		URI graphUri = RdfUtils.getTrustyUri(baseUri, " ");
 		List<Statement> graph = new ArrayList<Statement>();
 		for (Statement st : statements) {
@@ -57,7 +57,7 @@ public class RdfHasher {
 		if (graph.size() == 0) {
 			throw new Exception("Graph not found");
 		}
-		return getGraphHash(digest(graph));
+		return getGraphArtifactCode(digest(graph));
 	}
 
 	private static MessageDigest digest(List<Statement> statements) {
@@ -79,11 +79,11 @@ public class RdfHasher {
 		return md;
 	}
 
-	public static String getHash(MessageDigest md) {
+	public static String getArtifactCode(MessageDigest md) {
 		return RdfModule.MODULE_ID + TrustyUriUtils.getBase64(md.digest());
 	}
 
-	public static String getGraphHash(MessageDigest md) {
+	public static String getGraphArtifactCode(MessageDigest md) {
 		return RdfGraphModule.MODULE_ID + TrustyUriUtils.getBase64(md.digest());
 	}
 

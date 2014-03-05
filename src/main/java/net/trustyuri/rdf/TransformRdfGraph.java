@@ -58,9 +58,9 @@ public class TransformRdfGraph {
 	public static void transform(RdfFileContent content, File outputFile, URI... baseUris) throws Exception {
 		for (URI baseUri : baseUris) {
 			content = RdfPreprocessor.run(content, baseUri);
-			String hash = RdfHasher.makeGraphHash(content.getStatements(), baseUri);
+			String artifactCode = RdfHasher.makeGraphArtifactCode(content.getStatements(), baseUri);
 			RdfFileContent newContent = new RdfFileContent(content.getOriginalFormat());
-			content.propagate(new HashAdder(baseUri, hash, newContent, null));
+			content.propagate(new HashAdder(baseUri, artifactCode, newContent, null));
 			content = newContent;
 		}
 		OutputStream out = new FileOutputStream(outputFile);
@@ -71,9 +71,9 @@ public class TransformRdfGraph {
 	public static void transform(RdfFileContent content, RDFHandler handler, URI... baseUris) throws Exception {
 		for (URI baseUri : baseUris) {
 			content = RdfPreprocessor.run(content, baseUri);
-			String hash = RdfHasher.makeGraphHash(content.getStatements(), baseUri);
+			String artifactCode = RdfHasher.makeGraphArtifactCode(content.getStatements(), baseUri);
 			RdfFileContent newContent = new RdfFileContent(content.getOriginalFormat());
-			content.propagate(new HashAdder(baseUri, hash, newContent, null));
+			content.propagate(new HashAdder(baseUri, artifactCode, newContent, null));
 			content = newContent;
 		}
 		content.propagate(handler);
@@ -83,9 +83,9 @@ public class TransformRdfGraph {
 		RdfFileContent content = RdfUtils.load(in, format);
 		for (URI baseUri : baseUris) {
 			content = RdfPreprocessor.run(content, baseUri);
-			String hash = RdfHasher.makeGraphHash(content.getStatements(), baseUri);
+			String artifactCode = RdfHasher.makeGraphArtifactCode(content.getStatements(), baseUri);
 			RdfFileContent newContent = new RdfFileContent(content.getOriginalFormat());
-			content.propagate(new HashAdder(baseUri, hash, newContent, null));
+			content.propagate(new HashAdder(baseUri, artifactCode, newContent, null));
 			content = newContent;
 		}
 		content.propagate(Rio.createWriter(format, out));

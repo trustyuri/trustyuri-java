@@ -9,25 +9,29 @@ public class TrustyUriUtils {
 
 	private static final MimetypesFileTypeMap mimeMap = new MimetypesFileTypeMap();
 
-	public static String getTrustyUriTail(String s) {
-		if (!s.matches("(.*[^A-Za-z0-9\\-_]|)[A-Za-z0-9\\-_]{25,}(\\.[A-Za-z0-9\\-_]{0,20})?")) {
+	public static String getArtifactCode(String trustyUriString) {
+		if (!trustyUriString.matches("(.*[^A-Za-z0-9\\-_]|)[A-Za-z0-9\\-_]{25,}(\\.[A-Za-z0-9\\-_]{0,20})?")) {
 			return null;
 		}
-		return s.replaceFirst("^(.*[^A-Za-z0-9\\-_]|)([A-Za-z0-9\\-_]{25,})(\\.[A-Za-z0-9\\-_]{0,20})?$", "$2");
+		return trustyUriString.replaceFirst("^(.*[^A-Za-z0-9\\-_]|)([A-Za-z0-9\\-_]{25,})(\\.[A-Za-z0-9\\-_]{0,20})?$", "$2");
 	}
 
 	public static boolean isPotentialTrustyUri(URI uri) {
-		String t = getTrustyUriTail(uri.toString());
-		if (t == null) return false;
-		String id = getModuleId(t);
+		String c = getArtifactCode(uri.toString());
+		if (c == null) return false;
+		String id = getModuleId(c);
 		TrustyUriModule module = ModuleDirectory.getModule(id);
 		if (module == null) return false;
-		int l = t.substring(2).length();
-		return l == module.getHashLength();
+		int l = getDataPart(c).length();
+		return l == module.getDataPartLength();
 	}
 
-	public static String getModuleId(String tail) {
-		return tail.substring(0, 2);
+	public static String getModuleId(String artifactCode) {
+		return artifactCode.substring(0, 2);
+	}
+
+	public static String getDataPart(String artifactCode) {
+		return artifactCode.substring(2);
 	}
 
 	public static String getNiUri(String s) {
@@ -35,10 +39,11 @@ public class TrustyUriUtils {
 	}
 
 	public static String getNiUri(String s, boolean withAuthority) {
-		String t = getTrustyUriTail(s);
-		if (t == null) return null;
-		String moduleId = getModuleId(t);
-		String hash = t.substring(2);
+		String ac = getArtifactCode(s);
+		if (ac == null) return null;
+		String moduleId = getModuleId(ac);
+		// TODO For future modules, hash might not be equal to data part:
+		String hash = getDataPart(ac);
 		TrustyUriModule module = ModuleDirectory.getModule(moduleId);
 		String tail = "/" + module.getAlgorithmId() + ";" + hash + "?module=" + moduleId;
 		if (withAuthority) {

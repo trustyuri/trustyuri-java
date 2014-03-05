@@ -31,7 +31,7 @@ public class CheckLargeRdf {
 		CheckLargeRdf t = new CheckLargeRdf(file);
 		boolean valid = t.check();
 		if (valid) {
-			System.out.println("Correct hash: " + t.hash);
+			System.out.println("Correct hash: " + t.ac);
 		} else {
 			System.out.println("*** INCORRECT HASH ***");
 		}
@@ -39,7 +39,7 @@ public class CheckLargeRdf {
 
 	private File file;
 	private MessageDigest md;
-	private String hash;
+	private String ac;
 
 	public CheckLargeRdf(File file) {
 		this.file = file;
@@ -68,7 +68,7 @@ public class CheckLargeRdf {
 				}
 			}
 
-		}, r.getHash()));
+		}, r.getArtifactCode()));
 		BufferedReader reader = new BufferedReader(new InputStreamReader(r.getInputStream()), 64*1024);
 		try {
 			p.parse(reader, "");
@@ -97,8 +97,8 @@ public class CheckLargeRdf {
 		br.close();
 		sortOutFile.delete();
 
-		hash = RdfHasher.getHash(md);
-		return hash.equals(r.getHash());
+		ac = RdfHasher.getArtifactCode(md);
+		return ac.equals(r.getArtifactCode());
 	}
 
 }

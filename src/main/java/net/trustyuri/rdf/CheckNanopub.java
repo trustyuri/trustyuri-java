@@ -8,16 +8,15 @@ import org.nanopub.Nanopub;
 import org.nanopub.NanopubUtils;
 import org.openrdf.model.Statement;
 
-
 public class CheckNanopub {
 	
 	public static boolean isValid(Nanopub nanopub) {
-		String hash = TrustyUriUtils.getTrustyUriTail(nanopub.getUri().toString());
-		if (hash == null) return false;
+		String artifactCode = TrustyUriUtils.getArtifactCode(nanopub.getUri().toString());
+		if (artifactCode == null) return false;
 		List<Statement> statements = NanopubUtils.getStatements(nanopub);
-		statements = RdfPreprocessor.run(statements, hash);
-		String h = RdfHasher.makeHash(statements);
-		return h.equals(hash);
+		statements = RdfPreprocessor.run(statements, artifactCode);
+		String ac = RdfHasher.makeArtifactCode(statements);
+		return ac.equals(artifactCode);
 	}
 
 }

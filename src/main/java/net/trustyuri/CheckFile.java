@@ -18,7 +18,7 @@ public class CheckFile {
 
 		boolean valid = c.check();
 		if (valid) {
-			System.out.println("Correct hash: " + c.r.getHash());
+			System.out.println("Correct hash: " + c.r.getArtifactCode());
 			//System.out.println("ni URI: " + TrustyUriUtils.getNiUri(fileName));
 		} else {
 			System.out.println("*** INCORRECT HASH ***");

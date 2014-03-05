@@ -16,13 +16,13 @@ import org.openrdf.rio.RDFHandlerException;
 public class HashAdder implements RDFHandler {
 
 	private URI baseURI;
-	private String hash;
+	private String artifactCode;
 	private RDFHandler handler;
 	private Map<String,String> ns;
 
-	public HashAdder(URI baseURI, String hash, RDFHandler handler, Map<String,String> ns) {
+	public HashAdder(URI baseURI, String artifactCode, RDFHandler handler, Map<String,String> ns) {
 		this.baseURI = baseURI;
-		this.hash = hash;
+		this.artifactCode = artifactCode;
 		this.handler = handler;
 		this.ns = ns;
 		if (ns == null) {
@@ -75,7 +75,7 @@ public class HashAdder implements RDFHandler {
 		} else if (r instanceof BNode) {
 			throw new RuntimeException("Unexpected blank node encountered");
 		} else {
-			return new URIImpl(r.toString().replace(" ", hash));
+			return new URIImpl(r.toString().replace(" ", artifactCode));
 		}
 	}
 

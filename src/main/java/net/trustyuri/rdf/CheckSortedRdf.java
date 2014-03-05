@@ -15,7 +15,6 @@ import org.openrdf.rio.Rio;
 import org.openrdf.rio.helpers.RDFHandlerBase;
 import org.openrdf.rio.helpers.RDFaParserSettings;
 
-
 public class CheckSortedRdf {
 
 	public static void main(String[] args) throws Exception {
@@ -23,7 +22,7 @@ public class CheckSortedRdf {
 		CheckSortedRdf ch = new CheckSortedRdf(file);
 		boolean isCorrect = ch.check();
 		if (isCorrect) {
-			System.out.println("Correct hash: " + ch.getHash());
+			System.out.println("Correct hash: " + ch.getArtifactCode());
 		} else {
 			System.out.println("*** INCORRECT HASH ***");
 		}
@@ -41,7 +40,7 @@ public class CheckSortedRdf {
 	public boolean check() throws Exception {
 		md = RdfHasher.getDigest();
 		r = new TrustyUriResource(file);
-		if (r.getHash() == null) {
+		if (r.getArtifactCode() == null) {
 			System.out.println("ERROR: Not a trusty URI or unknown module");
 			System.exit(1);
 		}
@@ -67,7 +66,7 @@ public class CheckSortedRdf {
 				previous = st;
 			}
 
-		}, r.getHash()));
+		}, r.getArtifactCode()));
 		BufferedReader reader = new BufferedReader(new InputStreamReader(r.getInputStream()), 64*1024);
 		try {
 			p.parse(reader, "");
@@ -75,12 +74,12 @@ public class CheckSortedRdf {
 			reader.close();
 		}
 
-		String hash = RdfHasher.getHash(md);
-		return hash.equals(r.getHash());
+		String artifactCode = RdfHasher.getArtifactCode(md);
+		return artifactCode.equals(r.getArtifactCode());
 	}
 
-	public String getHash() {
-		return r.getHash();
+	public String getArtifactCode() {
+		return r.getArtifactCode();
 	}
 
 }

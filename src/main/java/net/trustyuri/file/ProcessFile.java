@@ -9,14 +9,14 @@ public class ProcessFile {
 		String filename = args[0];
 		File file = new File(filename);
 		FileHasher hasher = new FileHasher();
-		String hash = hasher.makeHash(new FileInputStream(file));
+		String ac = hasher.makeArtifactCode(new FileInputStream(file));
 		String ext = "";
 		String base = filename;
 		if (filename.matches(".+\\.[A-Za-z0-9\\-_]{0,20}")) {
 			ext = filename.replaceFirst("^(.*)(\\.[A-Za-z0-9\\-_]{0,20})$", "$2");
 			base = filename.replaceFirst("^(.*)(\\.[A-Za-z0-9\\-_]{0,20})$", "$1");
 		}
-		File hashFile = new File(base + "." + hash + ext);
+		File hashFile = new File(base + "." + ac + ext);
 		file.renameTo(hashFile);
 	}
 

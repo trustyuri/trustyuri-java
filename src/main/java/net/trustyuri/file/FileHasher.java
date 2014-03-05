@@ -12,7 +12,7 @@ public class FileHasher {
 	public FileHasher() {
 	}
 
-	public String makeHash(InputStream in) throws Exception {
+	public String makeArtifactCode(InputStream in) throws Exception {
 		MessageDigest md = null;
 		try {
 			md = MessageDigest.getInstance("SHA-256");

@@ -8,7 +8,7 @@ public interface TrustyUriModule {
 
 	public String getAlgorithmId();
 
-	public int getHashLength();
+	public int getDataPartLength();
 
 	public boolean hasCorrectHash(TrustyUriResource resource) throws Exception;
 

@@ -18,16 +18,16 @@ public class RdfModule extends AbstractTrustyUriModule {
 	}
 
 	@Override
-	public int getHashLength() {
+	public int getDataPartLength() {
 		return 43;
 	}
 
 	@Override
 	public boolean hasCorrectHash(TrustyUriResource r) throws Exception {
 		RdfFileContent content = RdfUtils.load(r);
-		content = RdfPreprocessor.run(content, r.getHash());
-		String h = RdfHasher.makeHash(content.getStatements());
-		return r.getHash().equals(h);
+		content = RdfPreprocessor.run(content, r.getArtifactCode());
+		String ac = RdfHasher.makeArtifactCode(content.getStatements());
+		return r.getArtifactCode().equals(ac);
 	}
 
 }

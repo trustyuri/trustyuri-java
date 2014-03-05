@@ -39,18 +39,18 @@ public class RdfUtils {
 		return s;
 	}
 
-	public static String getTrustyUriString(URI baseUri, String hash) {
-		return getTrustyUriString(baseUri, hash, null);
+	public static String getTrustyUriString(URI baseUri, String artifactCode) {
+		return getTrustyUriString(baseUri, artifactCode, null);
 	}
 
-	public static URI getTrustyUri(URI baseUri, String hash, String suffix) {
+	public static URI getTrustyUri(URI baseUri, String artifactCode, String suffix) {
 		if (baseUri == null) return null;
-		return new URIImpl(getTrustyUriString(baseUri, hash, suffix));
+		return new URIImpl(getTrustyUriString(baseUri, artifactCode, suffix));
 	}
 
-	public static URI getTrustyUri(URI baseUri, String hash) {
+	public static URI getTrustyUri(URI baseUri, String artifactCode) {
 		if (baseUri == null) return null;
-		return new URIImpl(getTrustyUriString(baseUri, hash, null));
+		return new URIImpl(getTrustyUriString(baseUri, artifactCode, null));
 	}
 
 	public static URI getPreUri(Resource resource, URI baseUri, Map<String,Integer> bnodeMap, boolean frozen) {
@@ -97,13 +97,13 @@ public class RdfUtils {
 		}
 	}
 
-	public static String normalize(URI uri, String hash) {
+	public static String normalize(URI uri, String artifactCode) {
 		String s = uri.toString();
 		if (s.indexOf('\n') > -1 || s.indexOf('\t') > -1) {
 			throw new RuntimeException("Newline or tab character in URI: " + s);
 		}
-		if (hash == null) return s;
-		return s.replace(hash, " ");
+		if (artifactCode == null) return s;
+		return s.replace(artifactCode, " ");
 	}
 
 	private static int getBlankNodeNumber(BNode blankNode, Map<String,Integer> bnodeMap) {

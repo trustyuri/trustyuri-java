@@ -9,7 +9,6 @@ import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.repository.sparql.SPARQLRepository;
 
-
 public class CheckNanopubViaSparql {
 	
 	public static void main(String[] args) throws Exception {
@@ -26,7 +25,7 @@ public class CheckNanopubViaSparql {
 			System.exit(1);
 		}
 		if (CheckNanopub.isValid(nanopub)) {
-			System.out.println("Correct hash: " + TrustyUriUtils.getTrustyUriTail(uriString));
+			System.out.println("Correct hash: " + TrustyUriUtils.getArtifactCode(uriString));
 		} else {
 			System.out.println("*** INCORRECT HASH ***");
 		}

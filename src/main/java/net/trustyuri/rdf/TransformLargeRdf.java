@@ -114,16 +114,16 @@ public class TransformLargeRdf {
 		}
 		br.close();
 
-		String hash = RdfHasher.getHash(md);
-		String hashFileName = fileName;
-		if (hashFileName.length() == 0) {
-			hashFileName = hash + ext;
+		String artifactCode = RdfHasher.getArtifactCode(md);
+		String acFileName = fileName;
+		if (acFileName.length() == 0) {
+			acFileName = artifactCode + ext;
 		} else {
-			hashFileName += "." + hash + ext;
+			acFileName += "." + artifactCode + ext;
 		}
-		OutputStream out = new FileOutputStream(new File(inputDir, hashFileName));
+		OutputStream out = new FileOutputStream(new File(inputDir, acFileName));
 		RDFWriter writer = Rio.createWriter(format, out);
-		final HashAdder replacer = new HashAdder(baseUri, hash, writer, null);
+		final HashAdder replacer = new HashAdder(baseUri, artifactCode, writer, null);
 
 		replacer.startRDF();
 		br = new BufferedReader(new FileReader(sortOutFile));
@@ -135,7 +135,7 @@ public class TransformLargeRdf {
 		replacer.endRDF();
 		sortOutFile.delete();
 
-		return RdfUtils.getTrustyUri(baseUri, hash);
+		return RdfUtils.getTrustyUri(baseUri, artifactCode);
 	}
 
 }

@@ -23,7 +23,7 @@ public class RdfPreprocessor implements RDFHandler {
 
 	private RDFHandler nestedHandler;
 	private URI baseUri;
-	private String hash;
+	private String artifactCode;
 	private Map<String,Integer> blankNodeMap;
 	private TrustyUriModule moduleRB;
 
@@ -33,9 +33,9 @@ public class RdfPreprocessor implements RDFHandler {
 		return p;
 	}
 
-	public static RdfFileContent run(RdfFileContent content, String hash) throws RDFHandlerException {
+	public static RdfFileContent run(RdfFileContent content, String artifactCode) throws RDFHandlerException {
 		RdfFileContent p = new RdfFileContent(content.getOriginalFormat());
-		content.propagate(new RdfPreprocessor(p, hash));
+		content.propagate(new RdfPreprocessor(p, artifactCode));
 		return p;
 	}
 
@@ -43,22 +43,22 @@ public class RdfPreprocessor implements RDFHandler {
 		return run(statements, baseUri, null);
 	}
 
-	public static List<Statement> run(List<Statement> statements, String hash) {
-		return run(statements, null, hash);
+	public static List<Statement> run(List<Statement> statements, String artifactCode) {
+		return run(statements, null, artifactCode);
 	}
 
-	private static List<Statement> run(List<Statement> statements, URI baseUri, String hash) {
+	private static List<Statement> run(List<Statement> statements, URI baseUri, String artifactCode) {
 		List<Statement> r = new ArrayList<>();
-		RdfPreprocessor obj = new RdfPreprocessor(baseUri, hash);
+		RdfPreprocessor obj = new RdfPreprocessor(baseUri, artifactCode);
 		for (Statement st : statements) {
 			r.add(obj.preprocess(st));
 		}
 		return r;
 	}
 
-	private RdfPreprocessor(URI baseUri, String hash) {
+	private RdfPreprocessor(URI baseUri, String artifactCode) {
 		this.baseUri = baseUri;
-		this.hash = hash;
+		this.artifactCode = artifactCode;
 		init();
 	}
 
@@ -66,22 +66,22 @@ public class RdfPreprocessor implements RDFHandler {
 		this(nestedHandler, baseUri, null);
 	}
 
-	public RdfPreprocessor(RDFHandler nestedHandler, String hash) {
-		this(nestedHandler, hash, null);
+	public RdfPreprocessor(RDFHandler nestedHandler, String artifactCode) {
+		this(nestedHandler, artifactCode, null);
 	}
 
 	public RdfPreprocessor(RDFHandler nestedHandler, URI baseUri, Map<String,Integer> blankNodeMap) {
 		this.nestedHandler = nestedHandler;
 		this.baseUri = baseUri;
-		this.hash = null;
+		this.artifactCode = null;
 		this.blankNodeMap = blankNodeMap;
 		init();
 	}
 
-	public RdfPreprocessor(RDFHandler nestedHandler, String hash, Map<String,Integer> blankNodeMap) {
+	public RdfPreprocessor(RDFHandler nestedHandler, String artifactCode, Map<String,Integer> blankNodeMap) {
 		this.nestedHandler = nestedHandler;
 		this.baseUri = null;
-		this.hash = hash;
+		this.artifactCode = artifactCode;
 		this.blankNodeMap = blankNodeMap;
 		init();
 	}
@@ -139,7 +139,7 @@ public class RdfPreprocessor implements RDFHandler {
 
 	private URI transform(Resource r, URI trustyGraph) {
 		if (baseUri == null) {
-			return new URIImpl(RdfUtils.normalize((URI) r, hash));
+			return new URIImpl(RdfUtils.normalize((URI) r, artifactCode));
 		}
 		URI uri = RdfUtils.getPreUri(r, baseUri, blankNodeMap, trustyGraph != null);
 		if (uri == null) {

@@ -18,15 +18,15 @@ public class FileModule extends AbstractTrustyUriModule {
 	}
 
 	@Override
-	public int getHashLength() {
+	public int getDataPartLength() {
 		return 43;
 	}
 
 	@Override
 	public boolean hasCorrectHash(TrustyUriResource r) throws Exception {
 		FileHasher hasher = new FileHasher();
-		String h = hasher.makeHash(r.getInputStream());
-		return r.getHash().equals(h);
+		String ac = hasher.makeArtifactCode(r.getInputStream());
+		return r.getArtifactCode().equals(ac);
 	}
 
 }

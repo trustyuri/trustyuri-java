@@ -31,7 +31,7 @@ public class CheckRdfGraph {
 			URI graphUri = new URIImpl(args[i]);
 			boolean valid = c.check(graphUri);
 			if (valid) {
-				System.out.println("Correct hash: " + getHash(graphUri));
+				System.out.println("Correct hash: " + getArtifactCode(graphUri));
 			} else {
 				System.out.println("*** INCORRECT HASH ***");
 			}
@@ -56,24 +56,24 @@ public class CheckRdfGraph {
 	}
 
 	public boolean check(URI graphUri) throws Exception {
-		String hash = getHash(graphUri);
-		if (hash == null) {
+		String artifactCode = getArtifactCode(graphUri);
+		if (artifactCode == null) {
 			throw new Exception("Not a trusty URI: " + graphUri);
 		}
-		if (!TrustyUriUtils.getModuleId(hash).equals(RdfGraphModule.MODULE_ID)) {
+		if (!TrustyUriUtils.getModuleId(artifactCode).equals(RdfGraphModule.MODULE_ID)) {
 			throw new Exception("Not a trusty URI of type " + RdfGraphModule.MODULE_ID + ": " + graphUri);
 		}
 		List<Statement> graph = new ArrayList<Statement>();
 		for (Statement st : content.getStatements()) {
 			if (graphUri.equals(st.getContext())) graph.add(st);
 		}
-		graph = RdfPreprocessor.run(graph, hash);
-		String h = RdfHasher.makeGraphHash(graph);
-		return hash.equals(h);
+		graph = RdfPreprocessor.run(graph, artifactCode);
+		String ac = RdfHasher.makeGraphArtifactCode(graph);
+		return artifactCode.equals(ac);
 	}
 
-	private static String getHash(URI graphUri) {
-		return TrustyUriUtils.getTrustyUriTail(graphUri.stringValue());
+	private static String getArtifactCode(URI graphUri) {
+		return TrustyUriUtils.getArtifactCode(graphUri.stringValue());
 	}
 
 }
