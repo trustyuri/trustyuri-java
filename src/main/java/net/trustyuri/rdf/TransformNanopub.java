@@ -44,11 +44,11 @@ public class TransformNanopub {
 		return transform(in, RDFFormat.TRIG, out, baseName);
 	}
 
-	public static Nanopub transform(Nanopub nanopub, String baseName) throws Exception {
+	public static Nanopub transform(Nanopub nanopub) throws Exception {
 		RdfFileContent r = new RdfFileContent(RDFFormat.TRIG);
 		NanopubUtils.propagateToHandler(nanopub, r);
 		NanopubRdfHandler h = new NanopubRdfHandler();
-		TransformRdf.transform(r, h, baseName);
+		TransformRdf.transform(r, h, nanopub.getUri().toString());
 		return h.getNanopub();
 	}
 
