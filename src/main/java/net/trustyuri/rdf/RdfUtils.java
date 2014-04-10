@@ -145,7 +145,7 @@ public class RdfUtils {
 		String s = nanopub.getUri().toString();
 		writer.handleNamespace("this", s);
 		writer.handleNamespace("sub", s + ".");
-		writer.handleNamespace("blank", s + "..");
+		writer.handleNamespace("node", s + "..");
 		writer.handleNamespace("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
 		writer.handleNamespace("rdfs", "http://www.w3.org/2000/01/rdf-schema#");
 		writer.handleNamespace("rdfg", "http://www.w3.org/2004/03/trix/rdfg-1/");

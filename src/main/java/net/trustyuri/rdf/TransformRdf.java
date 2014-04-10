@@ -120,7 +120,7 @@ public class TransformRdf {
 		if (!s.startsWith(uri)) return;
 		String suffix = s.substring(uri.length());
 		if (suffix.matches("\\.\\..*")) {
-			ns.put("blank", uri + "..");
+			ns.put("node", uri + "..");
 		} else if (suffix.matches("[^A-Za-z0-9\\-_].*")) {
 			ns.put("sub", uri + suffix.charAt(0));
 		}

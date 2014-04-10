@@ -35,7 +35,7 @@ public class HashAdder implements RDFHandler {
 		handler.startRDF();
 		if (ns.get("this") != null) handler.handleNamespace("this", ns.get("this"));
 		if (ns.get("sub") != null) handler.handleNamespace("sub", ns.get("sub"));
-		if (ns.get("blank") != null) handler.handleNamespace("blank", ns.get("blank"));
+		if (ns.get("node") != null) handler.handleNamespace("node", ns.get("node"));
 	}
 
 	@Override
