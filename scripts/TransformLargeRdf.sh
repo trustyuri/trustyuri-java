@@ -20,12 +20,12 @@ if [ "$RUN_VIA" = "MAVEN" ]; then
 else
 
   if [ ! -f target/trustyuri-*.jar ]; then
-    echo "trustyuri-*.jar not found: Run scripts/build.sh first."
+    echo "trustyuri-*.jar not found: Run 'mvn clean package' first."
     exit 1
   fi
 
   if [ ! -f classpath.txt ]; then
-    echo "classpath.txt not found: Run scripts/build.sh first."
+    echo "classpath.txt not found: Run 'mvn clean package' first."
     exit 1
   fi
 

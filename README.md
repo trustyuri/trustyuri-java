@@ -18,16 +18,9 @@ See the [examples](src/main/resources/examples).
 Build
 -----
 
-Assuming that you have Maven installed, you can build this package as follows. First compile
-and install nanopub-java (this package is not yet in a Maven repository):
+Maven is required to build this library:
 
-    $ git clone git@github.com:Nanopublication/nanopub-java.git
-    $ cd nanopub-java
-    $ mvn install
-
-Then you can run the script `build.sh` of this package:
-
-    $ scripts/build.sh
+    $ mvn clean package
 
 
 Run
