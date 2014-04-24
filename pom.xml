@@ -6,7 +6,13 @@
   <packaging>jar</packaging>
   <version>1.0-SNAPSHOT</version>
   <name>trustyuri</name>
+  <description>Trusty URI implementation for Java</description>
   <url>http://trustyuri.net</url>
+  <parent>
+    <groupId>org.sonatype.oss</groupId>
+    <artifactId>oss-parent</artifactId>
+    <version>7</version>
+  </parent>
   <licenses>
     <license>
       <name>MIT license</name>
@@ -92,6 +98,19 @@
       <version>1.0</version>
     </dependency>
   </dependencies>
+  <scm>
+    <url>https://github.com/trustyuri/trustyuri-java</url>
+    <connection>scm:git:git@github.com:trustyuri/trustyuri-java.git</connection>
+    <developerConnection>scm:git:git@github.com:trustyuri/trustyuri-java.git</developerConnection>
+  </scm>
+  <developers>
+    <developer>
+      <id>tkuhn</id>
+      <name>Tobias Kuhn</name>
+      <email>kuhntobias@gmail.com</email>
+      <url>http://www.tkuhn.ch/</url>
+    </developer>
+  </developers>
   <build>
     <plugins>
       <plugin>
@@ -123,6 +142,52 @@
           </descriptorRefs>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <version>2.2.2</version>
+      </plugin>
     </plugins>
   </build>
+  <distributionManagement>
+    <snapshotRepository>
+      <id>sonatype-nexus-snapshots</id>
+      <name>Sonatype Nexus snapshot repository</name>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <repository>
+      <id>sonatype-nexus-staging</id>
+      <name>Sonatype Nexus release repository</name>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
+  </distributionManagement>
+  <profiles>
+    <profile>
+      <id>release-sign-artifacts</id>
+      <activation>
+        <property>
+          <name>performRelease</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>1.5</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
