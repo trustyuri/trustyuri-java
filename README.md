@@ -15,6 +15,19 @@ Examples
 See the [examples](src/main/resources/examples).
 
 
+Usage
+-----
+
+The easiest way to use this library in your project is to let Maven download it from The Central
+Repository. Just include the following lines in your `pom.xml` file:
+
+    <dependency>
+      <groupId>net.trustyuri</groupId>
+      <artifactId>trustyuri</artifactId>
+      <version>1.0</version>
+    </dependency>
+
+
 Build
 -----
 
