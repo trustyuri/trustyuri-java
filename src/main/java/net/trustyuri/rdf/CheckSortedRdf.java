@@ -2,11 +2,14 @@ package net.trustyuri.rdf;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.security.MessageDigest;
 
+import net.trustyuri.TrustyUriException;
 import net.trustyuri.TrustyUriResource;
 
+import org.openrdf.OpenRDFException;
 import org.openrdf.model.Statement;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandlerException;
@@ -17,7 +20,7 @@ import org.openrdf.rio.helpers.RDFaParserSettings;
 
 public class CheckSortedRdf {
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws IOException, TrustyUriException {
 		File file = new File(args[0]);
 		CheckSortedRdf ch = new CheckSortedRdf(file);
 		boolean isCorrect = ch.check();
@@ -37,7 +40,7 @@ public class CheckSortedRdf {
 		this.file = file;
 	}
 
-	public boolean check() throws Exception {
+	public boolean check() throws IOException, TrustyUriException {
 		md = RdfHasher.getDigest();
 		r = new TrustyUriResource(file);
 		if (r.getArtifactCode() == null) {
@@ -70,6 +73,8 @@ public class CheckSortedRdf {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(r.getInputStream()), 64*1024);
 		try {
 			p.parse(reader, "");
+		} catch (OpenRDFException ex) {
+			throw new TrustyUriException(ex);
 		} finally {
 			reader.close();
 		}

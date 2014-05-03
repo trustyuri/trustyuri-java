@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import net.trustyuri.TrustyUriException;
 import net.trustyuri.TrustyUriUtils;
 
 import org.openrdf.model.BNode;
@@ -26,28 +27,28 @@ public class RdfHasher {
 		return getArtifactCode(digest(statements));
 	}
 
-	public static String makeGraphArtifactCode(List<Statement> statements) throws Exception {
+	public static String makeGraphArtifactCode(List<Statement> statements) throws TrustyUriException {
 		URI graphUri = null;
 		List<Statement> graph = new ArrayList<Statement>();
 		for (Statement st : statements) {
 			Resource c = st.getContext();
 			if (c == null) {
-				throw new Exception("Graph is null");
+				throw new TrustyUriException("Graph is null");
 			} else if (c instanceof BNode) {
-				throw new Exception("Graph is blank node");
+				throw new TrustyUriException("Graph is blank node");
 			} else if (graphUri != null && !c.equals(graphUri)) {
-				throw new Exception("Multiple graphs");
+				throw new TrustyUriException("Multiple graphs");
 			}
 			graphUri = (URI) c;
 			graph.add(st);
 		}
 		if (graph.size() == 0) {
-			throw new Exception("Graph not found");
+			throw new TrustyUriException("Graph not found");
 		}
 		return getGraphArtifactCode(digest(graph));
 	}
 
-	public static String makeGraphArtifactCode(List<Statement> statements, URI baseUri) throws Exception {
+	public static String makeGraphArtifactCode(List<Statement> statements, URI baseUri) throws TrustyUriException {
 		URI graphUri = RdfUtils.getTrustyUri(baseUri, " ");
 		List<Statement> graph = new ArrayList<Statement>();
 		for (Statement st : statements) {
@@ -55,7 +56,7 @@ public class RdfHasher {
 			if (c != null && c.equals(graphUri)) graph.add(st);
 		}
 		if (graph.size() == 0) {
-			throw new Exception("Graph not found");
+			throw new TrustyUriException("Graph not found");
 		}
 		return getGraphArtifactCode(digest(graph));
 	}

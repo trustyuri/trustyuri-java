@@ -1,23 +1,25 @@
 package net.trustyuri.rdf;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.trustyuri.TrustyUriException;
+import net.trustyuri.TrustyUriResource;
+import net.trustyuri.TrustyUriUtils;
+
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
 
-import net.trustyuri.TrustyUriResource;
-import net.trustyuri.TrustyUriUtils;
-
 public class CheckRdfGraph {
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws IOException, TrustyUriException {
 		if (args.length < 2) {
-			throw new Exception("Not enough arguments: <file> <graph-uri1> (<graph-uri2> ...)");
+			throw new RuntimeException("Not enough arguments: <file> <graph-uri1> (<graph-uri2> ...)");
 		}
 		String fileName = args[0];
 		CheckRdfGraph c;
@@ -41,27 +43,27 @@ public class CheckRdfGraph {
 	private TrustyUriResource r;
 	private RdfFileContent content;
 
-	public CheckRdfGraph(URL url) throws Exception {
+	public CheckRdfGraph(URL url) throws IOException, TrustyUriException {
 		r = new TrustyUriResource(url);
 		init();
 	}
 
-	public CheckRdfGraph(File file) throws Exception {
+	public CheckRdfGraph(File file) throws IOException, TrustyUriException {
 		r = new TrustyUriResource(file);
 		init();
 	}
 
-	private void init() throws Exception {
+	private void init() throws IOException, TrustyUriException {
 		content = RdfUtils.load(r);
 	}
 
-	public boolean check(URI graphUri) throws Exception {
+	public boolean check(URI graphUri) throws TrustyUriException {
 		String artifactCode = getArtifactCode(graphUri);
 		if (artifactCode == null) {
-			throw new Exception("Not a trusty URI: " + graphUri);
+			throw new TrustyUriException("Not a trusty URI: " + graphUri);
 		}
 		if (!TrustyUriUtils.getModuleId(artifactCode).equals(RdfGraphModule.MODULE_ID)) {
-			throw new Exception("Not a trusty URI of type " + RdfGraphModule.MODULE_ID + ": " + graphUri);
+			throw new TrustyUriException("Not a trusty URI of type " + RdfGraphModule.MODULE_ID + ": " + graphUri);
 		}
 		List<Statement> graph = new ArrayList<Statement>();
 		for (Statement st : content.getStatements()) {

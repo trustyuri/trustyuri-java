@@ -12,8 +12,10 @@ import java.security.MessageDigest;
 import java.util.Comparator;
 import java.util.List;
 
+import net.trustyuri.TrustyUriException;
 import net.trustyuri.TrustyUriResource;
 
+import org.openrdf.OpenRDFException;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.rio.RDFFormat;
@@ -29,7 +31,7 @@ import com.google.code.externalsorting.ExternalSort;
 
 public class TransformLargeRdf {
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws IOException, TrustyUriException {
 		File inputFile = new File(args[0]);
 		String baseName = "";
 		if (args.length > 1) {
@@ -53,7 +55,7 @@ public class TransformLargeRdf {
 		this.baseName = baseName;
 	}
 
-	public URI transform() throws Exception {
+	public URI transform() throws IOException, TrustyUriException {
 		baseUri = TransformRdf.getBaseURI(baseName);
 		md = RdfHasher.getDigest();
 		inputDir = inputFile.getParent();
@@ -90,6 +92,8 @@ public class TransformLargeRdf {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(r.getInputStream()), 64*1024);
 		try {
 			p.parse(reader, "");
+		} catch (OpenRDFException ex) {
+			throw new TrustyUriException(ex);
 		} finally {
 			reader.close();
 			preOut.close();
@@ -125,15 +129,20 @@ public class TransformLargeRdf {
 		RDFWriter writer = Rio.createWriter(format, out);
 		final HashAdder replacer = new HashAdder(baseUri, artifactCode, writer, null);
 
-		replacer.startRDF();
 		br = new BufferedReader(new FileReader(sortOutFile));
-		while ((line = br.readLine()) != null) {
-			Statement st = SerStatementComparator.fromString(line);
-			replacer.handleStatement(st);
+		try {
+			replacer.startRDF();
+			while ((line = br.readLine()) != null) {
+				Statement st = SerStatementComparator.fromString(line);
+				replacer.handleStatement(st);
+			}
+			replacer.endRDF();
+		} catch (RDFHandlerException ex) {
+			throw new TrustyUriException(ex);
+		} finally {
+			br.close();
+			sortOutFile.delete();
 		}
-		br.close();
-		replacer.endRDF();
-		sortOutFile.delete();
 
 		return RdfUtils.getTrustyUri(baseUri, artifactCode);
 	}

@@ -7,11 +7,12 @@ import org.nanopub.Nanopub;
 import org.nanopub.NanopubImpl;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
+import org.openrdf.repository.RepositoryException;
 import org.openrdf.repository.sparql.SPARQLRepository;
 
 public class CheckNanopubViaSparql {
 	
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws RepositoryException {
 		String endpointURL = args[0];
 		String uriString = args[1];
 		URI uri = new URIImpl(uriString);

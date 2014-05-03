@@ -1,5 +1,6 @@
 package net.trustyuri.file;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
@@ -12,7 +13,7 @@ public class FileHasher {
 	public FileHasher() {
 	}
 
-	public String makeArtifactCode(InputStream in) throws Exception {
+	public String makeArtifactCode(InputStream in) throws IOException {
 		MessageDigest md = null;
 		try {
 			md = MessageDigest.getInstance("SHA-256");

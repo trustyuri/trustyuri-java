@@ -11,8 +11,10 @@ import java.security.MessageDigest;
 import java.util.Comparator;
 import java.util.List;
 
+import net.trustyuri.TrustyUriException;
 import net.trustyuri.TrustyUriResource;
 
+import org.openrdf.OpenRDFException;
 import org.openrdf.model.Statement;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandlerException;
@@ -26,7 +28,7 @@ import com.google.code.externalsorting.ExternalSort;
 
 public class CheckLargeRdf {
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws IOException, TrustyUriException {
 		File file = new File(args[0]);
 		CheckLargeRdf t = new CheckLargeRdf(file);
 		boolean valid = t.check();
@@ -45,7 +47,7 @@ public class CheckLargeRdf {
 		this.file = file;
 	}
 
-	public boolean check() throws Exception {
+	public boolean check() throws IOException, TrustyUriException {
 		TrustyUriResource r = new TrustyUriResource(file);
 		File dir = file.getParentFile();
 		String fileName = file.getName();
@@ -72,6 +74,8 @@ public class CheckLargeRdf {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(r.getInputStream()), 64*1024);
 		try {
 			p.parse(reader, "");
+		} catch (OpenRDFException ex) {
+			throw new TrustyUriException(ex);
 		} finally {
 			reader.close();
 			preOut.close();

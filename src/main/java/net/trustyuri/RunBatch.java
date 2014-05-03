@@ -8,9 +8,11 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 
+import org.openrdf.OpenRDFException;
+
 public class RunBatch {
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws IOException, OpenRDFException, TrustyUriException {
 		String batchFile = args[0];
 
 		BufferedReader reader = new BufferedReader(new FileReader(batchFile));

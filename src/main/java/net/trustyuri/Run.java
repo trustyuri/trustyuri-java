@@ -1,6 +1,9 @@
 package net.trustyuri;
 
+import java.io.IOException;
 import java.util.Arrays;
+
+import org.openrdf.OpenRDFException;
 
 import net.trustyuri.file.ProcessFile;
 import net.trustyuri.rdf.CheckLargeRdf;
@@ -12,11 +15,11 @@ import net.trustyuri.rdf.TransformRdf;
 
 public class Run {
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws IOException, OpenRDFException, TrustyUriException {
 		run(args);
 	}
 
-	public static void run(String[] command) throws Exception {
+	public static void run(String[] command) throws IOException, OpenRDFException, TrustyUriException {
 		String cmd = command[0];
 		String[] cmdArgs = Arrays.copyOfRange(command, 1, command.length);
 		if (cmd.equals("CheckFile")) {

@@ -1,6 +1,9 @@
 package net.trustyuri.rdf;
 
+import java.io.IOException;
+
 import net.trustyuri.AbstractTrustyUriModule;
+import net.trustyuri.TrustyUriException;
 import net.trustyuri.TrustyUriResource;
 
 public class RdfGraphModule extends AbstractTrustyUriModule {
@@ -23,7 +26,7 @@ public class RdfGraphModule extends AbstractTrustyUriModule {
 	}
 
 	@Override
-	public boolean hasCorrectHash(TrustyUriResource r) throws Exception {
+	public boolean hasCorrectHash(TrustyUriResource r) throws IOException, TrustyUriException {
 		RdfFileContent content = RdfUtils.load(r);
 		content = RdfPreprocessor.run(content, r.getArtifactCode());
 		String ac = RdfHasher.makeGraphArtifactCode(content.getStatements());

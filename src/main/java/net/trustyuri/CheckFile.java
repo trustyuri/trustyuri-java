@@ -1,12 +1,13 @@
 package net.trustyuri;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 public class CheckFile {
 	
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws IOException, TrustyUriException {
 		String fileName = args[0];
 		CheckFile c;
 		try {
@@ -27,18 +28,18 @@ public class CheckFile {
 
 	private TrustyUriResource r;
 
-	public CheckFile(URL url) throws Exception {
+	public CheckFile(URL url) throws IOException {
 		r = new TrustyUriResource(url);
 	}
 
-	public CheckFile(File file) throws Exception {
+	public CheckFile(File file) throws IOException {
 		r = new TrustyUriResource(file);
 	}
 
-	public boolean check() throws Exception {
+	public boolean check() throws IOException, TrustyUriException {
 		TrustyUriModule module = ModuleDirectory.getModule(r.getModuleId());
 		if (module == null) {
-			throw new RuntimeException("ERROR: Not a trusty URI or unknown module");
+			throw new TrustyUriException("ERROR: Not a trusty URI or unknown module");
 		}
 		return module.hasCorrectHash(r);
 	}

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.trustyuri.ModuleDirectory;
+import net.trustyuri.TrustyUriException;
 import net.trustyuri.TrustyUriModule;
 
 import org.openrdf.model.Resource;
@@ -27,15 +28,23 @@ public class RdfPreprocessor implements RDFHandler {
 	private Map<String,Integer> blankNodeMap;
 	private TrustyUriModule moduleRB;
 
-	public static RdfFileContent run(RdfFileContent content, URI baseUri) throws RDFHandlerException {
+	public static RdfFileContent run(RdfFileContent content, URI baseUri) throws TrustyUriException {
 		RdfFileContent p = new RdfFileContent(content.getOriginalFormat());
-		content.propagate(new RdfPreprocessor(p, baseUri));
+		try {
+			content.propagate(new RdfPreprocessor(p, baseUri));
+		} catch (RDFHandlerException ex) {
+			throw new TrustyUriException(ex);
+		}
 		return p;
 	}
 
-	public static RdfFileContent run(RdfFileContent content, String artifactCode) throws RDFHandlerException {
+	public static RdfFileContent run(RdfFileContent content, String artifactCode) throws TrustyUriException {
 		RdfFileContent p = new RdfFileContent(content.getOriginalFormat());
-		content.propagate(new RdfPreprocessor(p, artifactCode));
+		try {
+			content.propagate(new RdfPreprocessor(p, artifactCode));
+		} catch (RDFHandlerException ex) {
+			throw new TrustyUriException(ex);
+		}
 		return p;
 	}
 

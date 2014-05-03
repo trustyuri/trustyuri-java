@@ -2,10 +2,11 @@ package net.trustyuri.file;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 
 public class ProcessFile {
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws IOException {
 		String filename = args[0];
 		File file = new File(filename);
 		FileHasher hasher = new FileHasher();

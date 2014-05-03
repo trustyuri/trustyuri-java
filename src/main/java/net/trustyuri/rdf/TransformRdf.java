@@ -2,12 +2,14 @@ package net.trustyuri.rdf;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.trustyuri.TrustyUriException;
 import net.trustyuri.TrustyUriResource;
 
 import org.nanopub.CustomTrigWriterFactory;
@@ -17,6 +19,7 @@ import org.openrdf.model.Value;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandler;
+import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.RDFWriterRegistry;
 import org.openrdf.rio.Rio;
@@ -29,7 +32,7 @@ public class TransformRdf {
 		RDFWriterRegistry.getInstance().add(new CustomTrigWriterFactory());
 	}
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws IOException, TrustyUriException {
 		File inputFile = new File(args[0]);
 		String baseName;
 		if (args.length > 1) {
@@ -41,7 +44,8 @@ public class TransformRdf {
 		transform(content, inputFile.getParent(), baseName);
 	}
 
-	public static URI transform(RdfFileContent content, String outputDir, String baseName) throws Exception {
+	public static URI transform(RdfFileContent content, String outputDir, String baseName)
+			throws IOException, TrustyUriException {
 		URI baseUri = getBaseURI(baseName);
 		String name = baseName;
 		if (baseName.indexOf("/") > 0) {
@@ -64,21 +68,31 @@ public class TransformRdf {
 		OutputStream out = new FileOutputStream(new File(outputDir, fileName));
 		RDFWriter writer = Rio.createWriter(format, out);
 		Map<String,String> ns = makeNamespaceMap(content.getStatements(), baseUri, artifactCode);
-		content.propagate(new HashAdder(baseUri, artifactCode, writer, ns));
+		try {
+			content.propagate(new HashAdder(baseUri, artifactCode, writer, ns));
+		} catch (RDFHandlerException ex) {
+			throw new TrustyUriException(ex);
+		}
 		out.close();
 		return RdfUtils.getTrustyUri(baseUri, artifactCode);
 	}
 
-	public static URI transform(RdfFileContent content, RDFHandler handler, String baseName) throws Exception {
+	public static URI transform(RdfFileContent content, RDFHandler handler, String baseName)
+			throws TrustyUriException {
 		URI baseUri = getBaseURI(baseName);
 		content = RdfPreprocessor.run(content, baseUri);
 		String artifactCode = RdfHasher.makeArtifactCode(content.getStatements());
 		Map<String,String> ns = makeNamespaceMap(content.getStatements(), baseUri, artifactCode);
-		content.propagate(new HashAdder(baseUri, artifactCode, handler, ns));
+		try {
+			content.propagate(new HashAdder(baseUri, artifactCode, handler, ns));
+		} catch (RDFHandlerException ex) {
+			throw new TrustyUriException(ex);
+		}
 		return RdfUtils.getTrustyUri(baseUri, artifactCode);
 	}
 
-	public static URI transform(InputStream in, RDFFormat format, OutputStream out, String baseName) throws Exception {
+	public static URI transform(InputStream in, RDFFormat format, OutputStream out, String baseName)
+			throws IOException, TrustyUriException {
 		URI baseUri = getBaseURI(baseName);
 		RdfFileContent content = RdfUtils.load(in, format);
 		content = RdfPreprocessor.run(content, baseUri);
@@ -86,7 +100,11 @@ public class TransformRdf {
 		RDFWriter writer = Rio.createWriter(format, out);
 		Map<String,String> ns = makeNamespaceMap(content.getStatements(), baseUri, artifactCode);
 		HashAdder replacer = new HashAdder(baseUri, artifactCode, writer, ns);
-		content.propagate(replacer);
+		try {
+			content.propagate(replacer);
+		} catch (RDFHandlerException ex) {
+			throw new TrustyUriException(ex);
+		}
 		out.close();
 		return RdfUtils.getTrustyUri(baseUri, artifactCode);
 	}

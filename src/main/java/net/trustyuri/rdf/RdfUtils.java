@@ -1,13 +1,16 @@
 package net.trustyuri.rdf;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Map;
 
+import net.trustyuri.TrustyUriException;
 import net.trustyuri.TrustyUriResource;
 
 import org.nanopub.Nanopub;
 import org.nanopub.NanopubUtils;
+import org.openrdf.OpenRDFException;
 import org.openrdf.model.BNode;
 import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
@@ -124,17 +127,21 @@ public class RdfUtils {
 		return s;
 	}
 
-	public static RdfFileContent load(InputStream in, RDFFormat format) throws Exception {
+	public static RdfFileContent load(InputStream in, RDFFormat format) throws IOException, TrustyUriException {
 		RDFParser p = Rio.createParser(format);
 		p.getParserConfig().set(RDFaParserSettings.FAIL_ON_RDFA_UNDEFINED_PREFIXES, true);
 		RdfFileContent content = new RdfFileContent(format);
 		p.setRDFHandler(content);
-		p.parse(in, "");
+		try {
+			p.parse(in, "");
+		} catch (OpenRDFException ex) {
+			throw new TrustyUriException(ex);
+		}
 		in.close();
 		return content;
 	}
 
-	public static RdfFileContent load(TrustyUriResource r) throws Exception {
+	public static RdfFileContent load(TrustyUriResource r) throws IOException, TrustyUriException {
 		return load(r.getInputStream(), r.getFormat(RDFFormat.TURTLE));
 	}
 
