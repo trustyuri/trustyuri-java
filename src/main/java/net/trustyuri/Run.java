@@ -13,12 +13,31 @@ import net.trustyuri.rdf.TransformLargeRdf;
 import net.trustyuri.rdf.TransformNanopub;
 import net.trustyuri.rdf.TransformRdf;
 
+/**
+ * This class can run the following commands by calling the respective class:
+ * CheckFile, ProcessFile, CheckLargeRdf, TransformRdf, TransformLargeRdf,
+ * CheckSortedRdf, TransformNanopub, and CheckNanopubViaSparql
+ *
+ * @author Tobias Kuhn
+ */
 public class Run {
 
+	private Run() {}  // no instances allowed
+
+	/**
+	 * Interprets the arguments as a command to run, for example: {"ProcessFile", "file.txt"}
+	 *
+	 * @param args the command
+	 */
 	public static void main(String[] args) throws IOException, OpenRDFException, TrustyUriException {
 		run(args);
 	}
 
+	/**
+	 * Runs the given command, for example: {"ProcessFile", "file.txt"}
+	 *
+	 * @param command the command, as a String array
+	 */
 	public static void run(String[] command) throws IOException, OpenRDFException, TrustyUriException {
 		String cmd = command[0];
 		String[] cmdArgs = Arrays.copyOfRange(command, 1, command.length);

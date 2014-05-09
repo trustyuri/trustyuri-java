@@ -12,6 +12,8 @@ import org.openrdf.OpenRDFException;
 
 public class RunBatch {
 
+	private RunBatch() {}  // no instances allowed
+
 	public static void main(String[] args) throws IOException, OpenRDFException, TrustyUriException {
 		String batchFile = args[0];
 

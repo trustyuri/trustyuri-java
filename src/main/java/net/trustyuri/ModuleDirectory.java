@@ -7,7 +7,11 @@ import net.trustyuri.file.FileModule;
 import net.trustyuri.rdf.RdfGraphModule;
 import net.trustyuri.rdf.RdfModule;
 
-
+/**
+ * This class stores all available modules.
+ *
+ * @author Tobias Kuhn
+ */
 public class ModuleDirectory {
 
 	private ModuleDirectory() {}  // no instances allowed
@@ -20,6 +24,12 @@ public class ModuleDirectory {
 		addModule(new RdfGraphModule());
 	}
 
+	/**
+	 * Returns the module object for the given ID.
+	 *
+	 * @param moduleId the module ID
+	 * @return the module object
+	 */
 	public static TrustyUriModule getModule(String moduleId) {
 		return modules.get(moduleId);
 	}
