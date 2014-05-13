@@ -28,15 +28,16 @@ public class RdfUtils {
 	private RdfUtils() {}  // no instances allowed
 
 	public static String getTrustyUriString(URI baseUri, String hash, String suffix) {
+		UriTransformConfig c = UriTransformConfig.getDefault();
 		String s = expandBaseUri(baseUri) + hash;
 		if (suffix != null) {
-			if (suffix.startsWith(".")) {
-				// Make three dots, as two dots are reserved for blank nodes
-				s += ".." + suffix;
-			} else if (suffix.matches("[^A-Za-z0-9\\-_].*")) {
+			if (suffix.startsWith(c.getBnodeChar() + "")) {
+				// Duplicate bnode character for escaping:
+				s += c.getPostHashChar() + c.getBnodeChar() + suffix;
+			} else if (!c.isPostHashCharForced() && suffix.matches("[^A-Za-z0-9\\-_].*")) {
 				s += suffix;
 			} else {
-				s += "." + suffix;
+				s += c.getPostHashChar() + suffix;
 			}
 		}
 		return s;
@@ -84,7 +85,8 @@ public class RdfUtils {
 
 	private static URI getSkolemizedUri(BNode bnode, URI baseUri, Map<String,Integer> bnodeMap) {
 		int n = getBlankNodeNumber(bnode, bnodeMap);
-		return new URIImpl(expandBaseUri(baseUri) + " .." + n);
+		UriTransformConfig c = UriTransformConfig.getDefault();
+		return new URIImpl(expandBaseUri(baseUri) + " " + c.getPostHashChar() + c.getBnodeChar() + n);
 	}
 
 	private static String getSuffix(URI plainUri, URI baseUri) {
@@ -120,9 +122,10 @@ public class RdfUtils {
 	}
 
 	private static String expandBaseUri(URI baseUri) {
+		UriTransformConfig c = UriTransformConfig.getDefault();
 		String s = baseUri.toString();
-		if (s.matches(".*[A-Za-z0-9\\-_]")) {
-			s += ".";
+		if (s.matches(".*[A-Za-z0-9\\-_]") || c.isPreHashCharForced()) {
+			s += c.getPreHashChar();
 		}
 		return s;
 	}
