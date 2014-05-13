@@ -1,0 +1,10 @@
+@prefix this: <http://trustyuri.net/examples/turtle2.RAUAsavvNK_70jxeCm0OuCgo50R6m4SCYdzU0qjRGmmgI> .
+@prefix sub: <http://trustyuri.net/examples/turtle2.RAUAsavvNK_70jxeCm0OuCgo50R6m4SCYdzU0qjRGmmgI#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix pav: <http://purl.org/pav/> .
+
+<http://trustyuri.net/examples/turtle2.RAUAsavvNK_70jxeCm0OuCgo50R6m4SCYdzU0qjRGmmgI> dc:title "Turtle example 2" ;
+	pav:createdBy sub:_1 .
+
+sub:_1 foaf:name "Tobias Kuhn" .

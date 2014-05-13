@@ -1,6 +1,6 @@
-@prefix : <http://purl.org/hashuri/examples/turtle1> .
+@prefix : <http://trustyuri.net/examples/turtle1> .
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
-@prefix pav: <http://swan.mindinformatics.org/ontologies/1.2/pav/> .
+@prefix pav: <http://purl.org/pav/> .
 
 : dc:title "Turtle example 1" ;
-  pav:authoredBy <http://orcid.org/0000-0002-1267-0234> .
+  pav:createdBy <http://orcid.org/0000-0002-1267-0234> .

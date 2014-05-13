@@ -5,7 +5,7 @@ public class UriTransformConfig {
 	public static UriTransformConfig DOT_CONFIG = new UriTransformConfig('.', false, '.', false, '.');
 	public static UriTransformConfig HASH_CONFIG = new UriTransformConfig('.', false, '#', true, '_');
 
-	private static UriTransformConfig defaultConfig = DOT_CONFIG;
+	private static UriTransformConfig defaultConfig = HASH_CONFIG;
 
 	public static UriTransformConfig getDefault() {
 		return defaultConfig;

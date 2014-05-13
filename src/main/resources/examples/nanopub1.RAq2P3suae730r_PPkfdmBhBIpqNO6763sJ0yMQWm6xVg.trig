@@ -1,0 +1,29 @@
+@prefix this: <http://trustyuri.net/examples/nanopub1.RAq2P3suae730r_PPkfdmBhBIpqNO6763sJ0yMQWm6xVg> .
+@prefix sub: <http://trustyuri.net/examples/nanopub1.RAq2P3suae730r_PPkfdmBhBIpqNO6763sJ0yMQWm6xVg#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dc: <http://purl.org/dc/terms/> .
+@prefix opm: <http://purl.org/net/opmv/ns#> .
+@prefix pav: <http://purl.org/pav/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix ex: <http://example.com/> .
+
+sub:Head {
+	this: np:hasAssertion sub:assertion ;
+		np:hasProvenance sub:provenance ;
+		np:hasPublicationInfo sub:pubinfo ;
+		a np:Nanopublication .
+}
+
+sub:assertion {
+	ex:mosquito ex:transmits ex:malaria .
+}
+
+sub:provenance {
+	sub:assertion prov:wasDerivedFrom <http://dx.doi.org/10.3233/ISU-2010-0613> .
+}
+
+sub:pubinfo {
+	this: dc:created "2013-02-25T14:33:21+01:00"^^xsd:dateTime ;
+		pav:createdBy <http://orcid.org/0000-0002-1267-0234> .
+}

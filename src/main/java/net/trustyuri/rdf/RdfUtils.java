@@ -150,12 +150,15 @@ public class RdfUtils {
 
 	public static void writeNanopub(Nanopub nanopub, OutputStream out, RDFFormat format)
 			throws RDFHandlerException {
+		UriTransformConfig c = UriTransformConfig.getDefault();
 		RDFWriter writer = Rio.createWriter(format, out);
 		writer.startRDF();
 		String s = nanopub.getUri().toString();
 		writer.handleNamespace("this", s);
-		writer.handleNamespace("sub", s + ".");
-		writer.handleNamespace("node", s + "..");
+		writer.handleNamespace("sub", s + c.getPostHashChar());
+		if (!(c.getBnodeChar() + "").matches("[A-Za-z0-9\\-_]")) {
+			writer.handleNamespace("node", s + c.getPostHashChar() + c.getBnodeChar());
+		}
 		writer.handleNamespace("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
 		writer.handleNamespace("rdfs", "http://www.w3.org/2000/01/rdf-schema#");
 		writer.handleNamespace("rdfg", "http://www.w3.org/2004/03/trix/rdfg-1/");

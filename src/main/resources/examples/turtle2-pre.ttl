@@ -1,7 +1,7 @@
-@prefix : <http://purl.org/hashuri/examples/turtle2> .
+@prefix : <http://trustyuri.net/examples/turtle2> .
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
-@prefix pav: <http://swan.mindinformatics.org/ontologies/1.2/pav/> .
+@prefix pav: <http://purl.org/pav/> .
 
 : dc:title "Turtle example 2" ;
-  pav:authoredBy [ foaf:name "Tobias Kuhn" ] .
+  pav:createdBy [ foaf:name "Tobias Kuhn" ] .

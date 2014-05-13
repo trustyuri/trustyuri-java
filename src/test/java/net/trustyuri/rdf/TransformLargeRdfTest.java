@@ -18,29 +18,29 @@ public class TransformLargeRdfTest {
 	@Test
 	public void runTest() throws Exception {
 		test("rdfxml1-pre.rdf",
-			"http://purl.org/hashuri/examples/rdfxml1",
-			"rdfxml1.RAJase0GSn-6UT-7ve_fYWLb0iHqX7z6KmopkwbUepEJw.rdf");
+			"http://trustyuri.net/examples/rdfxml1",
+			"rdfxml1.RAjNuWSfaFfTkXEetIbnV8a7Xlmai-IwsEs9gybU0Dgbs.rdf");
 		test("ntriples1-pre.nt",
-			"http://purl.org/hashuri/examples/ntriples1",
-			"ntriples1.RAbeMUqngGrBcvpQd2HxIrkXFOSVMK-5pfnMNpEfEIlD8.nt");
+			"http://trustyuri.net/examples/ntriples1",
+			"ntriples1.RATJSTFCAt4eL5YZtNk7kAj6IvTxyfC5g76Tu2rpA1Ln0.nt");
 		test("trix1-pre.xml",
-			"http://purl.org/hashuri/examples/trix1",
-			"trix1.RAcpyR-XR9cOpqQFvJ43SLhouV8uL6N_AXFNWfhjxiFGY.xml");
+			"http://trustyuri.net/examples/trix1",
+			"trix1.RA038sqfhk5MltUES5tDnTZl4wjMawLppCnFzx9kBEQWo.xml");
 		test("turtle1-pre.ttl",
-			"http://purl.org/hashuri/examples/turtle1",
-			"turtle1.RANkrDU-BLg8eNRHLYtgf-VngD8QHPRYGWKZbX48HKvw0.ttl");
+			"http://trustyuri.net/examples/turtle1",
+			"turtle1.RA4XTpFboYhYGbz2HvVJYcUqztH_x-03_qUUrRHUS4J9w.ttl");
 		test("turtle2-pre.ttl",
-			"http://purl.org/hashuri/examples/turtle2",
-			"turtle2.RAiYxMrJ7r0zUPEp3IvA07bcyE3v-I26uzw6GWpFtD36o.ttl");
+			"http://trustyuri.net/examples/turtle2",
+			"turtle2.RAUAsavvNK_70jxeCm0OuCgo50R6m4SCYdzU0qjRGmmgI.ttl");
 		test("nanopub1-pre.trig",
-			"http://purl.org/hashuri/examples/nanopub1",
-			"nanopub1.RA1SuhYyX9qlNnWWIIp9dqjGEuyOi5D384gjVShN6SuXk.trig");
+			"http://trustyuri.net/examples/nanopub1",
+			"nanopub1.RAq2P3suae730r_PPkfdmBhBIpqNO6763sJ0yMQWm6xVg.trig");
 		test("nanopub1-pre.nq",
-			"http://purl.org/hashuri/examples/nanopub1",
-			"nanopub1.RA1SuhYyX9qlNnWWIIp9dqjGEuyOi5D384gjVShN6SuXk.nq");
+			"http://trustyuri.net/examples/nanopub1",
+			"nanopub1.RAq2P3suae730r_PPkfdmBhBIpqNO6763sJ0yMQWm6xVg.nq");
 		test("nanopub1-pre.xml",
-			"http://purl.org/hashuri/examples/nanopub1",
-			"nanopub1.RA1SuhYyX9qlNnWWIIp9dqjGEuyOi5D384gjVShN6SuXk.xml");
+			"http://trustyuri.net/examples/nanopub1",
+			"nanopub1.RAq2P3suae730r_PPkfdmBhBIpqNO6763sJ0yMQWm6xVg.xml");
 	}
 
 	public void test(String preName, String baseUri, String name) throws Exception {

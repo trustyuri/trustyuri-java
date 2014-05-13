@@ -1,39 +1,37 @@
-@prefix : <http://purl.org/hashuri/examples/nanopub4> .
+@prefix : <http://trustyuri.net/examples/nanopub4> .
 @prefix rdfg: <http://www.w3.org/2004/03/trix/rdfg-1/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix dc: <http://purl.org/dc/terms/> .
-@prefix pav: <http://swan.mindinformatics.org/ontologies/1.2/pav/> .
-@prefix swan: <http://purl.org/swan/1.2/swan-commons/> .
+@prefix pav: <http://purl.org/pav/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix npx: <http://purl.org/nanopub/x/> .
 @prefix ex: <http://example.com/> .
 
-: {
-    : a np:Nanopublication ;
-        np:hasAssertion :Ass ;
-        np:hasProvenance :Prov ;
-        np:hasPublicationInfo :Info .
+:Head {
+    : a np:Nanopublication .
+    : np:hasAssertion :assertion .
+    : np:hasProvenance :provenance .
+    : np:hasPublicationInfo :pubinfo .
 
-    :AssHead rdfg:subGraphOf :Ass .
-    :AssStatement rdfg:subGraphOf :Ass .
+    :assertionHead rdfg:subGraphOf :assertion .
+    :assertionStatement rdfg:subGraphOf :assertion .
 }
 
-:AssHead {
-    :Ass
-        npx:asSentence <http://purl.org/aida/Malaria+is+transmitted+by+mosquitoes.> ;
-        npx:asFormula :AssStatement .
+:assertionHead {
+    :assertion npx:asSentence <http://purl.org/aida/Malaria+is+transmitted+by+mosquitoes.> .
+    :assertion npx:asFormula :assertionStatement .
 }
 
-:AssStatement {
+:assertionStatement {
     ex:mosquito ex:transmits ex:malaria .
 }
 
-:Prov {
-    : swan:citesAsSupportiveEvidence <http://dx.doi.org/10.3233/ISU-2010-0613> .
+:provenance {
+    :assertion prov:wasDerivedFrom <http://dx.doi.org/10.3233/ISU-2010-0613> .
 }
 
-:Info {
-    : pav:authoredBy <http://orcid.org/0000-0002-1267-0234> .
+:pubinfo {
     : pav:createdBy <http://orcid.org/0000-0002-1267-0234> .
     : dc:created "2013-03-04T17:24:00Z"^^xsd:dateTime .
 }

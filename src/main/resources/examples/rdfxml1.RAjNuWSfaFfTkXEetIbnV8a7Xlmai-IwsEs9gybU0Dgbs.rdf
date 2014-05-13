@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns:this="http://trustyuri.net/examples/rdfxml1.RAjNuWSfaFfTkXEetIbnV8a7Xlmai-IwsEs9gybU0Dgbs"
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:pav="http://purl.org/pav/">
+
+<rdf:Description rdf:about="http://trustyuri.net/examples/rdfxml1.RAjNuWSfaFfTkXEetIbnV8a7Xlmai-IwsEs9gybU0Dgbs">
+	<dc:title>RDF/XML example</dc:title>
+	<pav:createdBy rdf:resource="http://orcid.org/0000-0002-1267-0234"/>
+</rdf:Description>
+
+</rdf:RDF>
