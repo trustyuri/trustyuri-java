@@ -131,8 +131,7 @@ public class RdfUtils {
 	}
 
 	public static RdfFileContent load(InputStream in, RDFFormat format) throws IOException, TrustyUriException {
-		RDFParser p = Rio.createParser(format);
-		p.getParserConfig().set(RDFaParserSettings.FAIL_ON_RDFA_UNDEFINED_PREFIXES, true);
+		RDFParser p = getParser(format);
 		RdfFileContent content = new RdfFileContent(format);
 		p.setRDFHandler(content);
 		try {
@@ -142,6 +141,12 @@ public class RdfUtils {
 		}
 		in.close();
 		return content;
+	}
+
+	public static RDFParser getParser(RDFFormat format) {
+		RDFParser p = Rio.createParser(format);
+		p.getParserConfig().set(RDFaParserSettings.FAIL_ON_RDFA_UNDEFINED_PREFIXES, true);
+		return p;
 	}
 
 	public static RdfFileContent load(TrustyUriResource r) throws IOException, TrustyUriException {
