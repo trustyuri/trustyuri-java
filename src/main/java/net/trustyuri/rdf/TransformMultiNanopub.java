@@ -14,34 +14,36 @@ import org.nanopub.MultiNanopubRdfHandler;
 import org.nanopub.MultiNanopubRdfHandler.NanopubHandler;
 import org.nanopub.Nanopub;
 import org.nanopub.NanopubUtils;
-import org.openrdf.OpenRDFException;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandlerException;
-import org.openrdf.rio.RDFParser;
+import org.openrdf.rio.RDFParseException;
 import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.Rio;
 
-
 public class TransformMultiNanopub {
 
-	public static void main(String[] args) throws IOException, TrustyUriException {
+	public static void main(String[] args) throws IOException, RDFParseException, RDFHandlerException {
 		if (args.length == 0) {
 			System.out.println("ERROR: No file given");
 		}
 		for (String arg : args) {
 			File file = new File(arg);
-			InputStream in = new FileInputStream(file);
 			OutputStream out = new FileOutputStream(file.getParent() + "/trusty." + file.getName());
 			TrustyUriResource r = new TrustyUriResource(new File(arg));
 			RDFFormat format = r.getFormat(RDFFormat.TRIG);
-			transform(format, in, out);
+			transform(format, file, out);
 		}
 	}
 
+	public static void transform(final RDFFormat format, File file, final OutputStream out)
+			throws IOException, RDFParseException, RDFHandlerException {
+		InputStream in = new FileInputStream(file);
+		transform(format, in, out);
+	}
+
 	public static void transform(final RDFFormat format, InputStream in, final OutputStream out)
-			throws IOException, TrustyUriException {
-		RDFParser p = RdfUtils.getParser(format);
-		p.setRDFHandler(new MultiNanopubRdfHandler(new NanopubHandler() {
+			throws IOException, RDFParseException, RDFHandlerException {
+		MultiNanopubRdfHandler.process(format, in, new NanopubHandler() {
 
 			@Override
 			public void handleNanopub(Nanopub np) {
@@ -56,13 +58,7 @@ public class TransformMultiNanopub {
 				}
 			}
 
-		}));
-		try {
-			p.parse(in, "");
-		} catch (OpenRDFException ex) {
-			throw new RuntimeException(ex);
-		}
-		in.close();
+		});
 		out.close();
 	}
 
