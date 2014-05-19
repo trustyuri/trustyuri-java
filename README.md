@@ -24,7 +24,7 @@ Repository. Just include the following lines in your `pom.xml` file:
     <dependency>
       <groupId>net.trustyuri</groupId>
       <artifactId>trustyuri</artifactId>
-      <version>1.0</version>
+      <version>1.1</version>
     </dependency>
 
 

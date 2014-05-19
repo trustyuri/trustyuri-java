@@ -3,7 +3,7 @@
   <groupId>net.trustyuri</groupId>
   <artifactId>trustyuri</artifactId>
   <packaging>jar</packaging>
-  <version>1.1-SNAPSHOT</version>
+  <version>1.2-SNAPSHOT</version>
   <name>trustyuri</name>
   <description>Trusty URI implementation for Java</description>
   <url>http://trustyuri.net</url>
@@ -94,7 +94,7 @@
     <dependency>
       <groupId>org.nanopub</groupId>
       <artifactId>nanopub</artifactId>
-      <version>1.1-SNAPSHOT</version>
+      <version>1.1</version>
     </dependency>
   </dependencies>
   <scm>
