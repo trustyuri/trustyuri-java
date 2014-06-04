@@ -118,7 +118,7 @@ public class TransformRdf {
 	}
 
 	static Map<String,String> makeNamespaceMap(List<Statement> statements, URI baseURI, String artifactCode) {
-		Map<String,String> ns = new HashMap<>();
+		Map<String,String> ns = new HashMap<String,String>();
 		if (baseURI == null) return ns;
 		String u = RdfUtils.getTrustyUriString(baseURI, artifactCode);
 		ns.put("this", u);

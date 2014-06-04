@@ -57,7 +57,7 @@ public class RdfPreprocessor implements RDFHandler {
 	}
 
 	private static List<Statement> run(List<Statement> statements, URI baseUri, String artifactCode) {
-		List<Statement> r = new ArrayList<>();
+		List<Statement> r = new ArrayList<Statement>();
 		RdfPreprocessor obj = new RdfPreprocessor(baseUri, artifactCode);
 		for (Statement st : statements) {
 			r.add(obj.preprocess(st));
@@ -97,7 +97,7 @@ public class RdfPreprocessor implements RDFHandler {
 
 	private void init() {
 		if (blankNodeMap == null) {
-			this.blankNodeMap = new HashMap<>();
+			this.blankNodeMap = new HashMap<String,Integer>();
 		}
 		moduleRB = ModuleDirectory.getModule(RdfGraphModule.MODULE_ID);
 	}

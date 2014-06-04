@@ -16,7 +16,7 @@ public class ModuleDirectory {
 
 	private ModuleDirectory() {}  // no instances allowed
 
-	private static Map<String,TrustyUriModule> modules = new HashMap<>();
+	private static Map<String,TrustyUriModule> modules = new HashMap<String,TrustyUriModule>();
 
 	static {
 		addModule(new FileModule());

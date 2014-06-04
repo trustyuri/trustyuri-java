@@ -18,7 +18,7 @@ import org.openrdf.rio.RDFHandlerException;
 
 public class RdfFileContent implements RDFHandler {
 	
-	private Map<Value,Value> rdfEntityMap = new HashMap<>();
+	private Map<Value,Value> rdfEntityMap = new HashMap<Value,Value>();
 
 	private RDFFormat originalFormat = null;
 	private List<Pair<String,String>> namespaces;
@@ -30,8 +30,8 @@ public class RdfFileContent implements RDFHandler {
 
 	@Override
 	public void startRDF() throws RDFHandlerException {
-		namespaces = new ArrayList<>();
-		statements = new ArrayList<>();
+		namespaces = new ArrayList<Pair<String,String>>();
+		statements = new ArrayList<Statement>();
 	}
 
 	@Override

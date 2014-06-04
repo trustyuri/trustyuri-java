@@ -26,7 +26,7 @@ public class HashAdder implements RDFHandler {
 		this.handler = handler;
 		this.ns = ns;
 		if (ns == null) {
-			this.ns = new HashMap<>();
+			this.ns = new HashMap<String,String>();
 		}
 	}
 
