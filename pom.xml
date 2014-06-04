@@ -19,8 +19,9 @@
     </license>
   </licenses>
   <properties>
-    <maven.compiler.source>1.6</maven.compiler.source>
-    <maven.compiler.target>1.6</maven.compiler.target>
+    <maven.compiler.source>1.7</maven.compiler.source>
+    <maven.compiler.target>1.7</maven.compiler.target>
+    <!-- 1.6 does not work because of java.nio.file dependency -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <sesame.version>2.7.11</sesame.version>
   </properties>
