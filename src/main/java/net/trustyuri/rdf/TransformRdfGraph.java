@@ -61,15 +61,8 @@ public class TransformRdfGraph {
 	public static void transform(RdfFileContent content, File outputFile, URI... baseUris)
 			throws IOException, TrustyUriException {
 		try {
-			for (URI baseUri : baseUris) {
-				content = RdfPreprocessor.run(content, baseUri);
-				String artifactCode = RdfHasher.makeGraphArtifactCode(content.getStatements(), baseUri);
-				RdfFileContent newContent = new RdfFileContent(content.getOriginalFormat());
-				content.propagate(new HashAdder(baseUri, artifactCode, newContent, null));
-				content = newContent;
-			}
 			OutputStream out = new FileOutputStream(outputFile);
-			content.propagate(Rio.createWriter(content.getOriginalFormat(), out));
+			processBaseUris(content, Rio.createWriter(content.getOriginalFormat(), out), baseUris);
 			out.close();
 		} catch (RDFHandlerException ex) {
 			throw new TrustyUriException(ex);
@@ -79,14 +72,7 @@ public class TransformRdfGraph {
 	public static void transform(RdfFileContent content, RDFHandler handler, URI... baseUris)
 			throws IOException, TrustyUriException {
 		try {
-			for (URI baseUri : baseUris) {
-				content = RdfPreprocessor.run(content, baseUri);
-				String artifactCode = RdfHasher.makeGraphArtifactCode(content.getStatements(), baseUri);
-				RdfFileContent newContent = new RdfFileContent(content.getOriginalFormat());
-				content.propagate(new HashAdder(baseUri, artifactCode, newContent, null));
-				content = newContent;
-			}
-			content.propagate(handler);
+			processBaseUris(content, handler, baseUris);
 		} catch (RDFHandlerException ex) {
 			throw new TrustyUriException(ex);
 		}
@@ -96,18 +82,23 @@ public class TransformRdfGraph {
 			throws IOException, TrustyUriException {
 		RdfFileContent content = RdfUtils.load(in, format);
 		try {
-			for (URI baseUri : baseUris) {
-				content = RdfPreprocessor.run(content, baseUri);
-				String artifactCode = RdfHasher.makeGraphArtifactCode(content.getStatements(), baseUri);
-				RdfFileContent newContent = new RdfFileContent(content.getOriginalFormat());
-				content.propagate(new HashAdder(baseUri, artifactCode, newContent, null));
-				content = newContent;
-			}
-			content.propagate(Rio.createWriter(format, out));
+			processBaseUris(content, Rio.createWriter(format, out), baseUris);
 		} catch (RDFHandlerException ex) {
 			throw new TrustyUriException(ex);
 		}
 		out.close();
+	}
+
+	private static void processBaseUris(RdfFileContent content, RDFHandler handler, URI... baseUris)
+			throws RDFHandlerException, TrustyUriException {
+		for (URI baseUri : baseUris) {
+			content = RdfPreprocessor.run(content, baseUri);
+			String artifactCode = RdfHasher.makeGraphArtifactCode(content.getStatements(), baseUri);
+			RdfFileContent newContent = new RdfFileContent(content.getOriginalFormat());
+			content.propagate(new HashAdder(baseUri, artifactCode, newContent, null));
+			content = newContent;
+		}
+		content.propagate(handler);
 	}
 
 }
