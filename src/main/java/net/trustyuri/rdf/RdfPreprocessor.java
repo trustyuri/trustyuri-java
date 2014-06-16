@@ -27,6 +27,7 @@ public class RdfPreprocessor implements RDFHandler {
 	private String artifactCode;
 	private Map<String,Integer> blankNodeMap;
 	private TrustyUriModule moduleRB;
+	private Map<Resource,URI> transformMap;
 
 	public static RdfFileContent run(RdfFileContent content, URI baseUri) throws TrustyUriException {
 		RdfFileContent p = new RdfFileContent(content.getOriginalFormat());
@@ -100,6 +101,7 @@ public class RdfPreprocessor implements RDFHandler {
 			this.blankNodeMap = new HashMap<String,Integer>();
 		}
 		moduleRB = ModuleDirectory.getModule(RdfGraphModule.MODULE_ID);
+		transformMap = new HashMap<Resource,URI>();
 	}
 
 	@Override
@@ -126,6 +128,10 @@ public class RdfPreprocessor implements RDFHandler {
 	@Override
 	public void handleComment(String comment) throws RDFHandlerException {
 		nestedHandler.handleComment(comment);
+	}
+
+	public Map<Resource,URI> getTransformMap() {
+		return transformMap;
 	}
 
 	private Statement preprocess(Statement st) {
@@ -155,6 +161,8 @@ public class RdfPreprocessor implements RDFHandler {
 			// TODO Allow for 'force' option; URI might only look like a trusty URI...
 			throw new RuntimeException("Transformation would break existing trusty URI graph: " +
 					trustyGraph);
+		} else if (!r.toString().equals(uri.toString())) {
+			transformMap.put(r, uri);
 		}
 		return uri;
 	}

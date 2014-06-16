@@ -19,6 +19,7 @@ public class HashAdder implements RDFHandler {
 	private String artifactCode;
 	private RDFHandler handler;
 	private Map<String,String> ns;
+	private Map<URI,URI> transformMap;
 
 	public HashAdder(URI baseURI, String artifactCode, RDFHandler handler, Map<String,String> ns) {
 		this.baseURI = baseURI;
@@ -28,6 +29,7 @@ public class HashAdder implements RDFHandler {
 		if (ns == null) {
 			this.ns = new HashMap<String,String>();
 		}
+		transformMap = new HashMap<URI,URI>();
 	}
 
 	@Override
@@ -75,8 +77,14 @@ public class HashAdder implements RDFHandler {
 		} else if (r instanceof BNode) {
 			throw new RuntimeException("Unexpected blank node encountered");
 		} else {
-			return new URIImpl(r.toString().replace(" ", artifactCode));
+			URI transformedURI = new URIImpl(r.toString().replace(" ", artifactCode));
+			transformMap.put((URI) r, transformedURI);
+			return transformedURI;
 		}
+	}
+
+	public Map<URI,URI> getTransformMap() {
+		return transformMap;
 	}
 
 }

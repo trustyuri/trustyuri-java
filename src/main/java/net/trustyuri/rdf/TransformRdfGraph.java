@@ -92,10 +92,14 @@ public class TransformRdfGraph {
 	private static void processBaseUris(RdfFileContent content, RDFHandler handler, URI... baseUris)
 			throws RDFHandlerException, TrustyUriException {
 		for (URI baseUri : baseUris) {
-			content = RdfPreprocessor.run(content, baseUri);
-			String artifactCode = RdfHasher.makeGraphArtifactCode(content.getStatements(), baseUri);
 			RdfFileContent newContent = new RdfFileContent(content.getOriginalFormat());
-			content.propagate(new HashAdder(baseUri, artifactCode, newContent, null));
+			RdfPreprocessor preprocessor = new RdfPreprocessor(newContent, baseUri);
+			content.propagate(preprocessor);
+			content = newContent;
+			String artifactCode = RdfHasher.makeGraphArtifactCode(content.getStatements(), baseUri);
+			newContent = new RdfFileContent(content.getOriginalFormat());
+			HashAdder hashAdder = new HashAdder(baseUri, artifactCode, newContent, null);
+			content.propagate(hashAdder);
 			content = newContent;
 		}
 		content.propagate(handler);
