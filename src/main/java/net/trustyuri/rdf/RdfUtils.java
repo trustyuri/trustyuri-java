@@ -7,6 +7,7 @@ import java.util.Map;
 
 import net.trustyuri.TrustyUriException;
 import net.trustyuri.TrustyUriResource;
+import net.trustyuri.TrustyUriUtils;
 
 import org.nanopub.Nanopub;
 import org.nanopub.NanopubUtils;
@@ -71,6 +72,8 @@ public class RdfUtils {
 				return plainUri;
 			} else if (frozen) {
 				return null;
+			} else if (TrustyUriUtils.isPotentialTrustyUri(plainUri)) {
+				return plainUri;
 			} else {
 				return getTrustyUri(baseUri, " ", suffix);
 			}
