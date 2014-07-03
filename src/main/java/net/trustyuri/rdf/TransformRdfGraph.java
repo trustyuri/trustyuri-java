@@ -13,22 +13,16 @@ import java.util.List;
 import net.trustyuri.TrustyUriException;
 import net.trustyuri.TrustyUriResource;
 
-import org.nanopub.CustomTrigWriterFactory;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFHandlerException;
-import org.openrdf.rio.RDFWriterRegistry;
 import org.openrdf.rio.Rio;
 
 public class TransformRdfGraph {
 
 	// TODO only transform blank nodes that appear within the given graph
-
-	static {
-		RDFWriterRegistry.getInstance().add(new CustomTrigWriterFactory());
-	}
 
 	public static void main(String[] args) throws IOException, TrustyUriException {
 		if (args.length < 2) {

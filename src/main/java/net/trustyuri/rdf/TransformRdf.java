@@ -12,7 +12,6 @@ import java.util.Map;
 import net.trustyuri.TrustyUriException;
 import net.trustyuri.TrustyUriResource;
 
-import org.nanopub.CustomTrigWriterFactory;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
@@ -21,16 +20,11 @@ import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.RDFWriter;
-import org.openrdf.rio.RDFWriterRegistry;
 import org.openrdf.rio.Rio;
 
 public class TransformRdf {
 
 	// TODO Use RB module by default if trusty URI represents a single RDF graph
-
-	static {
-		RDFWriterRegistry.getInstance().add(new CustomTrigWriterFactory());
-	}
 
 	public static void main(String[] args) throws IOException, TrustyUriException {
 		File inputFile = new File(args[0]);

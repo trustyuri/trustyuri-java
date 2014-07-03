@@ -49,10 +49,6 @@ To transform an RDF document, use this command (the second argument is optional)
 
     $ scripts/TransformRdf.sh [FILE] [BASE-URI]
 
-For nanopublications you can use the following command:
-
-    $ scripts/TransformNanopub.sh [FILE]
-
 Running from a single JAR file should be possible, but does not work at the moment,
 see [Issue 2](https://github.com/trustyuri/trustyuri-java/issues/2).
 

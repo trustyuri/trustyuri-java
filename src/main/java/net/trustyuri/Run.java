@@ -7,10 +7,8 @@ import org.openrdf.OpenRDFException;
 
 import net.trustyuri.file.ProcessFile;
 import net.trustyuri.rdf.CheckLargeRdf;
-import net.trustyuri.rdf.CheckNanopubViaSparql;
 import net.trustyuri.rdf.CheckSortedRdf;
 import net.trustyuri.rdf.TransformLargeRdf;
-import net.trustyuri.rdf.TransformNanopub;
 import net.trustyuri.rdf.TransformRdf;
 
 /**
@@ -53,10 +51,6 @@ public class Run {
 			TransformLargeRdf.main(cmdArgs);
 		} else if (cmd.equals("CheckSortedRdf")) {
 			CheckSortedRdf.main(cmdArgs);
-		} else if (cmd.equals("TransformNanopub")) {
-			TransformNanopub.main(cmdArgs);
-		} else if (cmd.equals("CheckNanopubViaSparql")) {
-			CheckNanopubViaSparql.main(cmdArgs);
 		} else {
 			System.err.println("ERROR: Unrecognized command " + cmd);
 			System.exit(1);
