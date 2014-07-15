@@ -16,14 +16,17 @@ public class TrustyUriUtils {
 		return trustyUriString.replaceFirst("^(.*[^A-Za-z0-9\\-_]|)([A-Za-z0-9\\-_]{25,})(\\.[A-Za-z0-9\\-_]{0,20})?$", "$2");
 	}
 
-	public static boolean isPotentialTrustyUri(URI uri) {
-		String c = getArtifactCode(uri.toString());
-		if (c == null) return false;
-		String id = getModuleId(c);
+	public static boolean isPotentialArtifactCode(String ac) {
+		if (ac == null) return false;
+		String id = getModuleId(ac);
 		TrustyUriModule module = ModuleDirectory.getModule(id);
 		if (module == null) return false;
-		int l = getDataPart(c).length();
+		int l = getDataPart(ac).length();
 		return l == module.getDataPartLength();
+	}
+
+	public static boolean isPotentialTrustyUri(URI uri) {
+		return isPotentialArtifactCode(getArtifactCode(uri.toString()));
 	}
 
 	public static String getModuleId(String artifactCode) {
