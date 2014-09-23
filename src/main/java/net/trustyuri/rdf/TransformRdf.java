@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.GZIPOutputStream;
 
 import net.trustyuri.TrustyUriException;
 import net.trustyuri.TrustyUriResource;
@@ -28,18 +29,19 @@ public class TransformRdf {
 
 	public static void main(String[] args) throws IOException, TrustyUriException {
 		File inputFile = new File(args[0]);
-		String baseName;
+		String baseName = null;
 		if (args.length > 1) {
 			baseName = args[1];
-		} else {
+		}
+		transform(inputFile, baseName);
+	}
+
+	public static URI transform(File inputFile, String baseName)
+			throws IOException, TrustyUriException {
+		if (baseName == null) {
 			baseName = inputFile.getName().replaceFirst("[.][^.]+$", "");
 		}
 		RdfFileContent content = RdfUtils.load(new TrustyUriResource(inputFile));
-		transform(content, inputFile.getParent(), baseName);
-	}
-
-	public static URI transform(RdfFileContent content, String outputDir, String baseName)
-			throws IOException, TrustyUriException {
 		URI baseUri = getBaseURI(baseName);
 		String name = baseName;
 		if (baseName.indexOf("/") > 0) {
@@ -59,7 +61,12 @@ public class TransformRdf {
 		} else {
 			fileName += "." + artifactCode + ext;
 		}
-		OutputStream out = new FileOutputStream(new File(outputDir, fileName));
+		OutputStream out;
+		if (inputFile.getName().matches(".*\\.(gz|gzip)")) {
+			out = new GZIPOutputStream(new FileOutputStream(new File(inputFile.getParent(), fileName + ".gz")));
+		} else {
+			out = new FileOutputStream(new File(inputFile.getParent(), fileName));
+		}
 		RDFWriter writer = Rio.createWriter(format, out);
 		Map<String,String> ns = makeNamespaceMap(content.getStatements(), baseUri, artifactCode);
 		try {

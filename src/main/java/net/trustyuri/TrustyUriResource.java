@@ -2,11 +2,11 @@ package net.trustyuri;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.zip.GZIPInputStream;
 
 import org.openrdf.rio.RDFFormat;
 
@@ -16,23 +16,24 @@ public class TrustyUriResource {
 	private String mimetype;
 	private InputStream in;
 	private String artifactCode;
+	private boolean compressed;
 
-	public TrustyUriResource(String mimetype, File file, String hash) throws FileNotFoundException {
+	public TrustyUriResource(String mimetype, File file, String hash) throws IOException {
 		init(file.toString(), mimetype, new FileInputStream(file), hash);
 	}
 
-	public TrustyUriResource(String mimetype, File file) throws FileNotFoundException {
+	public TrustyUriResource(String mimetype, File file) throws IOException {
 		String n = file.toString();
 		String ac = TrustyUriUtils.getArtifactCode(n);
 		init(n, mimetype, new FileInputStream(file), ac);
 	}
 
-	public TrustyUriResource(File file, String artifactCode) throws FileNotFoundException {
+	public TrustyUriResource(File file, String artifactCode) throws IOException {
 		String n = file.toString();
 		init(n, TrustyUriUtils.getMimetype(n), new FileInputStream(file), artifactCode);
 	}
 
-	public TrustyUriResource(File file) throws FileNotFoundException {
+	public TrustyUriResource(File file) throws IOException {
 		String n = file.toString();
 		String ac = TrustyUriUtils.getArtifactCode(n);
 		init(n, TrustyUriUtils.getMimetype(n), new FileInputStream(file), ac);
@@ -62,10 +63,14 @@ public class TrustyUriResource {
 		init(n, conn.getContentType(), conn.getInputStream(), ac);
 	}
 
-	private void init(String filename, String mimetype, InputStream in, String artifactCode) {
+	private void init(String filename, String mimetype, InputStream in, String artifactCode) throws IOException {
+		if (filename.matches(".*\\.(gz|gzip)")) {
+			this.in = new GZIPInputStream(in);
+		} else {
+			this.in = in;
+		}
 		this.filename = filename;
 		this.mimetype = mimetype;
-		this.in = in;
 		this.artifactCode = artifactCode;
 	}
 
@@ -83,6 +88,10 @@ public class TrustyUriResource {
 
 	public String getArtifactCode() {
 		return artifactCode;
+	}
+
+	public boolean isCompressed() {
+		return compressed;
 	}
 
 	public String getModuleId() {

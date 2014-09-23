@@ -10,10 +10,10 @@ public class TrustyUriUtils {
 	private static final MimetypesFileTypeMap mimeMap = new MimetypesFileTypeMap();
 
 	public static String getArtifactCode(String trustyUriString) {
-		if (!trustyUriString.matches("(.*[^A-Za-z0-9\\-_]|)[A-Za-z0-9\\-_]{25,}(\\.[A-Za-z0-9\\-_]{0,20})?")) {
+		if (!trustyUriString.matches("(.*[^A-Za-z0-9\\-_]|)[A-Za-z0-9\\-_]{25,}(\\.[A-Za-z0-9\\-_\\.]{0,20})?")) {
 			return null;
 		}
-		return trustyUriString.replaceFirst("^(.*[^A-Za-z0-9\\-_]|)([A-Za-z0-9\\-_]{25,})(\\.[A-Za-z0-9\\-_]{0,20})?$", "$2");
+		return trustyUriString.replaceFirst("^(.*[^A-Za-z0-9\\-_]|)([A-Za-z0-9\\-_]{25,})(\\.[A-Za-z0-9\\-_\\.]{0,20})?$", "$2");
 	}
 
 	public static boolean isPotentialArtifactCode(String ac) {

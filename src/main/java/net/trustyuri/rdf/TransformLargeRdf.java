@@ -11,6 +11,7 @@ import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.util.Comparator;
 import java.util.List;
+import java.util.zip.GZIPOutputStream;
 
 import net.trustyuri.TrustyUriException;
 import net.trustyuri.TrustyUriResource;
@@ -125,7 +126,12 @@ public class TransformLargeRdf {
 		} else {
 			acFileName += "." + artifactCode + ext;
 		}
-		OutputStream out = new FileOutputStream(new File(inputDir, acFileName));
+		OutputStream out;
+		if (inputFile.getName().matches(".*\\.(gz|gzip)")) {
+			out = new GZIPOutputStream(new FileOutputStream(new File(inputDir, acFileName + ".gz")));
+		} else {
+			out = new FileOutputStream(new File(inputDir, acFileName));
+		}
 		RDFWriter writer = Rio.createWriter(format, out);
 		final HashAdder replacer = new HashAdder(baseUri, artifactCode, writer, null);
 
@@ -143,6 +149,7 @@ public class TransformLargeRdf {
 			br.close();
 			sortOutFile.delete();
 		}
+		out.close();
 
 		return RdfUtils.getTrustyUri(baseUri, artifactCode);
 	}
