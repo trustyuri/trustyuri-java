@@ -107,7 +107,7 @@
     </developer>
   </developers>
   <build>
-    <plugins>
+    <pluginManagement><plugins>
       <plugin>
         <artifactId>maven-dependency-plugin</artifactId>
         <version>2.8</version>
@@ -142,7 +142,7 @@
         <artifactId>maven-release-plugin</artifactId>
         <version>2.2.2</version>
       </plugin>
-    </plugins>
+    </plugins></pluginManagement>
   </build>
   <distributionManagement>
     <snapshotRepository>
