@@ -68,14 +68,9 @@ public class TransformRdf {
 			out = new FileOutputStream(new File(inputFile.getParent(), fileName));
 		}
 		RDFWriter writer = Rio.createWriter(format, out);
-		Map<String,String> ns = makeNamespaceMap(content.getStatements(), baseUri, artifactCode);
-		try {
-			content.propagate(new HashAdder(baseUri, artifactCode, writer, ns));
-		} catch (RDFHandlerException ex) {
-			throw new TrustyUriException(ex);
-		}
+		URI uri = includeArtifactCode(content, artifactCode, baseUri, writer);
 		out.close();
-		return RdfUtils.getTrustyUri(baseUri, artifactCode);
+		return uri;
 	}
 
 	public static URI transform(RdfFileContent content, RDFHandler handler, String baseName)
@@ -83,13 +78,8 @@ public class TransformRdf {
 		URI baseUri = getBaseURI(baseName);
 		content = RdfPreprocessor.run(content, baseUri);
 		String artifactCode = RdfHasher.makeArtifactCode(content.getStatements());
-		Map<String,String> ns = makeNamespaceMap(content.getStatements(), baseUri, artifactCode);
-		try {
-			content.propagate(new HashAdder(baseUri, artifactCode, handler, ns));
-		} catch (RDFHandlerException ex) {
-			throw new TrustyUriException(ex);
-		}
-		return RdfUtils.getTrustyUri(baseUri, artifactCode);
+		URI uri = includeArtifactCode(content, artifactCode, baseUri, handler);
+		return uri;
 	}
 
 	public static URI transform(InputStream in, RDFFormat format, OutputStream out, String baseName)
@@ -97,17 +87,35 @@ public class TransformRdf {
 		URI baseUri = getBaseURI(baseName);
 		RdfFileContent content = RdfUtils.load(in, format);
 		content = RdfPreprocessor.run(content, baseUri);
-		String artifactCode = RdfHasher.makeArtifactCode(content.getStatements());
 		RDFWriter writer = Rio.createWriter(format, out);
-		Map<String,String> ns = makeNamespaceMap(content.getStatements(), baseUri, artifactCode);
-		HashAdder replacer = new HashAdder(baseUri, artifactCode, writer, ns);
+		URI uri = transformPreprocessed(content, baseUri, writer);
+		out.close();
+		return uri;
+	}
+
+	public static URI transformPreprocessed(RdfFileContent preprocessedContent, URI baseUri, RDFWriter writer)
+			throws TrustyUriException {
+		String artifactCode = RdfHasher.makeArtifactCode(preprocessedContent.getStatements());
+		URI uri = includeArtifactCode(preprocessedContent, artifactCode, baseUri, writer);
+		return uri;
+	}
+
+	private static URI includeArtifactCode(RdfFileContent preprocessedContent, String artifactCode, URI baseUri, Object writerOrHandler)
+			throws TrustyUriException {
+		Map<String,String> ns = makeNamespaceMap(preprocessedContent.getStatements(), baseUri, artifactCode);
+		HashAdder hashAdder;
+		if (writerOrHandler instanceof RDFWriter) {
+			hashAdder = new HashAdder(baseUri, artifactCode, (RDFWriter) writerOrHandler, ns);
+		} else {
+			hashAdder = new HashAdder(baseUri, artifactCode, (RDFHandler) writerOrHandler, ns);
+		}
 		try {
-			content.propagate(replacer);
+			preprocessedContent.propagate(hashAdder);
 		} catch (RDFHandlerException ex) {
 			throw new TrustyUriException(ex);
 		}
-		out.close();
 		return RdfUtils.getTrustyUri(baseUri, artifactCode);
+		
 	}
 
 	static URI getBaseURI(String baseName) {
