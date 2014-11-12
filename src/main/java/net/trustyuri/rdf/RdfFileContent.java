@@ -85,14 +85,18 @@ public class RdfFileContent implements RDFHandler {
 	}
 
 	public void propagate(RDFHandler handler) throws RDFHandlerException {
-		handler.startRDF();
+		propagate(handler, true);
+	}
+
+	public void propagate(RDFHandler handler, boolean doStardAndEnd) throws RDFHandlerException {
+		if (doStardAndEnd) handler.startRDF();
 		for (Pair<String,String> ns : namespaces) {
 			handler.handleNamespace(ns.getLeft(), ns.getRight());
 		}
 		for (Statement st : statements) {
 			handler.handleStatement(st);
 		}
-		handler.endRDF();
+		if (doStardAndEnd) handler.endRDF();
 	}
 
 	public RDFFormat getOriginalFormat() {

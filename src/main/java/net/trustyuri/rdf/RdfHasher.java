@@ -61,7 +61,7 @@ public class RdfHasher {
 		return getGraphArtifactCode(digest(graph));
 	}
 
-	private static MessageDigest digest(List<Statement> statements) {
+	public static MessageDigest digest(List<Statement> statements) {
 		MessageDigest md = getDigest();
 		Collections.sort(statements, new StatementComparator());
 		if (DEBUG) System.err.println("----------");
@@ -76,7 +76,9 @@ public class RdfHasher {
 		MessageDigest md = null;
 		try {
 			md = MessageDigest.getInstance("SHA-256");
-		} catch (NoSuchAlgorithmException ex) {}
+		} catch (NoSuchAlgorithmException ex) {
+			throw new RuntimeException(ex);
+		}
 		return md;
 	}
 

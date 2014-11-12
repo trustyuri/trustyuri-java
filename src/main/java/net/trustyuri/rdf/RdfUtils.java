@@ -22,9 +22,9 @@ public class RdfUtils {
 
 	private RdfUtils() {}  // no instances allowed
 
-	public static String getTrustyUriString(URI baseUri, String hash, String suffix) {
+	public static String getTrustyUriString(URI baseUri, String artifactCode, String suffix) {
 		UriTransformConfig c = UriTransformConfig.getDefault();
-		String s = expandBaseUri(baseUri) + hash;
+		String s = expandBaseUri(baseUri) + artifactCode;
 		if (suffix != null) {
 			if (suffix.startsWith(c.getBnodeChar() + "")) {
 				// Duplicate bnode character for escaping:

@@ -77,8 +77,7 @@ public class TransformRdf {
 			throws TrustyUriException {
 		URI baseUri = getBaseURI(baseName);
 		content = RdfPreprocessor.run(content, baseUri);
-		String artifactCode = RdfHasher.makeArtifactCode(content.getStatements());
-		URI uri = includeArtifactCode(content, artifactCode, baseUri, handler);
+		URI uri = transformPreprocessed(content, baseUri, handler);
 		return uri;
 	}
 
@@ -97,6 +96,13 @@ public class TransformRdf {
 			throws TrustyUriException {
 		String artifactCode = RdfHasher.makeArtifactCode(preprocessedContent.getStatements());
 		URI uri = includeArtifactCode(preprocessedContent, artifactCode, baseUri, writer);
+		return uri;
+	}
+
+	public static URI transformPreprocessed(RdfFileContent preprocessedContent, URI baseUri, RDFHandler handler)
+			throws TrustyUriException {
+		String artifactCode = RdfHasher.makeArtifactCode(preprocessedContent.getStatements());
+		URI uri = includeArtifactCode(preprocessedContent, artifactCode, baseUri, handler);
 		return uri;
 	}
 
