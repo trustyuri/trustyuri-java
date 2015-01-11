@@ -1,5 +1,7 @@
 package net.trustyuri.file;
 
+import java.io.File;
+
 import net.trustyuri.CheckFile;
 
 import org.junit.Rule;
@@ -14,12 +16,16 @@ public class CheckFileTest {
  
 	@Test
 	public void runTest() throws Exception {
-		test("file1.FA47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU.txt");
-		test("file2.FAT-NmyX72cnFIf9aCx-TvoSIzgnLBLfZgA638PsbAZK8.txt");
+		File testSuiteDir = new File("src/main/resources/testsuite/FA/valid/");
+		if (testSuiteDir.isDirectory()) {
+			for (File testFile : testSuiteDir.listFiles()) {
+				test(testFile.getName());
+			}
+		}
 	}
 
 	public void test(String filename) throws Exception {
-		CheckFile.main(new String[] {"src/main/resources/examples/" + filename});
+		CheckFile.main(new String[] {"src/main/resources/testsuite/FA/valid/" + filename});
 	}
 
 }

@@ -15,21 +15,16 @@ public class CheckSortedRdfTest {
  
 	@Test
 	public void runTest() throws Exception {
-		test("rdfxml1.RAjNuWSfaFfTkXEetIbnV8a7Xlmai-IwsEs9gybU0Dgbs.rdf");
-		test("ntriples1.RATJSTFCAt4eL5YZtNk7kAj6IvTxyfC5g76Tu2rpA1Ln0.nt");
-		test("trix1.RA038sqfhk5MltUES5tDnTZl4wjMawLppCnFzx9kBEQWo.xml");
-		test("turtle1.RA4XTpFboYhYGbz2HvVJYcUqztH_x-03_qUUrRHUS4J9w.ttl");
-		test("turtle2.RAUAsavvNK_70jxeCm0OuCgo50R6m4SCYdzU0qjRGmmgI.ttl");
-		test("nanopub1.RAq2P3suae730r_PPkfdmBhBIpqNO6763sJ0yMQWm6xVg.trig");
-		test("nanopub1.RAq2P3suae730r_PPkfdmBhBIpqNO6763sJ0yMQWm6xVg.nq");
-		test("nanopub1.RAq2P3suae730r_PPkfdmBhBIpqNO6763sJ0yMQWm6xVg.xml");
-		test("nanopub2.RAAtRSyHmwuoQnfhi22Y-hdsH00tPei3CAkVgiuuisAi8.trig");
-		test("nanopub3.RAZgXBFqKI45x1DHmP40hoNj6dneLocMsfhZJJdjOZQSE.trig");
-		test("nanopub4.RAGjerlLWh3KiFiYTAQcKycXekeEVZeGq1JSr26KVntSw.trig");
+		File testSuiteDir = new File("src/main/resources/testsuite/RA/valid/");
+		if (testSuiteDir.isDirectory()) {
+			for (File testFile : testSuiteDir.listFiles()) {
+				test(testFile.getName());
+			}
+		}
 	}
 
 	public void test(String filename) throws Exception {
-		File file = new File("src/main/resources/examples/" + filename);
+		File file = new File("src/main/resources/testsuite/RA/valid/" + filename);
 		CheckSortedRdf c = new CheckSortedRdf(file);
 		boolean valid = c.check();
 		assert valid;
