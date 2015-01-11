@@ -1,7 +1,5 @@
 package net.trustyuri;
 
-import org.openrdf.model.URI;
-
 import javax.activation.MimetypesFileTypeMap;
 import javax.xml.bind.DatatypeConverter;
 
@@ -25,8 +23,8 @@ public class TrustyUriUtils {
 		return l == module.getDataPartLength();
 	}
 
-	public static boolean isPotentialTrustyUri(URI uri) {
-		return isPotentialArtifactCode(getArtifactCode(uri.toString()));
+	public static boolean isPotentialTrustyUri(Object stringObject) {
+		return isPotentialArtifactCode(getArtifactCode(stringObject.toString()));
 	}
 
 	public static String getModuleId(String artifactCode) {
