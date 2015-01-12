@@ -1,6 +1,0 @@
-@prefix this: <http://trustyuri.net/examples/turtle1.RA4XTpFboYhYGbz2HvVJYcUqztH_x-03_qUUrRHUS4J9w> .
-@prefix dc: <http://purl.org/dc/elements/1.1/> .
-@prefix pav: <http://purl.org/pav/> .
-
-<http://trustyuri.net/examples/turtle1.RA4XTpFboYhYGbz2HvVJYcUqztH_x-03_qUUrRHUS4J9w> dc:title "Turtle example 1" ;
-	pav:createdBy <http://orcid.org/0000-0002-1267-0234> .
