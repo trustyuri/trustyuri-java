@@ -83,7 +83,9 @@ public class StatementComparator implements Comparator<Statement> {
 		s1 = null;
 		s2 = null;
 		if (l1.getDatatype() != null) s1 = l1.getDatatype().toString();
+		if (l1.getLanguage() != null) s1 = null;
 		if (l2.getDatatype() != null) s2 = l2.getDatatype().toString();
+		if (l2.getLanguage() != null) s2 = null;
 		if (s1 == null && s2 != null) {
 			return -1;
 		} else if (s1 != null && s2 == null) {

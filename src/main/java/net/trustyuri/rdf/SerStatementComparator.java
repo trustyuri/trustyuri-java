@@ -42,19 +42,19 @@ public class SerStatementComparator implements Comparator<String> {
 		if (parts2.length > 4) o2 = parts2[4];
 		int i11 = o1.indexOf(32);
 		int i21 = o2.indexOf(32);
-		String d1 = o1.substring(0, i11);
-		String d2 = o2.substring(0, i11);
-		c = d1.compareTo(d2);
-		if (c != 0) return c;
 		int i12 = o1.indexOf(32, i11+1);
 		int i22 = o2.indexOf(32, i21+1);
-		String l1 = o1.substring(i11+1, i12);
-		String l2 = o2.substring(i21+1, i22);
-		c = l1.compareTo(l2);
-		if (c != 0) return c;
 		String v1 = unescape(o1.substring(i12+1));
 		String v2 = unescape(o2.substring(i22+1));
-		return v1.compareTo(v2);
+		c = v1.compareTo(v2);
+		if (c != 0) return c;
+		String d1 = o1.substring(0, i11);
+		String d2 = o2.substring(0, i21);
+		c = d1.compareTo(d2);
+		if (c != 0) return c;
+		String l1 = o1.substring(i11+1, i12);
+		String l2 = o2.substring(i21+1, i22);
+		return l1.compareTo(l2);
 	}
 
 	public static Statement fromString(String string) {
