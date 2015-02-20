@@ -66,8 +66,12 @@ public class RdfHasher {
 		MessageDigest md = getDigest();
 		Collections.sort(statements, new StatementComparator());
 		if (DEBUG) System.err.println("----------");
+		Statement previous = null;
 		for (Statement st : statements) {
-			digest(st, md);
+			if (!st.equals(previous)) {
+				digest(st, md);
+			}
+			previous = st;
 		}
 		if (DEBUG) System.err.println("----------");
 		return md;

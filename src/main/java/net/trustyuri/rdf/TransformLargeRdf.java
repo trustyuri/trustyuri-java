@@ -27,7 +27,6 @@ import org.openrdf.rio.Rio;
 import org.openrdf.rio.helpers.RDFHandlerBase;
 import org.openrdf.rio.helpers.RDFaParserSettings;
 
-
 import com.google.code.externalsorting.ExternalSort;
 
 public class TransformLargeRdf {
@@ -113,9 +112,13 @@ public class TransformLargeRdf {
 
 		BufferedReader br = new BufferedReader(new FileReader(sortOutFile));
 		String line;
+		Statement previous = null;
 		while ((line = br.readLine()) != null) {
 			Statement st = SerStatementComparator.fromString(line);
-			RdfHasher.digest(st, md);
+			if (!st.equals(previous)) {
+				RdfHasher.digest(st, md);
+			}
+			previous = st;
 		}
 		br.close();
 
@@ -138,9 +141,13 @@ public class TransformLargeRdf {
 		br = new BufferedReader(new FileReader(sortOutFile));
 		try {
 			replacer.startRDF();
+			previous = null;
 			while ((line = br.readLine()) != null) {
 				Statement st = SerStatementComparator.fromString(line);
-				replacer.handleStatement(st);
+				if (!st.equals(previous)) {
+					replacer.handleStatement(st);
+				}
+				previous = st;
 			}
 			replacer.endRDF();
 		} catch (RDFHandlerException ex) {

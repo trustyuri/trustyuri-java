@@ -94,9 +94,13 @@ public class CheckLargeRdf {
 
 		BufferedReader br = new BufferedReader(new FileReader(sortOutFile));
 		String line;
+		Statement previous = null;
 		while ((line = br.readLine()) != null) {
 			Statement st = SerStatementComparator.fromString(line);
-			RdfHasher.digest(st, md);
+			if (!st.equals(previous)) {
+				RdfHasher.digest(st, md);
+			}
+			previous = st;
 		}
 		br.close();
 		sortOutFile.delete();

@@ -65,7 +65,9 @@ public class CheckSortedRdf {
 				if (previous != null && StatementComparator.compareStatement(previous, st) > 0) {
 					throw new RuntimeException("File not sorted");
 				}
-				RdfHasher.digest(st, md);
+				if (!st.equals(previous)) {
+					RdfHasher.digest(st, md);
+				}
 				previous = st;
 			}
 
