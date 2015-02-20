@@ -107,9 +107,7 @@ public class RdfHasher {
 			return ((URI) v).toString() + "\n";
 		} else if (v instanceof Literal) {
 			Literal l = (Literal) v;
-			if (l.getDatatype() != null) {
-				return "^" + l.getDatatype().stringValue() + " " + escapeString(l.stringValue()) + "\n";
-			} else if (l.getLanguage() != null) {
+			if (l.getLanguage() != null) {
 				return "@" + l.getLanguage() + " " + escapeString(l.stringValue()) + "\n";
 			} else {
 				URI dataType = l.getDatatype();

@@ -12,6 +12,7 @@ import org.openrdf.model.impl.ContextStatementImpl;
 import org.openrdf.model.impl.LiteralImpl;
 import org.openrdf.model.impl.StatementImpl;
 import org.openrdf.model.impl.URIImpl;
+import org.openrdf.model.vocabulary.XMLSchema;
 
 public class SerStatementComparator implements Comparator<String> {
 
@@ -113,15 +114,12 @@ public class SerStatementComparator implements Comparator<String> {
 		} else if (obj instanceof Literal) {
 			sb.append("\t");
 			Literal objl = (Literal) obj;
-			if (objl.getDatatype() == null) {
-				sb.append(" ");
-			} else {
-				sb.append(objl.getDatatype().stringValue() + " ");
-			}
 			if (objl.getLanguage() == null) {
-				sb.append(" ");
+				URI dataType = objl.getDatatype();
+				if (dataType == null) dataType = XMLSchema.STRING;
+				sb.append(dataType.stringValue() + "  ");
 			} else {
-				sb.append(objl.getLanguage() + " ");
+				sb.append(" " + objl.getLanguage() + " ");
 			}
 			sb.append(escape(obj.stringValue()));
 		} else {
