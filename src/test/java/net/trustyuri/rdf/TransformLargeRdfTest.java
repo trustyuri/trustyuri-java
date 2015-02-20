@@ -25,7 +25,7 @@ public class TransformLargeRdfTest {
 				if (!TrustyUriUtils.isPotentialTrustyUri(name)) continue;
 				String preNameStem = name.replaceFirst("^(.*)\\.(RA[A-Za-z0-9\\-_]{43})(\\.[a-z]+)", "$1");
 				String preName = name.replaceFirst("^(.*)\\.(RA[A-Za-z0-9\\-_]{43})(\\.[a-z]+)", "$1$3");
-				test(preName, "http://trustyuri.net/examples/" + preNameStem, name);
+				test(preName, "http://trustyuri.net/testsuite/" + preNameStem, name);
 			}
 		}
 	}

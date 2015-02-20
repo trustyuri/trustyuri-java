@@ -15,6 +15,7 @@ import org.openrdf.model.Resource;
 import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
+import org.openrdf.model.vocabulary.XMLSchema;
 
 public class RdfHasher {
 
@@ -111,7 +112,9 @@ public class RdfHasher {
 			} else if (l.getLanguage() != null) {
 				return "@" + l.getLanguage() + " " + escapeString(l.stringValue()) + "\n";
 			} else {
-				return "#" + escapeString(l.stringValue()) + "\n";
+				URI dataType = l.getDatatype();
+				if (dataType == null) dataType = XMLSchema.STRING;
+				return "^" + dataType.stringValue() + " " + escapeString(l.stringValue()) + "\n";
 			}
 		} else if (v instanceof BNode) {
 			throw new RuntimeException("Unexpected blank node encountered");
