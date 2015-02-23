@@ -42,6 +42,8 @@ public interface TrustyUriModule {
 	 */
 	public boolean hasCorrectHash(TrustyUriResource resource) throws IOException, TrustyUriException;
 
+	public URI fixTrustyUri(TrustyUriResource resource) throws IOException, TrustyUriException, UnsupportedOperationException;
+
 	/**
 	 * Checks whether the given URI could be a trusty URI represented by this module.
 	 *

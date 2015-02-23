@@ -6,6 +6,8 @@ import net.trustyuri.AbstractTrustyUriModule;
 import net.trustyuri.TrustyUriException;
 import net.trustyuri.TrustyUriResource;
 
+import org.openrdf.model.URI;
+
 public class RdfModule extends AbstractTrustyUriModule {
 
 	public static final String MODULE_ID = "RA";
@@ -31,6 +33,11 @@ public class RdfModule extends AbstractTrustyUriModule {
 		content = RdfPreprocessor.run(content, r.getArtifactCode());
 		String ac = RdfHasher.makeArtifactCode(content.getStatements());
 		return r.getArtifactCode().equals(ac);
+	}
+
+	@Override
+	public URI fixTrustyUri(TrustyUriResource r) throws IOException, TrustyUriException {
+		return RdfUtils.fixTrustyUri(r, false);
 	}
 
 }

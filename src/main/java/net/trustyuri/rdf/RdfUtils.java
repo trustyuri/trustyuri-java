@@ -1,8 +1,12 @@
 package net.trustyuri.rdf;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Map;
+import java.util.zip.GZIPOutputStream;
 
 import net.trustyuri.TrustyUriException;
 import net.trustyuri.TrustyUriResource;
@@ -11,10 +15,14 @@ import net.trustyuri.TrustyUriUtils;
 import org.openrdf.OpenRDFException;
 import org.openrdf.model.BNode;
 import org.openrdf.model.Resource;
+import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
 import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.RDFHandler;
+import org.openrdf.rio.RDFHandlerException;
 import org.openrdf.rio.RDFParser;
+import org.openrdf.rio.RDFWriter;
 import org.openrdf.rio.Rio;
 import org.openrdf.rio.helpers.RDFaParserSettings;
 
@@ -148,6 +156,74 @@ public class RdfUtils {
 
 	public static RdfFileContent load(TrustyUriResource r) throws IOException, TrustyUriException {
 		return load(r.getInputStream(), r.getFormat(RDFFormat.TURTLE));
+	}
+
+	public static URI fixTrustyUri(TrustyUriResource r, boolean graphModule) throws IOException, TrustyUriException {
+		RdfFileContent content = RdfUtils.load(r);
+		String oldArtifactCode = r.getArtifactCode();
+		content = RdfPreprocessor.run(content, oldArtifactCode);
+		String newArtifactCode;
+		if (graphModule) {
+			newArtifactCode = RdfHasher.makeGraphArtifactCode(content.getStatements());
+		} else {
+			newArtifactCode = RdfHasher.makeArtifactCode(content.getStatements());
+		}
+		OutputStream out;
+		String filename = r.getFilename().replace(oldArtifactCode, newArtifactCode);
+		if (filename.matches(".*\\.(gz|gzip)")) {
+			out = new GZIPOutputStream(new FileOutputStream(new File("fixed." + filename)));
+		} else {
+			out = new FileOutputStream(new File("fixed." + filename));
+		}
+		RdfFileContent contentOut = new RdfFileContent(content.getOriginalFormat());
+		try {
+			content.propagate(new NamespaceProcessor(oldArtifactCode, newArtifactCode, contentOut));
+			content = contentOut;
+		} catch (RDFHandlerException ex) {
+			ex.printStackTrace();
+		}
+		RDFWriter writer = Rio.createWriter(r.getFormat(RDFFormat.TRIG), out);
+		URI uri = TransformRdf.transformPreprocessed(content, null, writer);
+		return uri;
+	}
+
+
+	private static class NamespaceProcessor implements RDFHandler {
+
+		private RDFHandler handler;
+		private String oldArtifactCode, newArtifactCode;
+
+		public NamespaceProcessor(String oldArtifactCode, String newArtifactCode, RDFHandler handler) {
+			this.handler = handler;
+			this.oldArtifactCode = oldArtifactCode;
+			this.newArtifactCode = newArtifactCode;
+		}
+
+		@Override
+		public void startRDF() throws RDFHandlerException {
+			handler.startRDF();
+		}
+
+		@Override
+		public void endRDF() throws RDFHandlerException {
+			handler.endRDF();
+		}
+
+		@Override
+		public void handleNamespace(String prefix, String uri) throws RDFHandlerException {
+			handler.handleNamespace(prefix, uri.replaceAll(oldArtifactCode, newArtifactCode));
+		}
+
+		@Override
+		public void handleStatement(Statement st) throws RDFHandlerException {
+			handler.handleStatement(st);
+		}
+
+		@Override
+		public void handleComment(String comment) throws RDFHandlerException {
+			handler.handleComment(comment);
+		}
+
 	}
 
 }
