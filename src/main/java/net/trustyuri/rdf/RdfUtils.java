@@ -177,7 +177,7 @@ public class RdfUtils {
 	}
 
 	public static void fixTrustyRdf(RdfFileContent content, String oldArtifactCode, RDFHandler writer)
-			throws IOException, TrustyUriException {
+			throws TrustyUriException {
 		content = RdfPreprocessor.run(content, oldArtifactCode);
 		String newArtifactCode = createArtifactCode(content, oldArtifactCode.startsWith("RB"));
 		content = processNamespaces(content, oldArtifactCode, newArtifactCode);
