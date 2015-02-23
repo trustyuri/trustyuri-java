@@ -35,8 +35,8 @@ public class FileModule extends AbstractTrustyUriModule {
 	}
 
 	@Override
-	public URI fixTrustyUri(TrustyUriResource r) throws IOException {
-		File file = new File(r.getFilename());
+	public URI fixTrustyFile(File file) throws IOException {
+		TrustyUriResource r = new TrustyUriResource(file);
 		File renamedFile = new File(r.getFilename().replaceAll(r.getArtifactCode(), ""));
 		file.renameTo(renamedFile);
 		ProcessFile.process(renamedFile);

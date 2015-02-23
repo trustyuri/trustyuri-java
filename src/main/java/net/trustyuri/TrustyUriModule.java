@@ -1,5 +1,6 @@
 package net.trustyuri;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.openrdf.model.URI;
@@ -42,7 +43,7 @@ public interface TrustyUriModule {
 	 */
 	public boolean hasCorrectHash(TrustyUriResource resource) throws IOException, TrustyUriException;
 
-	public URI fixTrustyUri(TrustyUriResource resource) throws IOException, TrustyUriException, UnsupportedOperationException;
+	public URI fixTrustyFile(File file) throws IOException, TrustyUriException, UnsupportedOperationException;
 
 	/**
 	 * Checks whether the given URI could be a trusty URI represented by this module.

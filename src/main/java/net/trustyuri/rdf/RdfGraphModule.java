@@ -1,5 +1,6 @@
 package net.trustyuri.rdf;
 
+import java.io.File;
 import java.io.IOException;
 
 import net.trustyuri.AbstractTrustyUriModule;
@@ -36,8 +37,8 @@ public class RdfGraphModule extends AbstractTrustyUriModule {
 	}
 
 	@Override
-	public URI fixTrustyUri(TrustyUriResource r) throws IOException, TrustyUriException {
-		return RdfUtils.fixTrustyUri(r, true);
+	public URI fixTrustyFile(File file) throws IOException, TrustyUriException {
+		return RdfUtils.fixTrustyFile(file, true);
 	}
 
 }

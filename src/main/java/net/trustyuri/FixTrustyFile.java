@@ -25,18 +25,19 @@ public class FixTrustyFile {
 		}
 	}
 
-	private TrustyUriResource r;
+	private File file;
 
 	public FixTrustyFile(File file) throws IOException {
-		r = new TrustyUriResource(file);
+		this.file = file;
 	}
 
 	public URI fix() throws IOException, TrustyUriException {
+		TrustyUriResource r = new TrustyUriResource(file);
 		TrustyUriModule module = ModuleDirectory.getModule(r.getModuleId());
 		if (module == null) {
 			throw new TrustyUriException("ERROR: Not a trusty URI or unknown module");
 		}
-		return module.fixTrustyUri(r);
+		return module.fixTrustyFile(file);
 	}
 
 }

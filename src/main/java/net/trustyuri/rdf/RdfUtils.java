@@ -158,7 +158,8 @@ public class RdfUtils {
 		return load(r.getInputStream(), r.getFormat(RDFFormat.TURTLE));
 	}
 
-	public static URI fixTrustyUri(TrustyUriResource r, boolean graphModule) throws IOException, TrustyUriException {
+	public static URI fixTrustyFile(File file, boolean graphModule) throws IOException, TrustyUriException {
+		TrustyUriResource r = new TrustyUriResource(file);
 		RdfFileContent content = RdfUtils.load(r);
 		String oldArtifactCode = r.getArtifactCode();
 		content = RdfPreprocessor.run(content, oldArtifactCode);
@@ -211,7 +212,7 @@ public class RdfUtils {
 
 		@Override
 		public void handleNamespace(String prefix, String uri) throws RDFHandlerException {
-			handler.handleNamespace(prefix, uri.replaceAll(oldArtifactCode, newArtifactCode));
+			handler.handleNamespace(prefix, uri.replace(oldArtifactCode, newArtifactCode));
 		}
 
 		@Override
