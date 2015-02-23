@@ -36,7 +36,7 @@ public class RdfModule extends AbstractTrustyUriModule {
 
 	@Override
 	public void fixTrustyFile(File file) throws IOException, TrustyUriException {
-		RdfUtils.fixTrustyFile(file, false);
+		RdfUtils.fixTrustyRdf(file);
 	}
 
 }
