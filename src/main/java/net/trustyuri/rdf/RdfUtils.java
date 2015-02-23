@@ -158,7 +158,7 @@ public class RdfUtils {
 		return load(r.getInputStream(), r.getFormat(RDFFormat.TURTLE));
 	}
 
-	public static URI fixTrustyFile(File file, boolean graphModule) throws IOException, TrustyUriException {
+	public static void fixTrustyFile(File file, boolean graphModule) throws IOException, TrustyUriException {
 		TrustyUriResource r = new TrustyUriResource(file);
 		RdfFileContent content = RdfUtils.load(r);
 		String oldArtifactCode = r.getArtifactCode();
@@ -184,8 +184,7 @@ public class RdfUtils {
 			ex.printStackTrace();
 		}
 		RDFWriter writer = Rio.createWriter(r.getFormat(RDFFormat.TRIG), out);
-		URI uri = TransformRdf.transformPreprocessed(content, null, writer);
-		return uri;
+		TransformRdf.transformPreprocessed(content, null, writer);
 	}
 
 

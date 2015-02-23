@@ -6,8 +6,6 @@ import java.io.IOException;
 import net.trustyuri.AbstractTrustyUriModule;
 import net.trustyuri.TrustyUriResource;
 
-import org.openrdf.model.URI;
-
 public class FileModule extends AbstractTrustyUriModule {
 
 	public static final String MODULE_ID = "FA";
@@ -35,12 +33,11 @@ public class FileModule extends AbstractTrustyUriModule {
 	}
 
 	@Override
-	public URI fixTrustyFile(File file) throws IOException {
+	public void fixTrustyFile(File file) throws IOException {
 		TrustyUriResource r = new TrustyUriResource(file);
 		File renamedFile = new File(r.getFilename().replaceAll(r.getArtifactCode(), ""));
 		file.renameTo(renamedFile);
 		ProcessFile.process(renamedFile);
-		return null;
 	}
 
 }

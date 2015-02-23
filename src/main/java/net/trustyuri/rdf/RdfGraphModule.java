@@ -7,8 +7,6 @@ import net.trustyuri.AbstractTrustyUriModule;
 import net.trustyuri.TrustyUriException;
 import net.trustyuri.TrustyUriResource;
 
-import org.openrdf.model.URI;
-
 public class RdfGraphModule extends AbstractTrustyUriModule {
 
 	public static final String MODULE_ID = "RB";
@@ -37,8 +35,8 @@ public class RdfGraphModule extends AbstractTrustyUriModule {
 	}
 
 	@Override
-	public URI fixTrustyFile(File file) throws IOException, TrustyUriException {
-		return RdfUtils.fixTrustyFile(file, true);
+	public void fixTrustyFile(File file) throws IOException, TrustyUriException {
+		RdfUtils.fixTrustyFile(file, true);
 	}
 
 }

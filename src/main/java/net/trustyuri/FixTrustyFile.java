@@ -3,8 +3,6 @@ package net.trustyuri;
 import java.io.File;
 import java.io.IOException;
 
-import org.openrdf.model.URI;
-
 /**
  * @author Tobias Kuhn
  */
@@ -18,11 +16,7 @@ public class FixTrustyFile {
 
 	public static void fix(File file) throws IOException, TrustyUriException {
 		FixTrustyFile c = new FixTrustyFile(file);
-
-		URI uri = c.fix();
-		if (uri != null) {
-			System.out.println("Fixed URI: " + uri);
-		}
+		c.fix();
 	}
 
 	private File file;
@@ -31,13 +25,13 @@ public class FixTrustyFile {
 		this.file = file;
 	}
 
-	public URI fix() throws IOException, TrustyUriException {
+	public void fix() throws IOException, TrustyUriException {
 		TrustyUriResource r = new TrustyUriResource(file);
 		TrustyUriModule module = ModuleDirectory.getModule(r.getModuleId());
 		if (module == null) {
 			throw new TrustyUriException("ERROR: Not a trusty URI or unknown module");
 		}
-		return module.fixTrustyFile(file);
+		module.fixTrustyFile(file);
 	}
 
 }
