@@ -9,6 +9,7 @@ import java.net.URLConnection;
 import java.util.zip.GZIPInputStream;
 
 import org.openrdf.rio.RDFFormat;
+import org.openrdf.rio.Rio;
 
 public class TrustyUriResource {
 
@@ -99,9 +100,9 @@ public class TrustyUriResource {
 	}
 
 	public RDFFormat getFormat(RDFFormat defaultFormat) {
-		RDFFormat format = RDFFormat.forMIMEType(getMimetype());
+		RDFFormat format = Rio.getParserFormatForMIMEType(getMimetype());
 		if (format == null) {
-			format = RDFFormat.forFileName(getFilename(), defaultFormat);
+			format = Rio.getParserFormatForFileName(getFilename(), defaultFormat);
 		}
 		return format;
 	}
