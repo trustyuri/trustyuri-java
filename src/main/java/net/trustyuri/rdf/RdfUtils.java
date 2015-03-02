@@ -158,17 +158,13 @@ public class RdfUtils {
 		return load(r.getInputStream(), r.getFormat(RDFFormat.TURTLE));
 	}
 
-	public static void fixTrustyFile(File file, boolean graphModule) throws IOException, TrustyUriException {
+	public static void fixTrustyRdf(File file) throws IOException, TrustyUriException {
 		TrustyUriResource r = new TrustyUriResource(file);
 		RdfFileContent content = RdfUtils.load(r);
 		String oldArtifactCode = r.getArtifactCode();
 		content = RdfPreprocessor.run(content, oldArtifactCode);
-		String newArtifactCode;
-		if (graphModule) {
-			newArtifactCode = RdfHasher.makeGraphArtifactCode(content.getStatements());
-		} else {
-			newArtifactCode = RdfHasher.makeArtifactCode(content.getStatements());
-		}
+		String newArtifactCode = createArtifactCode(content, oldArtifactCode.startsWith("RB"));
+		content = processNamespaces(content, oldArtifactCode, newArtifactCode);
 		OutputStream out;
 		String filename = r.getFilename().replace(oldArtifactCode, newArtifactCode);
 		if (filename.matches(".*\\.(gz|gzip)")) {
@@ -176,15 +172,35 @@ public class RdfUtils {
 		} else {
 			out = new FileOutputStream(new File("fixed." + filename));
 		}
-		RdfFileContent contentOut = new RdfFileContent(content.getOriginalFormat());
+		RDFWriter writer = Rio.createWriter(r.getFormat(RDFFormat.TRIG), out);
+		TransformRdf.transformPreprocessed(content, null, writer);
+	}
+
+	public static void fixTrustyRdf(RdfFileContent content, String oldArtifactCode, RDFHandler writer)
+			throws TrustyUriException {
+		content = RdfPreprocessor.run(content, oldArtifactCode);
+		String newArtifactCode = createArtifactCode(content, oldArtifactCode.startsWith("RB"));
+		content = processNamespaces(content, oldArtifactCode, newArtifactCode);
+		TransformRdf.transformPreprocessed(content, null, writer);
+	}
+
+	private static String createArtifactCode(RdfFileContent preprocessedContent, boolean graphModule) throws TrustyUriException {
+		if (graphModule) {
+			return RdfHasher.makeGraphArtifactCode(preprocessedContent.getStatements());
+		} else {
+			return RdfHasher.makeArtifactCode(preprocessedContent.getStatements());
+		}
+	}
+
+	private static RdfFileContent processNamespaces(RdfFileContent content, String oldArtifactCode, String newArtifactCode) {
 		try {
+			RdfFileContent contentOut = new RdfFileContent(content.getOriginalFormat());
 			content.propagate(new NamespaceProcessor(oldArtifactCode, newArtifactCode, contentOut));
-			content = contentOut;
+			return contentOut;
 		} catch (RDFHandlerException ex) {
 			ex.printStackTrace();
 		}
-		RDFWriter writer = Rio.createWriter(r.getFormat(RDFFormat.TRIG), out);
-		TransformRdf.transformPreprocessed(content, null, writer);
+		return content;
 	}
 
 
