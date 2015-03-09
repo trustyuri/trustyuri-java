@@ -29,19 +29,21 @@ import org.openrdf.rio.helpers.RDFaParserSettings;
 
 public class RdfUtils {
 
+	public static final char bnodeChar = '_';
+	public static final char preAcChar = '.';
+	public static final char postAcChar = '#';
+	public static final char postAcFallbackChar = '.';
+
 	private RdfUtils() {}  // no instances allowed
 
 	public static String getTrustyUriString(URI baseUri, String artifactCode, String suffix) {
-		UriTransformConfig c = UriTransformConfig.getDefault();
 		String s = expandBaseUri(baseUri) + artifactCode;
 		if (suffix != null) {
-			if (suffix.startsWith(c.getBnodeChar() + "")) {
+			if (suffix.startsWith(bnodeChar + "")) {
 				// Duplicate bnode character for escaping:
-				s += c.getPostHashChar() + c.getBnodeChar() + suffix;
-			} else if (!c.isPostHashCharForced() && suffix.matches("[^A-Za-z0-9\\-_].*")) {
-				s += suffix;
+				s += getPostAcChar(baseUri) + bnodeChar + suffix;
 			} else {
-				s += c.getPostHashChar() + suffix;
+				s += getPostAcChar(baseUri) + suffix;
 			}
 		}
 		return s;
@@ -96,10 +98,16 @@ public class RdfUtils {
 		}
 	}
 
+	public static char getPostAcChar(URI baseUri) {
+		if (baseUri.stringValue().contains("#")) {
+			return postAcFallbackChar;
+		}
+		return postAcChar;
+	}
+
 	private static URI getSkolemizedUri(BNode bnode, URI baseUri, Map<String,Integer> bnodeMap) {
 		int n = getBlankNodeNumber(bnode, bnodeMap);
-		UriTransformConfig c = UriTransformConfig.getDefault();
-		return new URIImpl(expandBaseUri(baseUri) + " " + c.getPostHashChar() + c.getBnodeChar() + n);
+		return new URIImpl(expandBaseUri(baseUri) + " " + getPostAcChar(baseUri) + bnodeChar + n);
 	}
 
 	private static String getSuffix(URI plainUri, URI baseUri) {
@@ -135,10 +143,9 @@ public class RdfUtils {
 	}
 
 	private static String expandBaseUri(URI baseUri) {
-		UriTransformConfig c = UriTransformConfig.getDefault();
 		String s = baseUri.toString();
-		if (s.matches(".*[A-Za-z0-9\\-_]") || c.isPreHashCharForced()) {
-			s += c.getPreHashChar();
+		if (s.matches(".*[A-Za-z0-9\\-_]")) {
+			s += preAcChar;
 		}
 		return s;
 	}

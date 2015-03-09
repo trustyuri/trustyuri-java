@@ -151,10 +151,9 @@ public class TransformRdf {
 		String uri = RdfUtils.getTrustyUriString(baseURI, artifactCode);
 		String s = v.toString().replace(" ", artifactCode);
 		if (!s.startsWith(uri)) return;
-		UriTransformConfig c = UriTransformConfig.getDefault();
 		String suffix = s.substring(uri.length());
-		if (suffix.length() > 2 && suffix.charAt(0) == c.getPostHashChar() && suffix.charAt(1) == c.getBnodeChar() &&
-				!(c.getBnodeChar() + "").matches("[A-Za-z0-9\\-_]")) {
+		if (suffix.length() > 2 && suffix.charAt(0) == RdfUtils.getPostAcChar(baseURI) && suffix.charAt(1) == RdfUtils.bnodeChar &&
+				!(RdfUtils.bnodeChar + "").matches("[A-Za-z0-9\\-_]")) {
 			ns.put("node", uri + "..");
 		} else if (suffix.matches("[^A-Za-z0-9\\-_].*")) {
 			ns.put("sub", uri + suffix.charAt(0));
