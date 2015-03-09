@@ -154,6 +154,7 @@ public class RdfPreprocessor implements RDFHandler {
 
 	private URI transform(Resource r, URI trustyGraph) {
 		if (baseUri == null) {
+			RdfUtils.checkUri((URI) r);
 			return new URIImpl(RdfUtils.normalize((URI) r, artifactCode));
 		}
 		URI uri = RdfUtils.getPreUri(r, baseUri, blankNodeMap, trustyGraph != null);

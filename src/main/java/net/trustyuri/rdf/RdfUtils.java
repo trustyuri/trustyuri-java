@@ -66,12 +66,7 @@ public class RdfUtils {
 			throw new RuntimeException("Resource is null");
 		} else if (resource instanceof URI) {
 			URI plainUri = (URI) resource;
-			try {
-				// Raise error if not well-formed
-				new java.net.URI(plainUri.stringValue());
-			} catch (URISyntaxException ex) {
-				throw new RuntimeException("Malformed URI: " + plainUri.stringValue(), ex);
-			}
+			checkUri(plainUri);
 			// TODO Add option to disable suffixes appended to trusty URIs
 			String suffix = getSuffix(plainUri, baseUri);
 			if (suffix == null && !plainUri.equals(baseUri)) {
@@ -89,6 +84,15 @@ public class RdfUtils {
 			} else {
 				return getSkolemizedUri((BNode) resource, baseUri, bnodeMap);
 			}
+		}
+	}
+
+	public static void checkUri(URI uri) {
+		try {
+			// Raise error if not well-formed
+			new java.net.URI(uri.stringValue());
+		} catch (URISyntaxException ex) {
+			throw new RuntimeException("Malformed URI: " + uri.stringValue(), ex);
 		}
 	}
 
