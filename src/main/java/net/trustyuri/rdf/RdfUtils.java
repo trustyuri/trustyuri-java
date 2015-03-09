@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
 
@@ -65,8 +66,11 @@ public class RdfUtils {
 			throw new RuntimeException("Resource is null");
 		} else if (resource instanceof URI) {
 			URI plainUri = (URI) resource;
-			if (plainUri.toString().matches(".*(\\n|\\t).*")) {
-				throw new RuntimeException("Newline or tab character in URI: " + plainUri.toString());
+			try {
+				// Raise error if not well-formed
+				new java.net.URI(plainUri.stringValue());
+			} catch (URISyntaxException ex) {
+				throw new RuntimeException("Malformed URI: " + plainUri.stringValue(), ex);
 			}
 			// TODO Add option to disable suffixes appended to trusty URIs
 			String suffix = getSuffix(plainUri, baseUri);
