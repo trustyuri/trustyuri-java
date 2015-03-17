@@ -39,6 +39,7 @@ public class RdfUtils {
 	public static String getTrustyUriString(URI baseUri, String artifactCode, String suffix) {
 		String s = expandBaseUri(baseUri) + artifactCode;
 		if (suffix != null) {
+			suffix = suffix.replace("#", "%23");
 			if (suffix.startsWith(bnodeChar + "")) {
 				// Duplicate bnode character for escaping:
 				s += getPostAcChar(baseUri) + bnodeChar + suffix;
