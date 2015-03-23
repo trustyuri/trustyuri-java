@@ -29,13 +29,13 @@ Repository. Just include the following lines in your `pom.xml` file:
 Build
 -----
 
-Maven is required to build this library:
+Maven is required to build and run this library:
 
-    $ mvn clean package
+    $ mvn clean install
 
 
-Run
----
+Run from Source
+---------------
 
 Run the following command to check a file or URL with a trusty URI:
 
@@ -49,8 +49,25 @@ To transform an RDF document, use this command (the second argument is optional)
 
     $ scripts/TransformRdf.sh [FILE] [BASE-URI]
 
-Running from a single JAR file should be possible, but does not work at the moment,
-see [Issue 2](https://github.com/trustyuri/trustyuri-java/issues/2).
+
+Run from JAR File
+-----------------
+
+Alternatively, you can generate a single JAR file with the following command
+(the JAR file will show up in `target/`):
+
+    $ mvn compile assembly:single
+
+Or you can download a prebuilt JAR file:
+https://github.com/trustyuri/trustyuri-java/releases
+
+Then you can use the same commands as in the `scripts/` directory as follows:
+
+    $ java -jar trustyuri-1.4-jar-with-dependencies.jar [COMMAND] [ARGS]
+
+For example:
+
+    $ java -jar trustyuri-1.4-jar-with-dependencies.jar CheckFile http://trustyuri.net/spec/v1.FADQoZWcYugekAb4jW-Zm3_5Cd9tmkkYEV0bxK2fLSKao.md
 
 
 License
