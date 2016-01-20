@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.util.Comparator;
@@ -134,7 +135,7 @@ public class TransformLargeRdf {
 		} else {
 			out = new FileOutputStream(new File(inputDir, acFileName));
 		}
-		RDFWriter writer = Rio.createWriter(format, out);
+		RDFWriter writer = Rio.createWriter(format, new OutputStreamWriter(out, Charset.forName("UTF-8")));
 		final HashAdder replacer = new HashAdder(baseUri, artifactCode, writer, null);
 
 		br = new BufferedReader(new FileReader(sortOutFile));

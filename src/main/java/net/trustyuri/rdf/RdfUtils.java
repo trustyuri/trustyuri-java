@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.util.Map;
@@ -190,7 +191,7 @@ public class RdfUtils {
 		} else {
 			out = new FileOutputStream(new File("fixed." + filename));
 		}
-		RDFWriter writer = Rio.createWriter(r.getFormat(RDFFormat.TRIG), out);
+		RDFWriter writer = Rio.createWriter(r.getFormat(RDFFormat.TRIG), new OutputStreamWriter(out, Charset.forName("UTF-8")));
 		TransformRdf.transformPreprocessed(content, null, writer);
 	}
 

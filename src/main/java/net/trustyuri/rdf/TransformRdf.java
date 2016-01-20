@@ -5,6 +5,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,7 +69,7 @@ public class TransformRdf {
 		} else {
 			out = new FileOutputStream(new File(inputFile.getParent(), fileName));
 		}
-		RDFWriter writer = Rio.createWriter(format, out);
+		RDFWriter writer = Rio.createWriter(format, new OutputStreamWriter(out, Charset.forName("UTF-8")));
 		URI uri = includeArtifactCode(content, artifactCode, baseUri, writer);
 		out.close();
 		return uri;
@@ -86,7 +88,7 @@ public class TransformRdf {
 		URI baseUri = getBaseURI(baseName);
 		RdfFileContent content = RdfUtils.load(in, format);
 		content = RdfPreprocessor.run(content, baseUri);
-		RDFWriter writer = Rio.createWriter(format, out);
+		RDFWriter writer = Rio.createWriter(format, new OutputStreamWriter(out, Charset.forName("UTF-8")));
 		URI uri = transformPreprocessed(content, baseUri, writer);
 		out.close();
 		return uri;

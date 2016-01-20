@@ -62,7 +62,7 @@ public class CheckLargeRdf {
 			public void handleStatement(Statement st) throws RDFHandlerException {
 				String s = SerStatementComparator.toString(st) + "\n";
 				try {
-					preOut.write(s.getBytes());
+					preOut.write(s.getBytes(Charset.forName("UTF-8")));
 				} catch (IOException ex) {
 					ex.printStackTrace();
 				}

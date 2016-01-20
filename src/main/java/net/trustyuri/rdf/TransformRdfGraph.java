@@ -7,6 +7,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,7 +58,7 @@ public class TransformRdfGraph {
 			throws IOException, TrustyUriException {
 		try {
 			OutputStream out = new FileOutputStream(outputFile);
-			processBaseUris(content, Rio.createWriter(content.getOriginalFormat(), out), baseUris);
+			processBaseUris(content, Rio.createWriter(content.getOriginalFormat(), new OutputStreamWriter(out, Charset.forName("UTF-8"))), baseUris);
 			out.close();
 		} catch (RDFHandlerException ex) {
 			throw new TrustyUriException(ex);
@@ -76,7 +78,7 @@ public class TransformRdfGraph {
 			throws IOException, TrustyUriException {
 		RdfFileContent content = RdfUtils.load(in, format);
 		try {
-			processBaseUris(content, Rio.createWriter(format, out), baseUris);
+			processBaseUris(content, Rio.createWriter(format, new OutputStreamWriter(out, Charset.forName("UTF-8"))), baseUris);
 		} catch (RDFHandlerException ex) {
 			throw new TrustyUriException(ex);
 		}
