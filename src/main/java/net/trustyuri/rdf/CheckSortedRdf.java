@@ -3,7 +3,6 @@ package net.trustyuri.rdf;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.security.MessageDigest;
 
 import net.trustyuri.TrustyUriException;
@@ -72,7 +71,7 @@ public class CheckSortedRdf {
 			}
 
 		}, r.getArtifactCode()));
-		BufferedReader reader = new BufferedReader(new InputStreamReader(r.getInputStream()), 64*1024);
+		BufferedReader reader = new BufferedReader(r.getInputStreamReader(), 64*1024);
 		try {
 			p.parse(reader, "");
 		} catch (OpenRDFException ex) {

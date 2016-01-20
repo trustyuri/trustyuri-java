@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
 
@@ -156,7 +158,7 @@ public class RdfUtils {
 		RdfFileContent content = new RdfFileContent(format);
 		p.setRDFHandler(content);
 		try {
-			p.parse(in, "");
+			p.parse(new InputStreamReader(in, Charset.forName("UTF-8")), "");
 		} catch (OpenRDFException ex) {
 			throw new TrustyUriException(ex);
 		}

@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
@@ -89,7 +88,7 @@ public class TransformLargeRdf {
 			}
 
 		}, baseUri));
-		BufferedReader reader = new BufferedReader(new InputStreamReader(r.getInputStream()), 64*1024);
+		BufferedReader reader = new BufferedReader(r.getInputStreamReader(), 64*1024);
 		try {
 			p.parse(reader, "");
 		} catch (OpenRDFException ex) {

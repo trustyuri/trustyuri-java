@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.Charset;
 import java.util.zip.GZIPInputStream;
 
 import org.openrdf.rio.RDFFormat;
@@ -85,6 +87,10 @@ public class TrustyUriResource {
 
 	public InputStream getInputStream() {
 		return in;
+	}
+
+	public InputStreamReader getInputStreamReader() {
+		return new InputStreamReader(in, Charset.forName("UTF-8"));
 	}
 
 	public String getArtifactCode() {

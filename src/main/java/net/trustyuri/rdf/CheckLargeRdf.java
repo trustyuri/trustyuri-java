@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.util.Comparator;
@@ -22,7 +21,6 @@ import org.openrdf.rio.RDFParser;
 import org.openrdf.rio.Rio;
 import org.openrdf.rio.helpers.RDFHandlerBase;
 import org.openrdf.rio.helpers.RDFaParserSettings;
-
 
 import com.google.code.externalsorting.ExternalSort;
 
@@ -71,7 +69,7 @@ public class CheckLargeRdf {
 			}
 
 		}, r.getArtifactCode()));
-		BufferedReader reader = new BufferedReader(new InputStreamReader(r.getInputStream()), 64*1024);
+		BufferedReader reader = new BufferedReader(r.getInputStreamReader(), 64*1024);
 		try {
 			p.parse(reader, "");
 		} catch (OpenRDFException ex) {
