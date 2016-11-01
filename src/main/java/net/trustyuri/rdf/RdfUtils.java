@@ -45,9 +45,9 @@ public class RdfUtils {
 			suffix = suffix.replace("#", "%23");
 			if (suffix.startsWith(bnodeChar + "")) {
 				// Duplicate bnode character for escaping:
-				s += getPostAcChar(baseUri) + bnodeChar + suffix;
+				s += "" + getPostAcChar(baseUri) + bnodeChar + suffix;
 			} else {
-				s += getPostAcChar(baseUri) + suffix;
+				s += "" + getPostAcChar(baseUri) + suffix;
 			}
 		}
 		return s;
