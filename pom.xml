@@ -3,7 +3,7 @@
   <groupId>net.trustyuri</groupId>
   <artifactId>trustyuri</artifactId>
   <packaging>jar</packaging>
-  <version>1.8-SNAPSHOT</version>
+  <version>1.9-SNAPSHOT</version>
   <name>trustyuri</name>
   <description>Trusty URI implementation for Java</description>
   <url>http://trustyuri.net</url>
