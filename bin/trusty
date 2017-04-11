@@ -1,0 +1,23 @@
+#!/bin/bash
+
+WORKINGDIR=`pwd`
+
+cd "$( dirname "${BASH_SOURCE[0]}" )"
+cd -P ..
+
+PROJECTDIR=`pwd`
+# for Cygwin:
+PROJECTDIR=${PROJECTDIR#/cygdrive/?}
+
+cd $WORKINGDIR
+
+COMMAND=$1
+shift
+
+if [ -z "$COMMAND" ]; then
+  echo "Available commands:"
+  ls $PROJECTDIR/scripts | grep -e '^[A-Z]' | sed -r 's/^(.*)\.sh/- \1/'
+else
+  $PROJECTDIR/scripts/$COMMAND.sh "$@"
+fi
+
