@@ -1,5 +1,6 @@
 package net.trustyuri.file;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 
@@ -28,7 +29,7 @@ public class FileModule extends AbstractTrustyUriModule {
 	@Override
 	public boolean hasCorrectHash(TrustyUriResource r) throws IOException {
 		FileHasher hasher = new FileHasher();
-		String ac = hasher.makeArtifactCode(r.getInputStream());
+		String ac = hasher.makeArtifactCode(new BufferedInputStream(r.getInputStream()));
 		return r.getArtifactCode().equals(ac);
 	}
 

@@ -1,5 +1,6 @@
 package net.trustyuri.file;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -15,7 +16,7 @@ public class ProcessFile {
 	public static void process(File file) throws IOException {
 		String filename = file.getName();
 		FileHasher hasher = new FileHasher();
-		String ac = hasher.makeArtifactCode(new FileInputStream(file));
+		String ac = hasher.makeArtifactCode(new BufferedInputStream(new FileInputStream(file)));
 		String ext = "";
 		String base = filename;
 		if (filename.matches(".+\\.[A-Za-z0-9\\-_]{0,20}")) {
