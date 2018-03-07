@@ -88,15 +88,15 @@ public class RdfFileContent implements RDFHandler {
 		propagate(handler, true);
 	}
 
-	public void propagate(RDFHandler handler, boolean doStardAndEnd) throws RDFHandlerException {
-		if (doStardAndEnd) handler.startRDF();
+	public void propagate(RDFHandler handler, boolean doStartAndEnd) throws RDFHandlerException {
+		if (doStartAndEnd) handler.startRDF();
 		for (Pair<String,String> ns : namespaces) {
 			handler.handleNamespace(ns.getLeft(), ns.getRight());
 		}
 		for (Statement st : statements) {
 			handler.handleStatement(st);
 		}
-		if (doStardAndEnd) handler.endRDF();
+		if (doStartAndEnd) handler.endRDF();
 	}
 
 	public RDFFormat getOriginalFormat() {
