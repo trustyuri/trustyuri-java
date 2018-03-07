@@ -77,6 +77,19 @@ public class RdfHasher {
 		return md;
 	}
 
+	public static String getDigestString(List<Statement> statements) {
+		StringBuilder sb = new StringBuilder();
+		Collections.sort(statements, new StatementComparator());
+		Statement previous = null;
+		for (Statement st : statements) {
+			if (!st.equals(previous)) {
+				sb.append(getDigestString(st));
+			}
+			previous = st;
+		}
+		return sb.toString();
+	}
+
 	public static MessageDigest getDigest() {
 		MessageDigest md = null;
 		try {
@@ -104,6 +117,15 @@ public class RdfHasher {
 		md.update(valueToString(st.getPredicate()).getBytes());
 		if (DEBUG) System.err.print(valueToString(st.getObject()));
 		md.update(valueToString(st.getObject()).getBytes());
+	}
+
+	public static String getDigestString(Statement st) {
+		String s = "";
+		s += valueToString(st.getContext());
+		s += valueToString(st.getSubject());
+		s += valueToString(st.getPredicate());
+		s += valueToString(st.getObject());
+		return s;
 	}
 
 	private static String valueToString(Value v) {
