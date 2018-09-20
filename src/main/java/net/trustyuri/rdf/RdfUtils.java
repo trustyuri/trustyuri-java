@@ -148,6 +148,7 @@ public class RdfUtils {
 
 	private static String expandBaseUri(URI baseUri) {
 		String s = baseUri.toString();
+		s = s.replaceFirst("ARTIFACTCODE-PLACEHOLDER[\\.#/]?$", "");
 		if (s.matches(".*[A-Za-z0-9\\-_]")) {
 			s += preAcChar;
 		}
