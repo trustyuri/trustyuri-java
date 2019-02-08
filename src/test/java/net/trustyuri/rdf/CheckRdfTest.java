@@ -2,11 +2,11 @@ package net.trustyuri.rdf;
 
 import java.io.File;
 
-import net.trustyuri.CheckFile;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+
+import net.trustyuri.CheckFile;
 
 
 public class CheckRdfTest {

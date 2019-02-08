@@ -2,14 +2,13 @@ package net.trustyuri.rdf;
 
 import java.io.File;
 
-import net.trustyuri.CheckFile;
-import net.trustyuri.TrustyUriUtils;
-import net.trustyuri.rdf.TransformRdf;
-
 import org.apache.commons.io.FileUtils;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+
+import net.trustyuri.CheckFile;
+import net.trustyuri.TrustyUriUtils;
 
 
 public class TransformRdfTest {

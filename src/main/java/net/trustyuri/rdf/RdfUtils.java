@@ -12,23 +12,25 @@ import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
 
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.model.BNode;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.RDFHandler;
+import org.eclipse.rdf4j.rio.RDFHandlerException;
+import org.eclipse.rdf4j.rio.RDFParser;
+import org.eclipse.rdf4j.rio.RDFWriter;
+import org.eclipse.rdf4j.rio.Rio;
+import org.eclipse.rdf4j.rio.helpers.BasicParserSettings;
+import org.eclipse.rdf4j.rio.helpers.RDFaParserSettings;
+import org.eclipse.rdf4j.rio.helpers.RioSettingImpl;
+
 import net.trustyuri.TrustyUriException;
 import net.trustyuri.TrustyUriResource;
 import net.trustyuri.TrustyUriUtils;
-
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.BNode;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
-import org.openrdf.model.impl.URIImpl;
-import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.RDFHandler;
-import org.openrdf.rio.RDFHandlerException;
-import org.openrdf.rio.RDFParser;
-import org.openrdf.rio.RDFWriter;
-import org.openrdf.rio.Rio;
-import org.openrdf.rio.helpers.RDFaParserSettings;
 
 public class RdfUtils {
 
@@ -39,7 +41,7 @@ public class RdfUtils {
 
 	private RdfUtils() {}  // no instances allowed
 
-	public static String getTrustyUriString(URI baseUri, String artifactCode, String suffix) {
+	public static String getTrustyUriString(IRI baseUri, String artifactCode, String suffix) {
 		String s = expandBaseUri(baseUri) + artifactCode;
 		if (suffix != null) {
 			suffix = suffix.replace("#", "%23");
@@ -53,25 +55,25 @@ public class RdfUtils {
 		return s;
 	}
 
-	public static String getTrustyUriString(URI baseUri, String artifactCode) {
+	public static String getTrustyUriString(IRI baseUri, String artifactCode) {
 		return getTrustyUriString(baseUri, artifactCode, null);
 	}
 
-	public static URI getTrustyUri(URI baseUri, String artifactCode, String suffix) {
+	public static IRI getTrustyUri(IRI baseUri, String artifactCode, String suffix) {
 		if (baseUri == null) return null;
-		return new URIImpl(getTrustyUriString(baseUri, artifactCode, suffix));
+		return SimpleValueFactory.getInstance().createIRI(getTrustyUriString(baseUri, artifactCode, suffix));
 	}
 
-	public static URI getTrustyUri(URI baseUri, String artifactCode) {
+	public static IRI getTrustyUri(IRI baseUri, String artifactCode) {
 		if (baseUri == null) return null;
-		return new URIImpl(getTrustyUriString(baseUri, artifactCode, null));
+		return SimpleValueFactory.getInstance().createIRI(getTrustyUriString(baseUri, artifactCode, null));
 	}
 
-	public static URI getPreUri(Resource resource, URI baseUri, Map<String,Integer> bnodeMap, boolean frozen) {
+	public static IRI getPreUri(Resource resource, IRI baseUri, Map<String,Integer> bnodeMap, boolean frozen) {
 		if (resource == null) {
 			throw new RuntimeException("Resource is null");
-		} else if (resource instanceof URI) {
-			URI plainUri = (URI) resource;
+		} else if (resource instanceof IRI) {
+			IRI plainUri = (IRI) resource;
 			checkUri(plainUri);
 			// TODO Add option to disable suffixes appended to trusty URIs
 			String suffix = getSuffix(plainUri, baseUri);
@@ -93,7 +95,7 @@ public class RdfUtils {
 		}
 	}
 
-	public static void checkUri(URI uri) {
+	public static void checkUri(IRI uri) {
 		try {
 			// Raise error if not well-formed
 			new java.net.URI(uri.stringValue());
@@ -102,19 +104,19 @@ public class RdfUtils {
 		}
 	}
 
-	public static char getPostAcChar(URI baseUri) {
+	public static char getPostAcChar(IRI baseUri) {
 		if (baseUri.stringValue().contains("#")) {
 			return postAcFallbackChar;
 		}
 		return postAcChar;
 	}
 
-	private static URI getSkolemizedUri(BNode bnode, URI baseUri, Map<String,Integer> bnodeMap) {
+	private static IRI getSkolemizedUri(BNode bnode, IRI baseUri, Map<String,Integer> bnodeMap) {
 		int n = getBlankNodeNumber(bnode, bnodeMap);
-		return new URIImpl(expandBaseUri(baseUri) + " " + getPostAcChar(baseUri) + bnodeChar + n);
+		return SimpleValueFactory.getInstance().createIRI(expandBaseUri(baseUri) + " " + getPostAcChar(baseUri) + bnodeChar + n);
 	}
 
-	private static String getSuffix(URI plainUri, URI baseUri) {
+	private static String getSuffix(IRI plainUri, IRI baseUri) {
 		if (baseUri == null) return null;
 		String b = baseUri.toString();
 		String p = plainUri.toString();
@@ -127,7 +129,7 @@ public class RdfUtils {
 		}
 	}
 
-	public static String normalize(URI uri, String artifactCode) {
+	public static String normalize(IRI uri, String artifactCode) {
 		String s = uri.toString();
 		if (s.indexOf('\n') > -1 || s.indexOf('\t') > -1) {
 			throw new RuntimeException("Newline or tab character in URI: " + s);
@@ -146,7 +148,7 @@ public class RdfUtils {
 		return n;
 	}
 
-	private static String expandBaseUri(URI baseUri) {
+	private static String expandBaseUri(IRI baseUri) {
 		String s = baseUri.toString();
 		s = s.replaceFirst("ARTIFACTCODE-PLACEHOLDER[\\.#/]?$", "");
 		if (s.matches(".*[A-Za-z0-9\\-_]")) {
@@ -161,7 +163,8 @@ public class RdfUtils {
 		p.setRDFHandler(content);
 		try {
 			p.parse(new InputStreamReader(in, Charset.forName("UTF-8")), "");
-		} catch (OpenRDFException ex) {
+		} catch (RDF4JException ex) {
+			ex.printStackTrace();
 			throw new TrustyUriException(ex);
 		}
 		in.close();
@@ -170,6 +173,7 @@ public class RdfUtils {
 
 	public static RDFParser getParser(RDFFormat format) {
 		RDFParser p = Rio.createParser(format);
+		p.getParserConfig().addNonFatalError(BasicParserSettings.VERIFY_URI_SYNTAX);
 		p.getParserConfig().set(RDFaParserSettings.FAIL_ON_RDFA_UNDEFINED_PREFIXES, true);
 		return p;
 	}

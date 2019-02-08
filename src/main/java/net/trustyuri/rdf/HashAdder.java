@@ -3,25 +3,24 @@ package net.trustyuri.rdf;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.openrdf.model.BNode;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
-import org.openrdf.model.Value;
-import org.openrdf.model.impl.ContextStatementImpl;
-import org.openrdf.model.impl.URIImpl;
-import org.openrdf.rio.RDFHandler;
-import org.openrdf.rio.RDFHandlerException;
+import org.eclipse.rdf4j.model.BNode;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.rio.RDFHandler;
+import org.eclipse.rdf4j.rio.RDFHandlerException;
 
 public class HashAdder implements RDFHandler {
 
-	private URI baseURI;
+	private IRI baseURI;
 	private String artifactCode;
 	private RDFHandler handler;
 	private Map<String,String> ns;
-	private Map<URI,URI> transformMap;
+	private Map<IRI,IRI> transformMap;
 
-	public HashAdder(URI baseURI, String artifactCode, RDFHandler handler, Map<String,String> ns) {
+	public HashAdder(IRI baseURI, String artifactCode, RDFHandler handler, Map<String,String> ns) {
 		this.baseURI = baseURI;
 		this.artifactCode = artifactCode;
 		this.handler = handler;
@@ -29,7 +28,7 @@ public class HashAdder implements RDFHandler {
 		if (ns == null) {
 			this.ns = new HashMap<String,String>();
 		}
-		transformMap = new HashMap<URI,URI>();
+		transformMap = new HashMap<IRI,IRI>();
 	}
 
 	@Override
@@ -57,12 +56,12 @@ public class HashAdder implements RDFHandler {
 	public void handleStatement(Statement st) throws RDFHandlerException {
 		Resource context = transform(st.getContext());
 		Resource subject = transform(st.getSubject());
-		URI predicate = transform(st.getPredicate());
+		IRI predicate = transform(st.getPredicate());
 		Value object = st.getObject();
 		if (object instanceof Resource) {
 			object = transform((Resource) object);
 		}
-		Statement n = new ContextStatementImpl(subject, predicate, object, context);
+		Statement n = SimpleValueFactory.getInstance().createStatement(subject, predicate, object, context);
 		handler.handleStatement(n);
 	}
 
@@ -71,19 +70,19 @@ public class HashAdder implements RDFHandler {
 		handler.handleComment(comment);
 	}
 
-	private URI transform(Resource r) {
+	private IRI transform(Resource r) {
 		if (r == null) {
 			return null;
 		} else if (r instanceof BNode) {
 			throw new RuntimeException("Unexpected blank node encountered");
 		} else {
-			URI transformedURI = new URIImpl(r.toString().replace(" ", artifactCode));
-			transformMap.put((URI) r, transformedURI);
+			IRI transformedURI = SimpleValueFactory.getInstance().createIRI(r.toString().replace(" ", artifactCode));
+			transformMap.put((IRI) r, transformedURI);
 			return transformedURI;
 		}
 	}
 
-	public Map<URI,URI> getTransformMap() {
+	public Map<IRI,IRI> getTransformMap() {
 		return transformMap;
 	}
 

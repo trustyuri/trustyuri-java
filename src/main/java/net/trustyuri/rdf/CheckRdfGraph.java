@@ -7,13 +7,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+
 import net.trustyuri.TrustyUriException;
 import net.trustyuri.TrustyUriResource;
 import net.trustyuri.TrustyUriUtils;
-
-import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
-import org.openrdf.model.impl.URIImpl;
 
 public class CheckRdfGraph {
 
@@ -30,7 +30,7 @@ public class CheckRdfGraph {
 			c = new CheckRdfGraph(new File(fileName));
 		}
 		for (int i = 1 ; i < args.length ; i++) {
-			URI graphUri = new URIImpl(args[i]);
+			IRI graphUri = SimpleValueFactory.getInstance().createIRI(args[i]);
 			boolean valid = c.check(graphUri);
 			if (valid) {
 				System.out.println("Correct hash: " + getArtifactCode(graphUri));
@@ -57,7 +57,7 @@ public class CheckRdfGraph {
 		content = RdfUtils.load(r);
 	}
 
-	public boolean check(URI graphUri) throws TrustyUriException {
+	public boolean check(IRI graphUri) throws TrustyUriException {
 		String artifactCode = getArtifactCode(graphUri);
 		if (artifactCode == null) {
 			throw new TrustyUriException("Not a trusty URI: " + graphUri);
@@ -74,7 +74,7 @@ public class CheckRdfGraph {
 		return artifactCode.equals(ac);
 	}
 
-	private static String getArtifactCode(URI graphUri) {
+	private static String getArtifactCode(IRI graphUri) {
 		return TrustyUriUtils.getArtifactCode(graphUri.stringValue());
 	}
 

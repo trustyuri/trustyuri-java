@@ -2,8 +2,6 @@ package net.trustyuri.rdf;
 
 import java.io.File;
 
-import net.trustyuri.rdf.CheckSortedRdf;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;

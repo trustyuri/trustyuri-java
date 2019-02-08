@@ -6,16 +6,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.rdf4j.model.BNode;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.vocabulary.XMLSchema;
+
 import net.trustyuri.TrustyUriException;
 import net.trustyuri.TrustyUriUtils;
-
-import org.openrdf.model.BNode;
-import org.openrdf.model.Literal;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
-import org.openrdf.model.Value;
-import org.openrdf.model.vocabulary.XMLSchema;
 
 public class RdfHasher {
 
@@ -29,7 +29,7 @@ public class RdfHasher {
 	}
 
 	public static String makeGraphArtifactCode(List<Statement> statements) throws TrustyUriException {
-		URI graphUri = null;
+		IRI graphUri = null;
 		List<Statement> graph = new ArrayList<Statement>();
 		for (Statement st : statements) {
 			Resource c = st.getContext();
@@ -40,7 +40,7 @@ public class RdfHasher {
 			} else if (graphUri != null && !c.equals(graphUri)) {
 				throw new TrustyUriException("Multiple graphs");
 			}
-			graphUri = (URI) c;
+			graphUri = (IRI) c;
 			graph.add(st);
 		}
 		if (graph.size() == 0) {
@@ -49,8 +49,8 @@ public class RdfHasher {
 		return getGraphArtifactCode(digest(graph));
 	}
 
-	public static String makeGraphArtifactCode(List<Statement> statements, URI baseUri) throws TrustyUriException {
-		URI graphUri = RdfUtils.getTrustyUri(baseUri, " ");
+	public static String makeGraphArtifactCode(List<Statement> statements, IRI baseUri) throws TrustyUriException {
+		IRI graphUri = RdfUtils.getTrustyUri(baseUri, " ");
 		List<Statement> graph = new ArrayList<Statement>();
 		for (Statement st : statements) {
 			Resource c = st.getContext();
@@ -129,14 +129,14 @@ public class RdfHasher {
 	}
 
 	private static String valueToString(Value v) {
-		if (v instanceof URI) {
-			return ((URI) v).toString() + "\n";
+		if (v instanceof IRI) {
+			return ((IRI) v).toString() + "\n";
 		} else if (v instanceof Literal) {
 			Literal l = (Literal) v;
-			if (l.getLanguage() != null) {
-				return "@" + l.getLanguage() + " " + escapeString(l.stringValue()) + "\n";
+			if (l.getLanguage().isPresent()) {
+				return "@" + l.getLanguage().get().toLowerCase() + " " + escapeString(l.stringValue()) + "\n";
 			} else {
-				URI dataType = l.getDatatype();
+				IRI dataType = l.getDatatype();
 				if (dataType == null) dataType = XMLSchema.STRING;
 				return "^" + dataType.stringValue() + " " + escapeString(l.stringValue()) + "\n";
 			}

@@ -2,8 +2,6 @@ package net.trustyuri.rdf;
 
 import java.io.File;
 
-import net.trustyuri.rdf.CheckLargeRdf;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;

@@ -12,15 +12,15 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.RDFHandler;
+import org.eclipse.rdf4j.rio.RDFHandlerException;
+import org.eclipse.rdf4j.rio.Rio;
+
 import net.trustyuri.TrustyUriException;
 import net.trustyuri.TrustyUriResource;
-
-import org.openrdf.model.URI;
-import org.openrdf.model.impl.URIImpl;
-import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.RDFHandler;
-import org.openrdf.rio.RDFHandlerException;
-import org.openrdf.rio.Rio;
 
 public class TransformRdfGraph {
 
@@ -31,16 +31,16 @@ public class TransformRdfGraph {
 			throw new RuntimeException("Not enough arguments: <file> <graph-uri1> (<graph-uri2> ...)");
 		}
 		File inputFile = new File(args[0]);
-		List<URI> baseUris = new ArrayList<URI>();
+		List<IRI> baseUris = new ArrayList<IRI>();
 		for (int i = 1 ; i < args.length ; i++) {
 			String arg = args[i];
 			if (arg.contains("://")) {
-				baseUris.add(new URIImpl(arg));
+				baseUris.add(SimpleValueFactory.getInstance().createIRI(arg));
 			} else {
 				BufferedReader reader = new BufferedReader(new FileReader(arg));
 				String line;
 				while ((line = reader.readLine()) != null) {
-				   baseUris.add(new URIImpl(line));
+				   baseUris.add(SimpleValueFactory.getInstance().createIRI(line));
 				}
 				reader.close();
 			}
@@ -51,10 +51,10 @@ public class TransformRdfGraph {
 		if (!format.getFileExtensions().isEmpty()) {
 			outputFilePath += "." + format.getFileExtensions().get(0);
 		}
-		transform(content, new File(outputFilePath), baseUris.toArray(new URI[baseUris.size()]));
+		transform(content, new File(outputFilePath), baseUris.toArray(new IRI[baseUris.size()]));
 	}
 
-	public static void transform(RdfFileContent content, File outputFile, URI... baseUris)
+	public static void transform(RdfFileContent content, File outputFile, IRI... baseUris)
 			throws IOException, TrustyUriException {
 		try {
 			OutputStream out = new FileOutputStream(outputFile);
@@ -65,7 +65,7 @@ public class TransformRdfGraph {
 		}
 	}
 
-	public static void transform(RdfFileContent content, RDFHandler handler, URI... baseUris)
+	public static void transform(RdfFileContent content, RDFHandler handler, IRI... baseUris)
 			throws IOException, TrustyUriException {
 		try {
 			processBaseUris(content, handler, baseUris);
@@ -74,7 +74,7 @@ public class TransformRdfGraph {
 		}
 	}
 
-	public static void transform(InputStream in, RDFFormat format, OutputStream out, URI... baseUris)
+	public static void transform(InputStream in, RDFFormat format, OutputStream out, IRI... baseUris)
 			throws IOException, TrustyUriException {
 		RdfFileContent content = RdfUtils.load(in, format);
 		try {
@@ -85,9 +85,9 @@ public class TransformRdfGraph {
 		out.close();
 	}
 
-	private static void processBaseUris(RdfFileContent content, RDFHandler handler, URI... baseUris)
+	private static void processBaseUris(RdfFileContent content, RDFHandler handler, IRI... baseUris)
 			throws RDFHandlerException, TrustyUriException {
-		for (URI baseUri : baseUris) {
+		for (IRI baseUri : baseUris) {
 			RdfFileContent newContent = new RdfFileContent(content.getOriginalFormat());
 			RdfPreprocessor preprocessor = new RdfPreprocessor(newContent, baseUri);
 			content.propagate(preprocessor);

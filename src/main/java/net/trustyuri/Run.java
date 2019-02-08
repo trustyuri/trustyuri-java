@@ -3,7 +3,7 @@ package net.trustyuri;
 import java.io.IOException;
 import java.util.Arrays;
 
-import org.openrdf.OpenRDFException;
+import org.eclipse.rdf4j.RDF4JException;
 
 import net.trustyuri.file.ProcessFile;
 import net.trustyuri.rdf.CheckLargeRdf;
@@ -27,7 +27,7 @@ public class Run {
 	 *
 	 * @param args the command
 	 */
-	public static void main(String[] args) throws IOException, OpenRDFException, TrustyUriException {
+	public static void main(String[] args) throws IOException, RDF4JException, TrustyUriException {
 		run(args);
 	}
 
@@ -36,7 +36,7 @@ public class Run {
 	 *
 	 * @param command the command, as a String array
 	 */
-	public static void run(String[] command) throws IOException, OpenRDFException, TrustyUriException {
+	public static void run(String[] command) throws IOException, RDF4JException, TrustyUriException {
 		String cmd = command[0];
 		String[] cmdArgs = Arrays.copyOfRange(command, 1, command.length);
 		if (cmd.equals("CheckFile")) {

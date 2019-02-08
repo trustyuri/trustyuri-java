@@ -1,13 +1,14 @@
 package net.trustyuri.rdf;
 
 import java.util.Comparator;
+import java.util.Optional;
 
-import org.openrdf.model.BNode;
-import org.openrdf.model.Literal;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
-import org.openrdf.model.Value;
+import org.eclipse.rdf4j.model.BNode;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
 
 public class StatementComparator implements Comparator<Statement> {
 
@@ -70,7 +71,7 @@ public class StatementComparator implements Comparator<Statement> {
 		if (r1 instanceof BNode) {
 			throw new RuntimeException("Unexpected blank node");
 		} else {
-			return compareURIs((URI) r1, (URI) r2);
+			return compareURIs((IRI) r1, (IRI) r2);
 		}
 	}
 
@@ -83,9 +84,9 @@ public class StatementComparator implements Comparator<Statement> {
 		s1 = null;
 		s2 = null;
 		if (l1.getDatatype() != null) s1 = l1.getDatatype().toString();
-		if (l1.getLanguage() != null) s1 = null;
+		if (l1.getLanguage().isPresent()) s1 = null;
 		if (l2.getDatatype() != null) s2 = l2.getDatatype().toString();
-		if (l2.getLanguage() != null) s2 = null;
+		if (l2.getLanguage().isPresent()) s2 = null;
 		if (s1 == null && s2 != null) {
 			return -1;
 		} else if (s1 != null && s2 == null) {
@@ -93,19 +94,19 @@ public class StatementComparator implements Comparator<Statement> {
 		} else if (s1 != null && !s1.equals(s2)) {
 			return s1.compareTo(s2);
 		}
-		s1 = l1.getLanguage();
-		s2 = l2.getLanguage();
-		if (s1 == null && s2 != null) {
+		Optional<String> lang1 = l1.getLanguage();
+		Optional<String> lang2 = l2.getLanguage();
+		if (!lang1.isPresent() && lang2.isPresent()) {
 			return -1;
-		} else if (s1 != null && s2 == null) {
+		} else if (lang1.isPresent() && !lang2.isPresent()) {
 			return 1;
-		} else if (s1 != null && !s1.equals(s2)) {
-			return s1.compareTo(s2);
+		} else if (lang1.isPresent() && !lang1.get().toLowerCase().equals(lang2.get().toLowerCase())) {
+			return lang1.get().toLowerCase().compareTo(lang2.get().toLowerCase());
 		}
 		return 0;
 	}
 
-	private static int compareURIs(URI uri1, URI uri2) {
+	private static int compareURIs(IRI uri1, IRI uri2) {
 		return uri1.toString().compareTo(uri2.toString());
 	}
 

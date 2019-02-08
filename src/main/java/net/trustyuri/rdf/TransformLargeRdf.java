@@ -13,21 +13,20 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.zip.GZIPOutputStream;
 
-import net.trustyuri.TrustyUriException;
-import net.trustyuri.TrustyUriResource;
-
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
-import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.RDFHandlerException;
-import org.openrdf.rio.RDFParser;
-import org.openrdf.rio.RDFWriter;
-import org.openrdf.rio.Rio;
-import org.openrdf.rio.helpers.RDFHandlerBase;
-import org.openrdf.rio.helpers.RDFaParserSettings;
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.RDFHandlerException;
+import org.eclipse.rdf4j.rio.RDFParser;
+import org.eclipse.rdf4j.rio.RDFWriter;
+import org.eclipse.rdf4j.rio.Rio;
+import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
 
 import com.google.code.externalsorting.ExternalSort;
+
+import net.trustyuri.TrustyUriException;
+import net.trustyuri.TrustyUriResource;
 
 public class TransformLargeRdf {
 
@@ -47,7 +46,7 @@ public class TransformLargeRdf {
 	private String inputDir;
 	private String baseName;
 	private MessageDigest md;
-	private URI baseUri;
+	private IRI baseUri;
 	private String fileName, ext;
 
 	public TransformLargeRdf(File inputFile, String baseName) {
@@ -55,7 +54,7 @@ public class TransformLargeRdf {
 		this.baseName = baseName;
 	}
 
-	public URI transform() throws IOException, TrustyUriException {
+	public IRI transform() throws IOException, TrustyUriException {
 		baseUri = TransformRdf.getBaseURI(baseName);
 		md = RdfHasher.getDigest();
 		inputDir = inputFile.getParent();
@@ -72,11 +71,10 @@ public class TransformLargeRdf {
 			ext = "." + format.getFileExtensions().get(0);
 		}
 
-		RDFParser p = Rio.createParser(format);
-		p.getParserConfig().set(RDFaParserSettings.FAIL_ON_RDFA_UNDEFINED_PREFIXES, true);
+		RDFParser p = RdfUtils.getParser(format);
 		File sortInFile = new File(inputDir, fileName + ".temp.sort-in");
 		final FileOutputStream preOut = new FileOutputStream(sortInFile);
-		p.setRDFHandler(new RdfPreprocessor(new RDFHandlerBase() {
+		p.setRDFHandler(new RdfPreprocessor(new AbstractRDFHandler() {
 			
 			@Override
 			public void handleStatement(Statement st) throws RDFHandlerException {
@@ -92,7 +90,7 @@ public class TransformLargeRdf {
 		BufferedReader reader = new BufferedReader(r.getInputStreamReader(), 64*1024);
 		try {
 			p.parse(reader, "");
-		} catch (OpenRDFException ex) {
+		} catch (RDF4JException ex) {
 			throw new TrustyUriException(ex);
 		} finally {
 			reader.close();

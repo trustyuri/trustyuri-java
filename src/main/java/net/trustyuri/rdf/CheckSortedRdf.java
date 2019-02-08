@@ -5,17 +5,15 @@ import java.io.File;
 import java.io.IOException;
 import java.security.MessageDigest;
 
+import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.RDFHandlerException;
+import org.eclipse.rdf4j.rio.RDFParser;
+import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
+
 import net.trustyuri.TrustyUriException;
 import net.trustyuri.TrustyUriResource;
-
-import org.openrdf.OpenRDFException;
-import org.openrdf.model.Statement;
-import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.RDFHandlerException;
-import org.openrdf.rio.RDFParser;
-import org.openrdf.rio.Rio;
-import org.openrdf.rio.helpers.RDFHandlerBase;
-import org.openrdf.rio.helpers.RDFaParserSettings;
 
 public class CheckSortedRdf {
 
@@ -54,10 +52,9 @@ public class CheckSortedRdf {
 		}
 		RDFFormat format = r.getFormat(RDFFormat.TURTLE);
 
-		RDFParser p = Rio.createParser(format);
+		RDFParser p = RdfUtils.getParser(format);
 		previous = null;
-		p.getParserConfig().set(RDFaParserSettings.FAIL_ON_RDFA_UNDEFINED_PREFIXES, true);
-		p.setRDFHandler(new RdfPreprocessor(new RDFHandlerBase() {
+		p.setRDFHandler(new RdfPreprocessor(new AbstractRDFHandler() {
 
 			@Override
 			public void handleStatement(Statement st) throws RDFHandlerException {
@@ -74,7 +71,7 @@ public class CheckSortedRdf {
 		BufferedReader reader = new BufferedReader(r.getInputStreamReader(), 64*1024);
 		try {
 			p.parse(reader, "");
-		} catch (OpenRDFException ex) {
+		} catch (RDF4JException ex) {
 			throw new TrustyUriException(ex);
 		} finally {
 			reader.close();

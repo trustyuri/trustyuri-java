@@ -8,13 +8,13 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 
-import org.openrdf.OpenRDFException;
+import org.eclipse.rdf4j.RDF4JException;
 
 public class RunBatch {
 
 	private RunBatch() {}  // no instances allowed
 
-	public static void main(String[] args) throws IOException, OpenRDFException, TrustyUriException {
+	public static void main(String[] args) throws IOException, RDF4JException, TrustyUriException {
 		String batchFile = args[0];
 
 		BufferedReader reader = new BufferedReader(new FileReader(batchFile));

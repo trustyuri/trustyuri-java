@@ -6,15 +6,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
-import org.openrdf.model.Value;
-import org.openrdf.model.impl.ContextStatementImpl;
-import org.openrdf.model.impl.StatementImpl;
-import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.RDFHandler;
-import org.openrdf.rio.RDFHandlerException;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.RDFHandler;
+import org.eclipse.rdf4j.rio.RDFHandlerException;
 
 public class RdfFileContent implements RDFHandler {
 	
@@ -50,7 +49,7 @@ public class RdfFileContent implements RDFHandler {
 			subj = st.getSubject();
 			rdfEntityMap.put(subj, subj);
 		}
-		URI pred = (URI) rdfEntityMap.get(st.getPredicate());
+		IRI pred = (IRI) rdfEntityMap.get(st.getPredicate());
 		if (pred == null) {
 			pred = st.getPredicate();
 			rdfEntityMap.put(pred, pred);
@@ -62,14 +61,14 @@ public class RdfFileContent implements RDFHandler {
 		}
 		Resource context = null;
 		if (st.getContext() == null) {
-			st = new StatementImpl(subj, pred, obj);
+			st = SimpleValueFactory.getInstance().createStatement(subj, pred, obj);
 		} else {
 			context = (Resource) rdfEntityMap.get(st.getContext());
 			if (context == null) {
 				context = st.getContext();
 				rdfEntityMap.put(context, context);
 			}
-			st = new ContextStatementImpl(subj, pred, obj, context);
+			st = SimpleValueFactory.getInstance().createStatement(subj, pred, obj, context);
 		}
 
 		statements.add(st);
@@ -93,7 +92,11 @@ public class RdfFileContent implements RDFHandler {
 		for (Pair<String,String> ns : namespaces) {
 			handler.handleNamespace(ns.getLeft(), ns.getRight());
 		}
+		Statement prev = null;
 		for (Statement st : statements) {
+			// omitting duplicates
+			if (prev != null && prev.equals(st)) continue;
+			prev = st;
 			handler.handleStatement(st);
 		}
 		if (doStartAndEnd) handler.endRDF();

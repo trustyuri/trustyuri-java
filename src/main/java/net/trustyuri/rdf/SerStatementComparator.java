@@ -2,17 +2,15 @@ package net.trustyuri.rdf;
 
 import java.util.Comparator;
 
-import org.openrdf.model.BNode;
-import org.openrdf.model.Literal;
-import org.openrdf.model.Resource;
-import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
-import org.openrdf.model.Value;
-import org.openrdf.model.impl.ContextStatementImpl;
-import org.openrdf.model.impl.LiteralImpl;
-import org.openrdf.model.impl.StatementImpl;
-import org.openrdf.model.impl.URIImpl;
-import org.openrdf.model.vocabulary.XMLSchema;
+import org.eclipse.rdf4j.model.BNode;
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Literal;
+import org.eclipse.rdf4j.model.Resource;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.ValueFactory;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.model.vocabulary.XMLSchema;
 
 public class SerStatementComparator implements Comparator<String> {
 
@@ -58,16 +56,17 @@ public class SerStatementComparator implements Comparator<String> {
 	}
 
 	public static Statement fromString(String string) {
+		ValueFactory vf = SimpleValueFactory.getInstance();
 		String[] parts = string.split("\\t");
 		Resource context = null;
 		if (!parts[0].isEmpty()) {
-			context = new URIImpl(parts[0]);
+			context = vf.createIRI(parts[0]);
 		}
-		Resource subj = new URIImpl(parts[1]);
-		URI pred = new URIImpl(parts[2]);
+		Resource subj = vf.createIRI(parts[1]);
+		IRI pred = vf.createIRI(parts[2]);
 		Value obj = null;
 		if (!parts[3].isEmpty()) {
-			obj = new URIImpl(parts[3]);
+			obj = SimpleValueFactory.getInstance().createIRI(parts[3]);
 		} else {
 			String o = parts[4];
 			int i1 = o.indexOf(32);
@@ -76,17 +75,17 @@ public class SerStatementComparator implements Comparator<String> {
 			String l = o.substring(i1+1, i2);
 			String v = unescape(o.substring(i2+1));
 			if (!d.isEmpty()) {
-				obj = new LiteralImpl(v, new URIImpl(d));
+				obj = vf.createLiteral(v, vf.createIRI(d));
 			} else if (!l.isEmpty()) {
-				obj = new LiteralImpl(v, l);
+				obj = vf.createLiteral(v, l);
 			} else {
-				obj = new LiteralImpl(v);
+				obj = vf.createLiteral(v);
 			}
 		}
 		if (context == null) {
-			return new StatementImpl(subj, pred, obj);
+			return vf.createStatement(subj, pred, obj);
 		} else {
-			return new ContextStatementImpl(subj, pred, obj, context);
+			return vf.createStatement(subj, pred, obj, context);
 		}
 	}
 
@@ -106,7 +105,7 @@ public class SerStatementComparator implements Comparator<String> {
 		} else {
 			sb.append(subj.stringValue() + "\t");
 		}
-		URI pred = st.getPredicate();
+		IRI pred = st.getPredicate();
 		sb.append(pred.stringValue() + "\t");
 		Value obj = st.getObject();
 		if (obj instanceof BNode) {
@@ -114,12 +113,12 @@ public class SerStatementComparator implements Comparator<String> {
 		} else if (obj instanceof Literal) {
 			sb.append("\t");
 			Literal objl = (Literal) obj;
-			if (objl.getLanguage() == null) {
-				URI dataType = objl.getDatatype();
+			if (!objl.getLanguage().isPresent()) {
+				IRI dataType = objl.getDatatype();
 				if (dataType == null) dataType = XMLSchema.STRING;
 				sb.append(dataType.stringValue() + "  ");
 			} else {
-				sb.append(" " + objl.getLanguage() + " ");
+				sb.append(" " + objl.getLanguage().get().toLowerCase() + " ");
 			}
 			sb.append(escape(obj.stringValue()));
 		} else {

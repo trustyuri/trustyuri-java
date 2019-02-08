@@ -3,7 +3,7 @@ package net.trustyuri;
 import java.io.File;
 import java.io.IOException;
 
-import org.openrdf.model.URI;
+import org.eclipse.rdf4j.model.IRI;
 
 /**
  * A trusty URI module handles a particular type of content (such as RDF graphs or the byte content
@@ -51,6 +51,6 @@ public interface TrustyUriModule {
 	 * @param uri the URI
 	 * @return true if the URI matches the format of this module
 	 */
-	public boolean matches(URI uri);
+	public boolean matches(IRI uri);
 
 }

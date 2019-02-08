@@ -1,6 +1,6 @@
 package net.trustyuri;
 
-import org.openrdf.model.URI;
+import org.eclipse.rdf4j.model.IRI;
 
 /**
  * A partial implementation of a trusty URI module.
@@ -18,7 +18,7 @@ public abstract class AbstractTrustyUriModule implements TrustyUriModule {
 		pattern = ".*[^A-Za-z0-9\\-_]" + getModuleId() + "[A-Za-z0-9\\-_]{" + getDataPartLength() + "}";
 	}
 
-	public boolean matches(URI uri) {
+	public boolean matches(IRI uri) {
 		return uri.stringValue().matches(pattern);
 	}
 

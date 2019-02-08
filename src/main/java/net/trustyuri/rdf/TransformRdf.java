@@ -12,18 +12,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
 
+import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Statement;
+import org.eclipse.rdf4j.model.Value;
+import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.RDFHandler;
+import org.eclipse.rdf4j.rio.RDFHandlerException;
+import org.eclipse.rdf4j.rio.RDFWriter;
+import org.eclipse.rdf4j.rio.Rio;
+import org.eclipse.rdf4j.rio.helpers.BasicWriterSettings;
+
 import net.trustyuri.TrustyUriException;
 import net.trustyuri.TrustyUriResource;
-
-import org.openrdf.model.Statement;
-import org.openrdf.model.URI;
-import org.openrdf.model.Value;
-import org.openrdf.model.impl.URIImpl;
-import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.RDFHandler;
-import org.openrdf.rio.RDFHandlerException;
-import org.openrdf.rio.RDFWriter;
-import org.openrdf.rio.Rio;
 
 public class TransformRdf {
 
@@ -38,13 +39,13 @@ public class TransformRdf {
 		transform(inputFile, baseName);
 	}
 
-	public static URI transform(File inputFile, String baseName)
+	public static IRI transform(File inputFile, String baseName)
 			throws IOException, TrustyUriException {
 		if (baseName == null) {
 			baseName = inputFile.getName().replaceFirst("[.][^.]+$", "");
 		}
 		RdfFileContent content = RdfUtils.load(new TrustyUriResource(inputFile));
-		URI baseUri = getBaseURI(baseName);
+		IRI baseUri = getBaseURI(baseName);
 		String name = baseName;
 		if (baseName.indexOf("/") > 0) {
 			name = baseName.replaceFirst("^.*[^A-Za-z0-9.\\-_]([A-Za-z0-9.\\-_]*)$", "$1");
@@ -70,45 +71,45 @@ public class TransformRdf {
 			out = new FileOutputStream(new File(inputFile.getParent(), fileName));
 		}
 		RDFWriter writer = Rio.createWriter(format, new OutputStreamWriter(out, Charset.forName("UTF-8")));
-		URI uri = includeArtifactCode(content, artifactCode, baseUri, writer);
+		IRI uri = includeArtifactCode(content, artifactCode, baseUri, writer);
 		out.close();
 		return uri;
 	}
 
-	public static URI transform(RdfFileContent content, RDFHandler handler, String baseName)
+	public static IRI transform(RdfFileContent content, RDFHandler handler, String baseName)
 			throws TrustyUriException {
-		URI baseUri = getBaseURI(baseName);
+		IRI baseUri = getBaseURI(baseName);
 		content = RdfPreprocessor.run(content, baseUri);
-		URI uri = transformPreprocessed(content, baseUri, handler);
+		IRI uri = transformPreprocessed(content, baseUri, handler);
 		return uri;
 	}
 
-	public static URI transform(InputStream in, RDFFormat format, OutputStream out, String baseName)
+	public static IRI transform(InputStream in, RDFFormat format, OutputStream out, String baseName)
 			throws IOException, TrustyUriException {
-		URI baseUri = getBaseURI(baseName);
+		IRI baseUri = getBaseURI(baseName);
 		RdfFileContent content = RdfUtils.load(in, format);
 		content = RdfPreprocessor.run(content, baseUri);
 		RDFWriter writer = Rio.createWriter(format, new OutputStreamWriter(out, Charset.forName("UTF-8")));
-		URI uri = transformPreprocessed(content, baseUri, writer);
+		IRI uri = transformPreprocessed(content, baseUri, writer);
 		out.close();
 		return uri;
 	}
 
-	public static URI transformPreprocessed(RdfFileContent preprocessedContent, URI baseUri, RDFWriter writer)
+	public static IRI transformPreprocessed(RdfFileContent preprocessedContent, IRI baseUri, RDFWriter writer)
 			throws TrustyUriException {
 		String artifactCode = RdfHasher.makeArtifactCode(preprocessedContent.getStatements());
-		URI uri = includeArtifactCode(preprocessedContent, artifactCode, baseUri, writer);
+		IRI uri = includeArtifactCode(preprocessedContent, artifactCode, baseUri, writer);
 		return uri;
 	}
 
-	public static URI transformPreprocessed(RdfFileContent preprocessedContent, URI baseUri, RDFHandler handler)
+	public static IRI transformPreprocessed(RdfFileContent preprocessedContent, IRI baseUri, RDFHandler handler)
 			throws TrustyUriException {
 		String artifactCode = RdfHasher.makeArtifactCode(preprocessedContent.getStatements());
-		URI uri = includeArtifactCode(preprocessedContent, artifactCode, baseUri, handler);
+		IRI uri = includeArtifactCode(preprocessedContent, artifactCode, baseUri, handler);
 		return uri;
 	}
 
-	private static URI includeArtifactCode(RdfFileContent preprocessedContent, String artifactCode, URI baseUri, Object writerOrHandler)
+	private static IRI includeArtifactCode(RdfFileContent preprocessedContent, String artifactCode, IRI baseUri, Object writerOrHandler)
 			throws TrustyUriException {
 		Map<String,String> ns = makeNamespaceMap(preprocessedContent.getStatements(), baseUri, artifactCode);
 		HashAdder hashAdder;
@@ -126,15 +127,15 @@ public class TransformRdf {
 		
 	}
 
-	static URI getBaseURI(String baseName) {
-		URI baseURI = null;
+	static IRI getBaseURI(String baseName) {
+		IRI baseURI = null;
 		if (baseName.indexOf("://") > 0) {
-			baseURI = new URIImpl(baseName);
+			baseURI = SimpleValueFactory.getInstance().createIRI(baseName);
 		}
 		return baseURI;
 	}
 
-	static Map<String,String> makeNamespaceMap(List<Statement> statements, URI baseURI, String artifactCode) {
+	static Map<String,String> makeNamespaceMap(List<Statement> statements, IRI baseURI, String artifactCode) {
 		Map<String,String> ns = new HashMap<String,String>();
 		if (baseURI == null) return ns;
 		String u = RdfUtils.getTrustyUriString(baseURI, artifactCode);
@@ -148,8 +149,8 @@ public class TransformRdf {
 		return ns;
 	}
 
-	static void addToNamespaceMap(Value v, URI baseURI, String artifactCode, Map<String,String> ns) {
-		if (!(v instanceof URI)) return;
+	static void addToNamespaceMap(Value v, IRI baseURI, String artifactCode, Map<String,String> ns) {
+		if (!(v instanceof IRI)) return;
 		String uri = RdfUtils.getTrustyUriString(baseURI, artifactCode);
 		String s = v.toString().replace(" ", artifactCode);
 		if (!s.startsWith(uri)) return;

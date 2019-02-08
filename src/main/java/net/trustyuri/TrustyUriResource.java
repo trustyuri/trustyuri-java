@@ -8,10 +8,11 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
+import java.util.Optional;
 import java.util.zip.GZIPInputStream;
 
-import org.openrdf.rio.RDFFormat;
-import org.openrdf.rio.Rio;
+import org.eclipse.rdf4j.rio.RDFFormat;
+import org.eclipse.rdf4j.rio.Rio;
 
 public class TrustyUriResource {
 
@@ -106,11 +107,14 @@ public class TrustyUriResource {
 	}
 
 	public RDFFormat getFormat(RDFFormat defaultFormat) {
-		RDFFormat format = Rio.getParserFormatForMIMEType(getMimetype());
-		if (format == null) {
-			format = Rio.getParserFormatForFileName(getFilename(), defaultFormat);
+		Optional<RDFFormat> format = Rio.getParserFormatForMIMEType(getMimetype());
+		if (!format.isPresent()) {
+			format = Rio.getParserFormatForFileName(getFilename());
 		}
-		return format;
+		if (format.isPresent()) {
+			return format.get();
+		}
+		return null;
 	}
 
 }
