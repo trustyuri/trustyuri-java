@@ -21,7 +21,6 @@ import org.eclipse.rdf4j.rio.RDFHandler;
 import org.eclipse.rdf4j.rio.RDFHandlerException;
 import org.eclipse.rdf4j.rio.RDFWriter;
 import org.eclipse.rdf4j.rio.Rio;
-import org.eclipse.rdf4j.rio.helpers.BasicWriterSettings;
 
 import net.trustyuri.TrustyUriException;
 import net.trustyuri.TrustyUriResource;
