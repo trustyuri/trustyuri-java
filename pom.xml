@@ -3,7 +3,7 @@
   <groupId>net.trustyuri</groupId>
   <artifactId>trustyuri</artifactId>
   <packaging>jar</packaging>
-  <version>1.12-SNAPSHOT</version>
+  <version>1.13-SNAPSHOT</version>
   <name>trustyuri</name>
   <description>Trusty URI implementation for Java</description>
   <url>http://trustyuri.net</url>
@@ -113,7 +113,7 @@
       <id>tkuhn</id>
       <name>Tobias Kuhn</name>
       <email>kuhntobias@gmail.com</email>
-      <url>http://www.tkuhn.ch/</url>
+      <url>http://www.tkuhn.org/</url>
     </developer>
   </developers>
   <build>

@@ -22,7 +22,7 @@ Repository. Just include the following lines in your `pom.xml` file:
     <dependency>
       <groupId>net.trustyuri</groupId>
       <artifactId>trustyuri</artifactId>
-      <version>1.11</version>
+      <version>1.12</version>
     </dependency>
 
 
@@ -63,11 +63,11 @@ https://github.com/trustyuri/trustyuri-java/releases
 
 Then you can use the same commands as in the `scripts/` directory as follows:
 
-    $ java -jar trustyuri-1.11-jar-with-dependencies.jar [COMMAND] [ARGS]
+    $ java -jar trustyuri-1.12-jar-with-dependencies.jar [COMMAND] [ARGS]
 
 For example:
 
-    $ java -jar trustyuri-1.11-jar-with-dependencies.jar CheckFile http://trustyuri.net/spec/v1.FADQoZWcYugekAb4jW-Zm3_5Cd9tmkkYEV0bxK2fLSKao.md
+    $ java -jar trustyuri-1.12-jar-with-dependencies.jar CheckFile http://trustyuri.net/spec/v1.FADQoZWcYugekAb4jW-Zm3_5Cd9tmkkYEV0bxK2fLSKao.md
 
 
 License
