@@ -9,12 +9,14 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
 
 import org.eclipse.rdf4j.RDF4JException;
 import org.eclipse.rdf4j.model.BNode;
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Namespace;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
@@ -25,8 +27,6 @@ import org.eclipse.rdf4j.rio.RDFParser;
 import org.eclipse.rdf4j.rio.RDFWriter;
 import org.eclipse.rdf4j.rio.Rio;
 import org.eclipse.rdf4j.rio.helpers.BasicParserSettings;
-import org.eclipse.rdf4j.rio.helpers.RDFaParserSettings;
-import org.eclipse.rdf4j.rio.helpers.RioSettingImpl;
 
 import net.trustyuri.TrustyUriException;
 import net.trustyuri.TrustyUriResource;
@@ -174,7 +174,7 @@ public class RdfUtils {
 	public static RDFParser getParser(RDFFormat format) {
 		RDFParser p = Rio.createParser(format);
 		p.getParserConfig().addNonFatalError(BasicParserSettings.VERIFY_URI_SYNTAX);
-		p.getParserConfig().set(RDFaParserSettings.FAIL_ON_RDFA_UNDEFINED_PREFIXES, true);
+		p.getParserConfig().set(BasicParserSettings.NAMESPACES, new HashSet<Namespace>());
 		return p;
 	}
 
