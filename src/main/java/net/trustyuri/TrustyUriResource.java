@@ -114,7 +114,7 @@ public class TrustyUriResource {
 		if (format.isPresent()) {
 			return format.get();
 		}
-		return null;
+		return defaultFormat;
 	}
 
 }
