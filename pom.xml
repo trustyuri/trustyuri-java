@@ -3,7 +3,7 @@
   <groupId>net.trustyuri</groupId>
   <artifactId>trustyuri</artifactId>
   <packaging>jar</packaging>
-  <version>1.13-SNAPSHOT</version>
+  <version>1.13</version>
   <name>trustyuri</name>
   <description>Trusty URI implementation for Java</description>
   <url>http://trustyuri.net</url>
@@ -107,6 +107,7 @@
     <url>https://github.com/trustyuri/trustyuri-java</url>
     <connection>scm:git:git@github.com:trustyuri/trustyuri-java.git</connection>
     <developerConnection>scm:git:git@github.com:trustyuri/trustyuri-java.git</developerConnection>
+    <tag>trustyuri-1.13</tag>
   </scm>
   <developers>
     <developer>
