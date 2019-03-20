@@ -197,7 +197,8 @@
       <id>release</id>
 <!--
 Release new version:
-    $ mvn clean deploy -P release
+    $ mvn release:clean release:prepare
+    $ mvn release:perform
 
 See: https://central.sonatype.org/pages/apache-maven.html
 -->
