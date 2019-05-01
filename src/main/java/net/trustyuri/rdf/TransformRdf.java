@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.zip.GZIPOutputStream;
 
 import org.eclipse.rdf4j.model.IRI;
+import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
@@ -81,6 +82,21 @@ public class TransformRdf {
 		content = RdfPreprocessor.run(content, baseUri);
 		IRI uri = transformPreprocessed(content, baseUri, handler);
 		return uri;
+	}
+
+	public static Map<Resource,IRI> transformAndGetMap(RdfFileContent content, RDFHandler handler, String baseName)
+			throws TrustyUriException {
+		IRI baseUri = getBaseURI(baseName);
+		RdfFileContent newContent = new RdfFileContent(content.getOriginalFormat());
+		RdfPreprocessor rp = new RdfPreprocessor(newContent, baseUri);
+		try {
+			content.propagate(rp);
+		} catch (RDFHandlerException ex) {
+			throw new TrustyUriException(ex);
+		}
+		String artifactCode = RdfHasher.makeArtifactCode(newContent.getStatements());
+		includeArtifactCode(newContent, artifactCode, baseUri, handler);
+		return finalizeTransformMap(rp.getTransformMap(), artifactCode);
 	}
 
 	public static IRI transform(InputStream in, RDFFormat format, OutputStream out, String baseName)
@@ -160,6 +176,15 @@ public class TransformRdf {
 		} else if (suffix.matches("[^A-Za-z0-9\\-_].*")) {
 			ns.put("sub", uri + suffix.charAt(0));
 		}
+	}
+
+	static Map<Resource,IRI> finalizeTransformMap(Map<Resource,IRI> transformMap, String artifactCode) {
+		Map<Resource,IRI> finalMap = new HashMap<>();
+		for (Resource r : transformMap.keySet()) {
+			String s = transformMap.get(r).stringValue().replaceFirst(" ", artifactCode);
+			finalMap.put(r, SimpleValueFactory.getInstance().createIRI(s));
+		}
+		return finalMap;
 	}
 
 }
