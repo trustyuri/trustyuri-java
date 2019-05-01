@@ -230,6 +230,9 @@ See: https://central.sonatype.org/pages/apache-maven.html
             </goals>
           </execution>
         </executions>
+        <configuration>
+          <source>8</source>
+        </configuration> 
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
