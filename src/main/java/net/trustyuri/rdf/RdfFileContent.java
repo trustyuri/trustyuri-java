@@ -83,6 +83,10 @@ public class RdfFileContent implements RDFHandler {
 		return statements;
 	}
 
+	public List<Pair<String,String>> getNamespaces() {
+		return namespaces;
+	}
+
 	public void propagate(RDFHandler handler) throws RDFHandlerException {
 		propagate(handler, true);
 	}
