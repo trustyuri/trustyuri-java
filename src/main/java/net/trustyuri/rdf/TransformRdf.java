@@ -124,7 +124,7 @@ public class TransformRdf {
 		return uri;
 	}
 
-	private static IRI includeArtifactCode(RdfFileContent preprocessedContent, String artifactCode, IRI baseUri, Object writerOrHandler)
+	public static IRI includeArtifactCode(RdfFileContent preprocessedContent, String artifactCode, IRI baseUri, Object writerOrHandler)
 			throws TrustyUriException {
 		Map<String,String> ns = makeNamespaceMap(preprocessedContent.getStatements(), baseUri, artifactCode);
 		HashAdder hashAdder;
@@ -178,7 +178,7 @@ public class TransformRdf {
 		}
 	}
 
-	static Map<Resource,IRI> finalizeTransformMap(Map<Resource,IRI> transformMap, String artifactCode) {
+	public static Map<Resource,IRI> finalizeTransformMap(Map<Resource,IRI> transformMap, String artifactCode) {
 		Map<Resource,IRI> finalMap = new HashMap<>();
 		for (Resource r : transformMap.keySet()) {
 			String s = transformMap.get(r).stringValue().replaceFirst(" ", artifactCode);
