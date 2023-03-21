@@ -3,7 +3,7 @@ package net.trustyuri;
 import java.io.IOException;
 import java.util.Arrays;
 
-import org.eclipse.rdf4j.RDF4JException;
+import org.eclipse.rdf4j.common.exception.RDF4JException;
 
 import net.trustyuri.file.ProcessFile;
 import net.trustyuri.rdf.CheckLargeRdf;
