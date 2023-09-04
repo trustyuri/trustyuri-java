@@ -1,7 +1,11 @@
 package net.trustyuri;
 
+import java.security.MessageDigest;
+
 import javax.activation.MimetypesFileTypeMap;
 import javax.xml.bind.DatatypeConverter;
+
+import net.trustyuri.rdf.RdfHasher;
 
 public class TrustyUriUtils {
 
@@ -62,6 +66,18 @@ public class TrustyUriUtils {
 		h = h.replace('+', '-');
 		h = h.replace('/', '_');
 		return h;
+	}
+
+	public static String getBase64Hash(String s) {
+		MessageDigest md = RdfHasher.getDigest();
+		md.update(s.getBytes());
+		return getBase64(md.digest());
+	}
+
+	public static byte[] getBase64Bytes(String base64String) {
+		base64String = base64String.replace('-', '+').replace('_', '/');
+		while (base64String.length() % 4 > 0) base64String = base64String + "=";
+		return DatatypeConverter.parseBase64Binary(base64String);
 	}
 
 	public static String getMimetype(String filename) {
