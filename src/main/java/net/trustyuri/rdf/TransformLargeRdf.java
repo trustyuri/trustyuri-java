@@ -39,7 +39,7 @@ public class TransformLargeRdf {
 			baseName = inputFile.getName().replaceFirst("[.][^.]+$", "");
 		}
 		TransformLargeRdf t = new TransformLargeRdf(inputFile, baseName);
-		t.transform();
+		t.transform(TransformRdfSetting.defautSetting);
 	}
 
 	private File inputFile;
@@ -54,7 +54,7 @@ public class TransformLargeRdf {
 		this.baseName = baseName;
 	}
 
-	public IRI transform() throws IOException, TrustyUriException {
+	public IRI transform(TransformRdfSetting setting) throws IOException, TrustyUriException {
 		baseUri = TransformRdf.getBaseURI(baseName);
 		md = RdfHasher.getDigest();
 		inputDir = inputFile.getParent();
@@ -86,7 +86,7 @@ public class TransformLargeRdf {
 				}
 			}
 
-		}, baseUri));
+		}, baseUri, setting));
 		BufferedReader reader = new BufferedReader(r.getInputStreamReader(), 64*1024);
 		try {
 			p.parse(reader, "");
@@ -156,7 +156,7 @@ public class TransformLargeRdf {
 		}
 		out.close();
 
-		return RdfUtils.getTrustyUri(baseUri, artifactCode);
+		return RdfUtils.getTrustyUri(baseUri, artifactCode, setting);
 	}
 
 }

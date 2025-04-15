@@ -34,42 +34,37 @@ import net.trustyuri.TrustyUriUtils;
 
 public class RdfUtils {
 
-	public static final char bnodeChar = '_';
-	public static final char preAcChar = '.';
-	public static final char postAcChar = '#';
-	public static final char postAcFallbackChar = '.';
-
 	private RdfUtils() {}  // no instances allowed
 
-	public static String getTrustyUriString(IRI baseUri, String artifactCode, String suffix) {
-		String s = expandBaseUri(baseUri) + artifactCode;
+	public static String getTrustyUriString(IRI baseUri, String artifactCode, String suffix, TransformRdfSetting setting) {
+		String s = expandBaseUri(baseUri, setting) + artifactCode;
 		if (suffix != null) {
 			suffix = suffix.replace("#", "%23");
-			if (suffix.startsWith(bnodeChar + "")) {
+			if (suffix.startsWith(setting.getBnodeChar() + "")) {
 				// Duplicate bnode character for escaping:
-				s += "" + getPostAcChar(baseUri) + bnodeChar + suffix;
+				s += "" + getPostAcChar(baseUri, setting) + setting.getBnodeChar() + suffix;
 			} else {
-				s += "" + getPostAcChar(baseUri) + suffix;
+				s += "" + getPostAcChar(baseUri, setting) + suffix;
 			}
 		}
 		return s;
 	}
 
-	public static String getTrustyUriString(IRI baseUri, String artifactCode) {
-		return getTrustyUriString(baseUri, artifactCode, null);
+	public static String getTrustyUriString(IRI baseUri, String artifactCode, TransformRdfSetting setting) {
+		return getTrustyUriString(baseUri, artifactCode, null, setting);
 	}
 
-	public static IRI getTrustyUri(IRI baseUri, String artifactCode, String suffix) {
+	public static IRI getTrustyUri(IRI baseUri, String artifactCode, String suffix, TransformRdfSetting setting) {
 		if (baseUri == null) return null;
-		return SimpleValueFactory.getInstance().createIRI(getTrustyUriString(baseUri, artifactCode, suffix));
+		return SimpleValueFactory.getInstance().createIRI(getTrustyUriString(baseUri, artifactCode, suffix, setting));
 	}
 
-	public static IRI getTrustyUri(IRI baseUri, String artifactCode) {
+	public static IRI getTrustyUri(IRI baseUri, String artifactCode, TransformRdfSetting setting) {
 		if (baseUri == null) return null;
-		return SimpleValueFactory.getInstance().createIRI(getTrustyUriString(baseUri, artifactCode, null));
+		return SimpleValueFactory.getInstance().createIRI(getTrustyUriString(baseUri, artifactCode, setting));
 	}
 
-	public static IRI getPreUri(Resource resource, IRI baseUri, Map<String,Integer> bnodeMap, boolean frozen) {
+	public static IRI getPreUri(Resource resource, IRI baseUri, Map<String,Integer> bnodeMap, boolean frozen, TransformRdfSetting setting) {
 		if (resource == null) {
 			throw new RuntimeException("Resource is null");
 		} else if (resource instanceof IRI) {
@@ -84,13 +79,13 @@ public class RdfUtils {
 			} else if (TrustyUriUtils.isPotentialTrustyUri(plainUri)) {
 				return plainUri;
 			} else {
-				return getTrustyUri(baseUri, " ", suffix);
+				return getTrustyUri(baseUri, " ", suffix, setting);
 			}
 		} else {
 			if (frozen) {
 				return null;
 			} else {
-				return getSkolemizedUri((BNode) resource, baseUri, bnodeMap);
+				return getSkolemizedUri((BNode) resource, baseUri, bnodeMap, setting);
 			}
 		}
 	}
@@ -104,16 +99,16 @@ public class RdfUtils {
 		}
 	}
 
-	public static char getPostAcChar(IRI baseUri) {
-		if (baseUri.stringValue().contains("#")) {
-			return postAcFallbackChar;
+	public static char getPostAcChar(IRI baseUri, TransformRdfSetting setting) {
+		if (setting.getPostAcChar() == '#' && baseUri.stringValue().contains("#")) {
+			return setting.getPostAcFallbackChar();
 		}
-		return postAcChar;
+		return setting.getPostAcChar();
 	}
 
-	private static IRI getSkolemizedUri(BNode bnode, IRI baseUri, Map<String,Integer> bnodeMap) {
+	private static IRI getSkolemizedUri(BNode bnode, IRI baseUri, Map<String,Integer> bnodeMap, TransformRdfSetting setting) {
 		int n = getBlankNodeNumber(bnode, bnodeMap);
-		return SimpleValueFactory.getInstance().createIRI(expandBaseUri(baseUri) + " " + getPostAcChar(baseUri) + bnodeChar + n);
+		return SimpleValueFactory.getInstance().createIRI(expandBaseUri(baseUri, setting) + " " + getPostAcChar(baseUri, setting) + setting.getBnodeChar() + n);
 	}
 
 	private static String getSuffix(IRI plainUri, IRI baseUri) {
@@ -148,11 +143,11 @@ public class RdfUtils {
 		return n;
 	}
 
-	private static String expandBaseUri(IRI baseUri) {
+	private static String expandBaseUri(IRI baseUri, TransformRdfSetting setting) {
 		String s = baseUri.toString();
 		s = s.replaceFirst("ARTIFACTCODE-PLACEHOLDER[\\.#/]?$", "");
 		if (s.matches(".*[A-Za-z0-9\\-_]")) {
-			s += preAcChar;
+			s += setting.getPreAcChar();
 		}
 		return s;
 	}
@@ -197,7 +192,7 @@ public class RdfUtils {
 			out = new FileOutputStream(new File("fixed." + filename));
 		}
 		RDFWriter writer = Rio.createWriter(r.getFormat(RDFFormat.TRIG), new OutputStreamWriter(out, Charset.forName("UTF-8")));
-		TransformRdf.transformPreprocessed(content, null, writer);
+		TransformRdf.transformPreprocessed(content, null, writer, null);
 	}
 
 	public static void fixTrustyRdf(RdfFileContent content, String oldArtifactCode, RDFHandler writer)
@@ -205,7 +200,7 @@ public class RdfUtils {
 		content = RdfPreprocessor.run(content, oldArtifactCode);
 		String newArtifactCode = createArtifactCode(content, oldArtifactCode.startsWith("RB"));
 		content = processNamespaces(content, oldArtifactCode, newArtifactCode);
-		TransformRdf.transformPreprocessed(content, null, writer);
+		TransformRdf.transformPreprocessed(content, null, writer, null);
 	}
 
 	private static String createArtifactCode(RdfFileContent preprocessedContent, boolean graphModule) throws TrustyUriException {

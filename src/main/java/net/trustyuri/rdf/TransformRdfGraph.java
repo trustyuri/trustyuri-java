@@ -51,48 +51,48 @@ public class TransformRdfGraph {
 		if (!format.getFileExtensions().isEmpty()) {
 			outputFilePath += "." + format.getFileExtensions().get(0);
 		}
-		transform(content, new File(outputFilePath), baseUris.toArray(new IRI[baseUris.size()]));
+		transform(content, new File(outputFilePath), TransformRdfSetting.defautSetting, baseUris.toArray(new IRI[baseUris.size()]));
 	}
 
-	public static void transform(RdfFileContent content, File outputFile, IRI... baseUris)
+	public static void transform(RdfFileContent content, File outputFile, TransformRdfSetting setting, IRI... baseUris)
 			throws IOException, TrustyUriException {
 		try {
 			OutputStream out = new FileOutputStream(outputFile);
-			processBaseUris(content, Rio.createWriter(content.getOriginalFormat(), new OutputStreamWriter(out, Charset.forName("UTF-8"))), baseUris);
+			processBaseUris(content, Rio.createWriter(content.getOriginalFormat(), new OutputStreamWriter(out, Charset.forName("UTF-8"))), setting, baseUris);
 			out.close();
 		} catch (RDFHandlerException ex) {
 			throw new TrustyUriException(ex);
 		}
 	}
 
-	public static void transform(RdfFileContent content, RDFHandler handler, IRI... baseUris)
+	public static void transform(RdfFileContent content, RDFHandler handler, TransformRdfSetting setting, IRI... baseUris)
 			throws IOException, TrustyUriException {
 		try {
-			processBaseUris(content, handler, baseUris);
+			processBaseUris(content, handler, setting, baseUris);
 		} catch (RDFHandlerException ex) {
 			throw new TrustyUriException(ex);
 		}
 	}
 
-	public static void transform(InputStream in, RDFFormat format, OutputStream out, IRI... baseUris)
+	public static void transform(InputStream in, RDFFormat format, OutputStream out, TransformRdfSetting setting, IRI... baseUris)
 			throws IOException, TrustyUriException {
 		RdfFileContent content = RdfUtils.load(in, format);
 		try {
-			processBaseUris(content, Rio.createWriter(format, new OutputStreamWriter(out, Charset.forName("UTF-8"))), baseUris);
+			processBaseUris(content, Rio.createWriter(format, new OutputStreamWriter(out, Charset.forName("UTF-8"))), setting, baseUris);
 		} catch (RDFHandlerException ex) {
 			throw new TrustyUriException(ex);
 		}
 		out.close();
 	}
 
-	private static void processBaseUris(RdfFileContent content, RDFHandler handler, IRI... baseUris)
+	private static void processBaseUris(RdfFileContent content, RDFHandler handler, TransformRdfSetting setting, IRI... baseUris)
 			throws RDFHandlerException, TrustyUriException {
 		for (IRI baseUri : baseUris) {
 			RdfFileContent newContent = new RdfFileContent(content.getOriginalFormat());
-			RdfPreprocessor preprocessor = new RdfPreprocessor(newContent, baseUri);
+			RdfPreprocessor preprocessor = new RdfPreprocessor(newContent, baseUri, setting);
 			content.propagate(preprocessor);
 			content = newContent;
-			String artifactCode = RdfHasher.makeGraphArtifactCode(content.getStatements(), baseUri);
+			String artifactCode = RdfHasher.makeGraphArtifactCode(content.getStatements(), baseUri, setting);
 			newContent = new RdfFileContent(content.getOriginalFormat());
 			HashAdder hashAdder = new HashAdder(baseUri, artifactCode, newContent, null);
 			content.propagate(hashAdder);

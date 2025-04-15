@@ -27,11 +27,12 @@ public class RdfPreprocessor implements RDFHandler {
 	private Map<String,Integer> blankNodeMap;
 	private TrustyUriModule moduleRB;
 	private Map<Resource,IRI> transformMap;
+	private TransformRdfSetting setting;
 
-	public static RdfFileContent run(RdfFileContent content, IRI baseUri) throws TrustyUriException {
+	public static RdfFileContent run(RdfFileContent content, IRI baseUri, TransformRdfSetting setting) throws TrustyUriException {
 		RdfFileContent p = new RdfFileContent(content.getOriginalFormat());
 		try {
-			content.propagate(new RdfPreprocessor(p, baseUri));
+			content.propagate(new RdfPreprocessor(p, baseUri, setting));
 		} catch (RDFHandlerException ex) {
 			throw new TrustyUriException(ex);
 		}
@@ -48,42 +49,44 @@ public class RdfPreprocessor implements RDFHandler {
 		return p;
 	}
 
-	public static List<Statement> run(List<Statement> statements, IRI baseUri) {
-		return run(statements, baseUri, null);
+	public static List<Statement> run(List<Statement> statements, IRI baseUri, TransformRdfSetting setting) {
+		return run(statements, baseUri, null, setting);
 	}
 
 	public static List<Statement> run(List<Statement> statements, String artifactCode) {
-		return run(statements, null, artifactCode);
+		return run(statements, null, artifactCode, null);
 	}
 
-	private static List<Statement> run(List<Statement> statements, IRI baseUri, String artifactCode) {
+	private static List<Statement> run(List<Statement> statements, IRI baseUri, String artifactCode, TransformRdfSetting setting) {
 		List<Statement> r = new ArrayList<Statement>();
-		RdfPreprocessor obj = new RdfPreprocessor(baseUri, artifactCode);
+		RdfPreprocessor obj = new RdfPreprocessor(baseUri, artifactCode, setting);
 		for (Statement st : statements) {
 			r.add(obj.preprocess(st));
 		}
 		return r;
 	}
 
-	private RdfPreprocessor(IRI baseUri, String artifactCode) {
+	private RdfPreprocessor(IRI baseUri, String artifactCode, TransformRdfSetting setting) {
 		this.baseUri = baseUri;
 		this.artifactCode = artifactCode;
+		this.setting = setting;
 		init();
 	}
 
-	public RdfPreprocessor(RDFHandler nestedHandler, IRI baseUri) {
-		this(nestedHandler, baseUri, null);
+	public RdfPreprocessor(RDFHandler nestedHandler, IRI baseUri, TransformRdfSetting setting) {
+		this(nestedHandler, baseUri, null, setting);
 	}
 
 	public RdfPreprocessor(RDFHandler nestedHandler, String artifactCode) {
 		this(nestedHandler, artifactCode, null);
 	}
 
-	public RdfPreprocessor(RDFHandler nestedHandler, IRI baseUri, Map<String,Integer> blankNodeMap) {
+	public RdfPreprocessor(RDFHandler nestedHandler, IRI baseUri, Map<String,Integer> blankNodeMap, TransformRdfSetting setting) {
 		this.nestedHandler = nestedHandler;
 		this.baseUri = baseUri;
 		this.artifactCode = null;
 		this.blankNodeMap = blankNodeMap;
+		this.setting = setting;
 		init();
 	}
 
@@ -92,6 +95,7 @@ public class RdfPreprocessor implements RDFHandler {
 		this.baseUri = null;
 		this.artifactCode = artifactCode;
 		this.blankNodeMap = blankNodeMap;
+		this.setting = null;
 		init();
 	}
 
@@ -156,7 +160,7 @@ public class RdfPreprocessor implements RDFHandler {
 			RdfUtils.checkUri((IRI) r);
 			return SimpleValueFactory.getInstance().createIRI(RdfUtils.normalize((IRI) r, artifactCode));
 		}
-		IRI uri = RdfUtils.getPreUri(r, baseUri, blankNodeMap, trustyGraph != null);
+		IRI uri = RdfUtils.getPreUri(r, baseUri, blankNodeMap, trustyGraph != null, setting);
 		if (uri == null) {
 			// TODO Allow for 'force' option; URI might only look like a trusty URI...
 			throw new RuntimeException("Transformation would break existing trusty URI graph: " +

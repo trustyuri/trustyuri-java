@@ -49,8 +49,8 @@ public class RdfHasher {
 		return getGraphArtifactCode(digest(graph));
 	}
 
-	public static String makeGraphArtifactCode(List<Statement> statements, IRI baseUri) throws TrustyUriException {
-		IRI graphUri = RdfUtils.getTrustyUri(baseUri, " ");
+	public static String makeGraphArtifactCode(List<Statement> statements, IRI baseUri, TransformRdfSetting setting) throws TrustyUriException {
+		IRI graphUri = RdfUtils.getTrustyUri(baseUri, " ", setting);
 		List<Statement> graph = new ArrayList<Statement>();
 		for (Statement st : statements) {
 			Resource c = st.getContext();
