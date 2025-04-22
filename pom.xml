@@ -149,9 +149,6 @@
         <executions>
           <execution>
             <phase>package</phase>
-            <goals>
-              <goal>attached</goal>
-            </goals>
           </execution>
         </executions>
       </plugin>
