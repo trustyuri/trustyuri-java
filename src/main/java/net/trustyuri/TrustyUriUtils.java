@@ -2,8 +2,8 @@ package net.trustyuri;
 
 import java.security.MessageDigest;
 
-import javax.activation.MimetypesFileTypeMap;
-import javax.xml.bind.DatatypeConverter;
+import jakarta.activation.MimetypesFileTypeMap;
+import jakarta.xml.bind.DatatypeConverter;
 
 import net.trustyuri.rdf.RdfHasher;
 
