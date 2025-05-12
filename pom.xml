@@ -7,11 +7,6 @@
   <name>trustyuri</name>
   <description>Trusty URI implementation for Java</description>
   <url>http://trustyuri.net</url>
-  <parent>
-    <groupId>org.sonatype.oss</groupId>
-    <artifactId>oss-parent</artifactId>
-    <version>7</version>
-  </parent>
   <licenses>
     <license>
       <name>MIT license</name>
@@ -53,8 +48,14 @@
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>2.1.0-alpha1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
       <artifactId>slf4j-simple</artifactId>
       <version>2.1.0-alpha1</version>
+      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>org.eclipse.rdf4j</groupId>
