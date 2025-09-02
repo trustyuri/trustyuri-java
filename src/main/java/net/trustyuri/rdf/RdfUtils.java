@@ -73,7 +73,7 @@ public class RdfUtils {
 			// TODO Add option to disable suffixes appended to trusty URIs
 			String suffix = getSuffix(plainUri, baseUri);
 			if (suffix == null && !plainUri.equals(baseUri)) {
-				return plainUri;
+				return SimpleValueFactory.getInstance().createIRI(plainUri.stringValue().replaceAll("~~~ARTIFACTCODE~~~", " "));
 			} else if (frozen) {
 				return null;
 			} else if (TrustyUriUtils.isPotentialTrustyUri(plainUri)) {
@@ -145,7 +145,12 @@ public class RdfUtils {
 
 	private static String expandBaseUri(IRI baseUri, TransformRdfSetting setting) {
 		String s = baseUri.toString();
+
+		// Deprecated (we should only use "~~~ARTIFACTCODE~~~" in the future:
 		s = s.replaceFirst("ARTIFACTCODE-PLACEHOLDER[\\.#/]?$", "");
+
+		// TODO Include this in test cases:
+        s = s.replaceFirst("~~~ARTIFACTCODE~~~[\\.#/]?$", "");
 		if (s.matches(".*[A-Za-z0-9\\-_]")) {
 			s += setting.getPreAcChar();
 		}
