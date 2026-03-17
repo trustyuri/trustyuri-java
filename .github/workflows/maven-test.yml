@@ -1,0 +1,29 @@
+name: Maven Test
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        distribution: [ "temurin" ]
+        java: [ "21" , "23", "25" ]
+    name: Testing with Java ${{ matrix.java }} (${{ matrix.distribution }})
+    steps:
+      - name: Checkout
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+
+      - name: Set up JDK
+        uses: actions/setup-java@f2beeb24e141e01a676f977032f5a29d81c9e27e # v5.1.0
+        with:
+          distribution: ${{ matrix.distribution }}
+          java-version: ${{ matrix.java }}
+          cache: 'maven'
+
+      - name: Test with Maven
+        run: ./mvnw -B test
