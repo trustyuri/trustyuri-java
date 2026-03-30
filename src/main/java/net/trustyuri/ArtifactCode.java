@@ -7,18 +7,18 @@ package net.trustyuri;
 public interface ArtifactCode {
 
     /**
-     * Returns the artifact code as a string.
-     *
-     * @return the artifact code
-     */
-    String getCode();
-
-    /**
      * Returns the module ID associated with the artifact code.
      *
      * @return the module ID
      */
     TrustyUriModule getModule();
+
+    /**
+     * Returns the artifact code as a string. It is a concatenation of the module ID and the data hash.
+     *
+     * @return the artifact code as a string
+     */
+    String getCode();
 
     /**
      * Creates an ArtifactCode from the given string. Returns null if the string is not a valid artifact code.
@@ -27,14 +27,18 @@ public interface ArtifactCode {
      * @return the ArtifactCode, or null if the string is not a valid artifact code
      */
     static ArtifactCode of(String code) {
-        if (code == null) {
-            return null;
-        }
-        try {
-            return new ArtifactCodeImpl(code);
-        } catch (IllegalArgumentException e) {
-            return null;
-        }
+        return new ArtifactCodeImpl(code);
+    }
+
+    /**
+     * Creates an ArtifactCode from the given module and code. Returns null if the module or code is null, or if the code is not valid for the module.
+     *
+     * @param module the module associated with the artifact code
+     * @param code   the data hash part of the artifact code
+     * @return the ArtifactCode, or null if the module or code is null, or if the code is not valid for the module
+     */
+    static ArtifactCode of(TrustyUriModule module, String code) {
+        return new ArtifactCodeImpl(module, code);
     }
 
 }

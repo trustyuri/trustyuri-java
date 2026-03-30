@@ -10,6 +10,18 @@ public class ArtifactCodeImplTest {
     private final String validArtifactCode = "RAQkRgam5soAC8p2audYEK88QTJjhxLqrDWP6siwwkr5c";
 
     @Test
+    public void constructWithModuleAndCode() {
+        ArtifactCode artifactCode = ArtifactCode.of(new RdfModule(), validArtifactCode.substring(2));
+        assertEquals(validArtifactCode, artifactCode.getCode());
+    }
+
+    @Test
+    public void constructWithValidModuleAndInvalidCode() {
+        assertThrows(IllegalArgumentException.class, () -> ArtifactCode.of(new RdfModule(), "this_is_an_invalid_code_because_it_is_too_long"));
+        assertThrows(IllegalArgumentException.class, () -> ArtifactCode.of(new RdfModule(), "invalid_code_because_it_is_too_short"));
+    }
+
+    @Test
     public void constructWithValidCode() {
         ArtifactCode artifactCode = ArtifactCode.of(validArtifactCode);
         assertEquals(validArtifactCode, artifactCode.getCode());
@@ -17,7 +29,7 @@ public class ArtifactCodeImplTest {
 
     @Test
     public void constructWithInvalidCode() {
-        assertNull(ArtifactCode.of("INVALID_CODE"));
+        assertThrows(IllegalArgumentException.class, () -> ArtifactCode.of("INVALID_CODE"));
     }
 
     @Test
@@ -47,6 +59,18 @@ public class ArtifactCodeImplTest {
         ArtifactCode artifactCode = ArtifactCode.of(validArtifactCode);
         assertTrue(artifactCode.getModule() instanceof RdfModule);
         assertEquals(RdfModule.MODULE_ID, artifactCode.getModule().getModuleId());
+    }
+
+    @Test
+    public void testGetCode() {
+        ArtifactCode artifactCode = ArtifactCode.of(validArtifactCode);
+        assertEquals(validArtifactCode, artifactCode.getCode());
+    }
+
+    @Test
+    public void testGetCodeWithModuleAndDataHash() {
+        ArtifactCode artifactCode = ArtifactCode.of(new RdfModule(), validArtifactCode.substring(2));
+        assertEquals(validArtifactCode, artifactCode.getCode());
     }
 
 }
