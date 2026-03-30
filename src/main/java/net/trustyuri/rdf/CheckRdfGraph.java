@@ -1,5 +1,6 @@
 package net.trustyuri.rdf;
 
+import net.trustyuri.ArtifactCode;
 import net.trustyuri.TrustyUriException;
 import net.trustyuri.TrustyUriResource;
 import net.trustyuri.TrustyUriUtils;
@@ -70,11 +71,13 @@ public class CheckRdfGraph {
         }
         List<Statement> graph = new ArrayList<Statement>();
         for (Statement st : content.getStatements()) {
-            if (graphUri.equals(st.getContext())) graph.add(st);
+            if (graphUri.equals(st.getContext())) {
+                graph.add(st);
+            }
         }
         graph = RdfPreprocessor.run(graph, artifactCode);
-        String ac = RdfHasher.makeGraphArtifactCode(graph);
-        return artifactCode.equals(ac);
+        ArtifactCode ac = RdfHasher.makeGraphArtifactCode(graph);
+        return artifactCode.equals(ac.getCode());
     }
 
     private static String getArtifactCode(IRI graphUri) {

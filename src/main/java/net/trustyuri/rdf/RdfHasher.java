@@ -1,5 +1,6 @@
 package net.trustyuri.rdf;
 
+import net.trustyuri.ArtifactCode;
 import net.trustyuri.TrustyUriException;
 import net.trustyuri.TrustyUriUtils;
 import org.eclipse.rdf4j.model.*;
@@ -19,11 +20,11 @@ public class RdfHasher {
     private RdfHasher() {
     }  // no instances allowed
 
-    public static String makeArtifactCode(List<Statement> statements) {
-        return getArtifactCode(digest(statements));
+    public static ArtifactCode makeArtifactCode(List<Statement> statements) {
+        return ArtifactCode.of(getArtifactCode(digest(statements)));
     }
 
-    public static String makeGraphArtifactCode(List<Statement> statements) throws TrustyUriException {
+    public static ArtifactCode makeGraphArtifactCode(List<Statement> statements) throws TrustyUriException {
         IRI graphUri = null;
         List<Statement> graph = new ArrayList<Statement>();
         for (Statement st : statements) {
@@ -41,10 +42,10 @@ public class RdfHasher {
         if (graph.size() == 0) {
             throw new TrustyUriException("Graph not found");
         }
-        return getGraphArtifactCode(digest(graph));
+        return ArtifactCode.of(getGraphArtifactCode(digest(graph)));
     }
 
-    public static String makeGraphArtifactCode(List<Statement> statements, IRI baseUri, TransformRdfSetting setting) throws TrustyUriException {
+    public static ArtifactCode makeGraphArtifactCode(List<Statement> statements, IRI baseUri, TransformRdfSetting setting) throws TrustyUriException {
         IRI graphUri = RdfUtils.getTrustyUri(baseUri, " ", setting);
         List<Statement> graph = new ArrayList<Statement>();
         for (Statement st : statements) {
@@ -56,7 +57,7 @@ public class RdfHasher {
         if (graph.size() == 0) {
             throw new TrustyUriException("Graph not found");
         }
-        return getGraphArtifactCode(digest(graph));
+        return ArtifactCode.of(getGraphArtifactCode(digest(graph)));
     }
 
     public static MessageDigest digest(List<Statement> statements) {
