@@ -160,7 +160,7 @@ public class RdfHasher {
         }
     }
 
-    private static final String escapeString(String s) {
+    private static String escapeString(String s) {
         return s.replace("\\", "\\\\").replace("\n", "\\n");
     }
 

@@ -56,7 +56,7 @@ public class CheckFile {
     private TrustyUriResource r;
 
     /**
-     * Creates a new object to check the content to be fetch from a URL.
+     * Creates a new object to check the content to be fetched from a URL.
      *
      * @param url the URL
      */
@@ -67,7 +67,7 @@ public class CheckFile {
     /**
      * Creates a new object to check the content to be read from a local file.
      *
-     * @param file
+     * @param file the local file from which the content is read
      */
     public CheckFile(File file) throws IOException {
         r = new TrustyUriResource(file);
