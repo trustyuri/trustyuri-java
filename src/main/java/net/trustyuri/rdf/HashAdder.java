@@ -79,7 +79,7 @@ public class HashAdder implements RDFHandler {
         } else if (r instanceof BNode) {
             throw new RuntimeException("Unexpected blank node encountered");
         } else {
-            IRI transformedURI = SimpleValueFactory.getInstance().createIRI(r.toString().replace(" ", artifactCode.getCode()));
+            IRI transformedURI = SimpleValueFactory.getInstance().createIRI(r.toString().replace(" ", artifactCode.toString()));
             transformMap.put((IRI) r, transformedURI);
             return transformedURI;
         }

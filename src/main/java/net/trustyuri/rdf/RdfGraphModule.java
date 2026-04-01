@@ -31,7 +31,7 @@ public class RdfGraphModule extends AbstractTrustyUriModule {
         RdfFileContent content = RdfUtils.load(r);
         content = RdfPreprocessor.run(content, r.getArtifactCode());
         ArtifactCode ac = RdfHasher.makeGraphArtifactCode(content.getStatements());
-        return r.getArtifactCode().equals(ac.getCode());
+        return r.getArtifactCode().equals(ac.toString());
     }
 
     @Override

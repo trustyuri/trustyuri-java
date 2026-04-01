@@ -30,7 +30,7 @@ public class FileModule extends AbstractTrustyUriModule {
     public boolean hasCorrectHash(TrustyUriResource r) throws IOException {
         FileHasher hasher = new FileHasher();
         ArtifactCode ac = hasher.makeArtifactCode(new BufferedInputStream(r.getInputStream()));
-        return r.getArtifactCode().equals(ac.getCode());
+        return r.getArtifactCode().equals(ac.toString());
     }
 
     @Override

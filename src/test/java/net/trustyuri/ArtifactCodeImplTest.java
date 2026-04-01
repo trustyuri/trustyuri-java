@@ -10,21 +10,9 @@ public class ArtifactCodeImplTest {
     private final String validArtifactCode = "RAQkRgam5soAC8p2audYEK88QTJjhxLqrDWP6siwwkr5c";
 
     @Test
-    public void constructWithModuleAndCode() {
-        ArtifactCode artifactCode = ArtifactCode.of(new RdfModule(), validArtifactCode.substring(2));
-        assertEquals(validArtifactCode, artifactCode.getCode());
-    }
-
-    @Test
     public void constructWithValidModuleAndInvalidCode() {
         assertThrows(IllegalArgumentException.class, () -> ArtifactCode.of(new RdfModule(), "this_is_an_invalid_code_because_it_is_too_long"));
         assertThrows(IllegalArgumentException.class, () -> ArtifactCode.of(new RdfModule(), "invalid_code_because_it_is_too_short"));
-    }
-
-    @Test
-    public void constructWithValidCode() {
-        ArtifactCode artifactCode = ArtifactCode.of(validArtifactCode);
-        assertEquals(validArtifactCode, artifactCode.getCode());
     }
 
     @Test
@@ -49,12 +37,6 @@ public class ArtifactCodeImplTest {
     }
 
     @Test
-    public void testToString() {
-        ArtifactCode artifactCode = ArtifactCode.of(validArtifactCode);
-        assertEquals("ArtifactCode{code='" + validArtifactCode + "'}", artifactCode.toString());
-    }
-
-    @Test
     public void testGetModule() {
         ArtifactCode artifactCode = ArtifactCode.of(validArtifactCode);
         assertTrue(artifactCode.getModule() instanceof RdfModule);
@@ -62,15 +44,15 @@ public class ArtifactCodeImplTest {
     }
 
     @Test
-    public void testGetCode() {
+    public void testToString() {
         ArtifactCode artifactCode = ArtifactCode.of(validArtifactCode);
-        assertEquals(validArtifactCode, artifactCode.getCode());
+        assertEquals(validArtifactCode, artifactCode.toString());
     }
 
     @Test
-    public void testGetCodeWithModuleAndDataHash() {
+    public void testToStringWithModuleAndDataHash() {
         ArtifactCode artifactCode = ArtifactCode.of(new RdfModule(), validArtifactCode.substring(2));
-        assertEquals(validArtifactCode, artifactCode.getCode());
+        assertEquals(validArtifactCode, artifactCode.toString());
     }
 
 }

@@ -29,7 +29,7 @@ public class ProcessFile {
         if (base.length() > 0 && base.charAt(base.length() - 1) != '.') {
             glue = ".";
         }
-        File hashFile = new File(file.getParentFile(), base + glue + ac.getCode() + ext);
+        File hashFile = new File(file.getParentFile(), base + glue + ac.toString() + ext);
         file.renameTo(hashFile);
     }
 

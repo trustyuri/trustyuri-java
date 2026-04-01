@@ -50,10 +50,10 @@ public class TransformRdf {
         if (!format.getFileExtensions().isEmpty()) {
             ext = "." + format.getFileExtensions().get(0);
         }
-        if (fileName.length() == 0) {
-            fileName = artifactCode.getCode() + ext;
+        if (fileName.isEmpty()) {
+            fileName = artifactCode + ext;
         } else {
-            fileName += "." + artifactCode.getCode() + ext;
+            fileName += "." + artifactCode + ext;
         }
         OutputStream out;
         if (inputFile.getName().matches(".*\\.(gz|gzip)")) {
@@ -114,7 +114,7 @@ public class TransformRdf {
 
     public static IRI includeArtifactCode(RdfFileContent preprocessedContent, ArtifactCode artifactCode, IRI baseUri, Object writerOrHandler, TransformRdfSetting setting)
             throws TrustyUriException {
-        Map<String, String> ns = makeNamespaceMap(preprocessedContent.getStatements(), baseUri, artifactCode.getCode(), setting);
+        Map<String, String> ns = makeNamespaceMap(preprocessedContent.getStatements(), baseUri, artifactCode.toString(), setting);
         HashAdder hashAdder;
         if (writerOrHandler instanceof RDFWriter) {
             hashAdder = new HashAdder(baseUri, artifactCode, (RDFWriter) writerOrHandler, ns);
@@ -126,7 +126,7 @@ public class TransformRdf {
         } catch (RDFHandlerException ex) {
             throw new TrustyUriException(ex);
         }
-        return RdfUtils.getTrustyUri(baseUri, artifactCode.getCode(), setting);
+        return RdfUtils.getTrustyUri(baseUri, artifactCode.toString(), setting);
 
     }
 
@@ -175,7 +175,7 @@ public class TransformRdf {
     public static Map<Resource, IRI> finalizeTransformMap(Map<Resource, IRI> transformMap, ArtifactCode artifactCode) {
         Map<Resource, IRI> finalMap = new HashMap<>();
         for (Resource r : transformMap.keySet()) {
-            String s = transformMap.get(r).stringValue().replaceFirst(" ", artifactCode.getCode());
+            String s = transformMap.get(r).stringValue().replaceFirst(" ", artifactCode.toString());
             finalMap.put(r, SimpleValueFactory.getInstance().createIRI(s));
         }
         return finalMap;

@@ -1,6 +1,7 @@
 package net.trustyuri.rdf;
 
 import com.google.code.externalsorting.ExternalSort;
+import net.trustyuri.ArtifactCode;
 import net.trustyuri.TrustyUriException;
 import net.trustyuri.TrustyUriResource;
 import org.eclipse.rdf4j.common.exception.RDF4JException;
@@ -27,7 +28,7 @@ public class CheckLargeRdf {
         CheckLargeRdf t = new CheckLargeRdf(file);
         boolean valid = t.check();
         if (valid) {
-            logger.info("Correct hash: {}", t.ac);
+            logger.info("Correct hash: {}", t.ac.toString());
         } else {
             logger.error("*** INCORRECT HASH ***");
         }
@@ -35,7 +36,7 @@ public class CheckLargeRdf {
 
     private File file;
     private MessageDigest md;
-    private String ac;
+    private ArtifactCode ac;
 
     public CheckLargeRdf(File file) {
         this.file = file;
@@ -99,7 +100,7 @@ public class CheckLargeRdf {
         sortOutFile.delete();
 
         ac = RdfHasher.getArtifactCode(md);
-        return ac.equals(r.getArtifactCode());
+        return ac.toString().equals(r.getArtifactCode());
     }
 
 }

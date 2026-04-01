@@ -18,7 +18,8 @@ public interface ArtifactCode {
      *
      * @return the artifact code as a string
      */
-    String getCode();
+    @Override
+    String toString();
 
     /**
      * Creates an ArtifactCode from the given string. Returns null if the string is not a valid artifact code.

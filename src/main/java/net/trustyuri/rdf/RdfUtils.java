@@ -181,11 +181,11 @@ public class RdfUtils {
         TrustyUriResource r = new TrustyUriResource(file);
         RdfFileContent content = RdfUtils.load(r);
         ArtifactCode oldArtifactCode = ArtifactCode.of(r.getArtifactCode());
-        content = RdfPreprocessor.run(content, oldArtifactCode.getCode());
+        content = RdfPreprocessor.run(content, oldArtifactCode.toString());
         ArtifactCode newArtifactCode = createArtifactCode(content, oldArtifactCode.getModule().getModuleId().equals(RdfGraphModule.MODULE_ID));
         content = processNamespaces(content, oldArtifactCode, newArtifactCode);
         OutputStream out;
-        String filename = r.getFilename().replace(oldArtifactCode.getCode(), newArtifactCode.getCode());
+        String filename = r.getFilename().replace(oldArtifactCode.toString(), newArtifactCode.toString());
         if (filename.matches(".*\\.(gz|gzip)")) {
             out = new GZIPOutputStream(new FileOutputStream(new File("fixed." + filename)));
         } else {
@@ -197,7 +197,7 @@ public class RdfUtils {
 
     public static void fixTrustyRdf(RdfFileContent content, ArtifactCode oldArtifactCode, RDFHandler writer)
             throws TrustyUriException {
-        content = RdfPreprocessor.run(content, oldArtifactCode.getCode());
+        content = RdfPreprocessor.run(content, oldArtifactCode.toString());
         ArtifactCode newArtifactCode = createArtifactCode(content, oldArtifactCode.getModule().getModuleId().equals(RdfGraphModule.MODULE_ID));
         content = processNamespaces(content, oldArtifactCode, newArtifactCode);
         TransformRdf.transformPreprocessed(content, null, writer, null);
@@ -246,7 +246,7 @@ public class RdfUtils {
 
         @Override
         public void handleNamespace(String prefix, String uri) throws RDFHandlerException {
-            handler.handleNamespace(prefix, uri.replace(oldArtifactCode.getCode(), newArtifactCode.getCode()));
+            handler.handleNamespace(prefix, uri.replace(oldArtifactCode.toString(), newArtifactCode.toString()));
         }
 
         @Override

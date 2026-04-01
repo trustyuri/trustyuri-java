@@ -22,10 +22,6 @@ public class ArtifactCodeImpl implements ArtifactCode {
      * @throws IllegalArgumentException if the code is not a valid artifact code
      */
     ArtifactCodeImpl(String artifactCode) {
-        if (artifactCode == null || artifactCode.isEmpty()) {
-            logger.error("Artifact code cannot be null or empty");
-            throw new IllegalArgumentException("Artifact code cannot be null or empty");
-        }
         if (TrustyUriUtils.isPotentialArtifactCode(artifactCode)) {
             this.dataHash = TrustyUriUtils.getDataPart(artifactCode);
             this.module = ModuleDirectory.getModule(TrustyUriUtils.getModuleId(artifactCode));
@@ -64,13 +60,8 @@ public class ArtifactCodeImpl implements ArtifactCode {
     }
 
     @Override
-    public String getCode() {
-        return this.module.getModuleId() + this.dataHash;
-    }
-
-    @Override
     public String toString() {
-        return "ArtifactCode{" + "code='" + getCode() + '\'' + '}';
+        return this.module.getModuleId() + this.dataHash;
     }
 
     @Override

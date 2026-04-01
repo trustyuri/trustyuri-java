@@ -109,12 +109,12 @@ public class TransformLargeRdf {
         }
         br.close();
 
-        ArtifactCode artifactCode = ArtifactCode.of(RdfHasher.getArtifactCode(md));
+        ArtifactCode artifactCode = RdfHasher.getArtifactCode(md);
         String acFileName = fileName;
-        if (acFileName.length() == 0) {
-            acFileName = artifactCode.getCode() + ext;
+        if (acFileName.isEmpty()) {
+            acFileName = artifactCode + ext;
         } else {
-            acFileName += "." + artifactCode.getCode() + ext;
+            acFileName += "." + artifactCode + ext;
         }
         OutputStream out;
         if (inputFile.getName().matches(".*\\.(gz|gzip)")) {
@@ -145,7 +145,7 @@ public class TransformLargeRdf {
         }
         out.close();
 
-        return RdfUtils.getTrustyUri(baseUri, artifactCode.getCode(), setting);
+        return RdfUtils.getTrustyUri(baseUri, artifactCode.toString(), setting);
     }
 
 }
