@@ -11,6 +11,7 @@ import org.eclipse.rdf4j.rio.*;
 import org.eclipse.rdf4j.rio.helpers.BasicParserSettings;
 
 import java.io.*;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.util.HashSet;
@@ -83,7 +84,7 @@ public class RdfUtils {
     public static void checkUri(IRI uri) {
         try {
             // Raise error if not well-formed
-            new java.net.URI(uri.stringValue());
+            new URI(uri.stringValue());
         } catch (URISyntaxException ex) {
             throw new RuntimeException("Malformed URI: " + uri.stringValue(), ex);
         }
