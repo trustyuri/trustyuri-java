@@ -12,9 +12,8 @@ public class RdfModule extends AbstractTrustyUriModule {
 
     public static final String MODULE_ID = "RA";
 
-    @Override
-    public String getModuleId() {
-        return MODULE_ID;
+    public RdfModule() {
+        super(MODULE_ID);
     }
 
     @Override

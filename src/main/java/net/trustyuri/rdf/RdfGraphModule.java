@@ -12,9 +12,8 @@ public class RdfGraphModule extends AbstractTrustyUriModule {
 
     public static final String MODULE_ID = "RB";
 
-    @Override
-    public String getModuleId() {
-        return MODULE_ID;
+    public RdfGraphModule() {
+        super(MODULE_ID);
     }
 
     @Override
