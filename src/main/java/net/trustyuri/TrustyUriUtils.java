@@ -6,11 +6,16 @@ import net.trustyuri.rdf.RdfHasher;
 
 import java.net.URI;
 import java.security.MessageDigest;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * A utility class for working with trusty URIs. This class provides static methods for extracting information from trusty URI strings, such as the artifact code. It also includes methods for checking if a string is a potential artifact code or trusty URI, and for converting between base64 strings and byte arrays.
  */
 public class TrustyUriUtils {
+
+    private static final String TRUSTY_URI_REGEX = "^(.*[^A-Za-z0-9\\-_]|)([A-Za-z0-9\\-_]{25,})(\\.[A-Za-z0-9\\-_\\.]{0,20})?$";
+    private static final Pattern trustyUriPattern = Pattern.compile(TRUSTY_URI_REGEX);
 
     private static final MimetypesFileTypeMap mimeMap = new MimetypesFileTypeMap();
 
@@ -21,10 +26,11 @@ public class TrustyUriUtils {
      * @return the artifact code, or null if the string does not match the expected format for a trusty URI
      */
     public static String getArtifactCode(String trustyUriString) {
-        if (!trustyUriString.matches("(.*[^A-Za-z0-9\\-_]|)[A-Za-z0-9\\-_]{25,}(\\.[A-Za-z0-9\\-_\\.]{0,20})?")) {
+        final Matcher matcher = trustyUriPattern.matcher(trustyUriString);
+        if (!matcher.matches()) {
             return null;
         }
-        return trustyUriString.replaceFirst("^(.*[^A-Za-z0-9\\-_]|)([A-Za-z0-9\\-_]{25,})(\\.[A-Za-z0-9\\-_\\.]{0,20})?$", "$2");
+        return matcher.group(2);
     }
 
     /**
@@ -94,6 +100,7 @@ public class TrustyUriUtils {
                 String authority = (new URI(s)).getAuthority();
                 return "ni://" + authority + tail;
             } catch (Exception ex) {
+                // Ignore URI parsing errors and fall back to returning ni:// without authority
             }
         }
         return "ni://" + tail;
