@@ -1,5 +1,6 @@
 package net.trustyuri.rdf;
 
+import net.trustyuri.ArtifactCode;
 import net.trustyuri.TrustyUriException;
 import net.trustyuri.TrustyUriResource;
 import net.trustyuri.TrustyUriUtils;
@@ -61,24 +62,23 @@ public class CheckRdfGraph {
     }
 
     public boolean check(IRI graphUri) throws TrustyUriException {
-        String artifactCode = getArtifactCode(graphUri);
-        if (artifactCode == null) {
-            throw new TrustyUriException("Not a trusty URI: " + graphUri);
-        }
-        if (!TrustyUriUtils.getModuleId(artifactCode).equals(RdfGraphModule.MODULE_ID)) {
+        ArtifactCode artifactCode = getArtifactCode(graphUri);
+        if (!artifactCode.getModule().getModuleId().equals(RdfGraphModule.MODULE_ID)) {
             throw new TrustyUriException("Not a trusty URI of type " + RdfGraphModule.MODULE_ID + ": " + graphUri);
         }
-        List<Statement> graph = new ArrayList<Statement>();
+        List<Statement> graph = new ArrayList<>();
         for (Statement st : content.getStatements()) {
-            if (graphUri.equals(st.getContext())) graph.add(st);
+            if (graphUri.equals(st.getContext())) {
+                graph.add(st);
+            }
         }
-        graph = RdfPreprocessor.run(graph, artifactCode);
-        String ac = RdfHasher.makeGraphArtifactCode(graph);
+        graph = RdfPreprocessor.run(graph, artifactCode.toString());
+        ArtifactCode ac = RdfHasher.makeGraphArtifactCode(graph);
         return artifactCode.equals(ac);
     }
 
-    private static String getArtifactCode(IRI graphUri) {
-        return TrustyUriUtils.getArtifactCode(graphUri.stringValue());
+    private static ArtifactCode getArtifactCode(IRI graphUri) {
+        return ArtifactCode.of(TrustyUriUtils.getArtifactCode(graphUri.stringValue()));
     }
 
 }

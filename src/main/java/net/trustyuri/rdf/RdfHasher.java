@@ -1,5 +1,7 @@
 package net.trustyuri.rdf;
 
+import net.trustyuri.ArtifactCode;
+import net.trustyuri.ModuleDirectory;
 import net.trustyuri.TrustyUriException;
 import net.trustyuri.TrustyUriUtils;
 import org.eclipse.rdf4j.model.*;
@@ -19,11 +21,11 @@ public class RdfHasher {
     private RdfHasher() {
     }  // no instances allowed
 
-    public static String makeArtifactCode(List<Statement> statements) {
+    public static ArtifactCode makeArtifactCode(List<Statement> statements) {
         return getArtifactCode(digest(statements));
     }
 
-    public static String makeGraphArtifactCode(List<Statement> statements) throws TrustyUriException {
+    public static ArtifactCode makeGraphArtifactCode(List<Statement> statements) throws TrustyUriException {
         IRI graphUri = null;
         List<Statement> graph = new ArrayList<Statement>();
         for (Statement st : statements) {
@@ -38,13 +40,13 @@ public class RdfHasher {
             graphUri = (IRI) c;
             graph.add(st);
         }
-        if (graph.size() == 0) {
+        if (graph.isEmpty()) {
             throw new TrustyUriException("Graph not found");
         }
         return getGraphArtifactCode(digest(graph));
     }
 
-    public static String makeGraphArtifactCode(List<Statement> statements, IRI baseUri, TransformRdfSetting setting) throws TrustyUriException {
+    public static ArtifactCode makeGraphArtifactCode(List<Statement> statements, IRI baseUri, TransformRdfSetting setting) throws TrustyUriException {
         IRI graphUri = RdfUtils.getTrustyUri(baseUri, " ", setting);
         List<Statement> graph = new ArrayList<Statement>();
         for (Statement st : statements) {
@@ -53,7 +55,7 @@ public class RdfHasher {
                 graph.add(st);
             }
         }
-        if (graph.size() == 0) {
+        if (graph.isEmpty()) {
             throw new TrustyUriException("Graph not found");
         }
         return getGraphArtifactCode(digest(graph));
@@ -101,12 +103,12 @@ public class RdfHasher {
         return md;
     }
 
-    public static String getArtifactCode(MessageDigest md) {
-        return RdfModule.MODULE_ID + TrustyUriUtils.getBase64(md.digest());
+    public static ArtifactCode getArtifactCode(MessageDigest md) {
+        return ArtifactCode.of(ModuleDirectory.getModule(RdfModule.MODULE_ID), TrustyUriUtils.getBase64(md.digest()));
     }
 
-    public static String getGraphArtifactCode(MessageDigest md) {
-        return RdfGraphModule.MODULE_ID + TrustyUriUtils.getBase64(md.digest());
+    public static ArtifactCode getGraphArtifactCode(MessageDigest md) {
+        return ArtifactCode.of(ModuleDirectory.getModule(RdfGraphModule.MODULE_ID), TrustyUriUtils.getBase64(md.digest()));
     }
 
     public static void digest(Statement st, MessageDigest md) {

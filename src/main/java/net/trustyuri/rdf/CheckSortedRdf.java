@@ -1,5 +1,6 @@
 package net.trustyuri.rdf;
 
+import net.trustyuri.ArtifactCode;
 import net.trustyuri.TrustyUriException;
 import net.trustyuri.TrustyUriResource;
 import org.eclipse.rdf4j.common.exception.RDF4JException;
@@ -25,7 +26,7 @@ public class CheckSortedRdf {
         CheckSortedRdf ch = new CheckSortedRdf(file);
         boolean isCorrect = ch.check();
         if (isCorrect) {
-            logger.info("Correct hash: {}", ch.getArtifactCode());
+            logger.info("Correct hash: {}", ch.getArtifactCode().toString());
         } else {
             logger.error("*** INCORRECT HASH ***");
         }
@@ -79,12 +80,12 @@ public class CheckSortedRdf {
             reader.close();
         }
 
-        String artifactCode = RdfHasher.getArtifactCode(md);
-        return artifactCode.equals(r.getArtifactCode());
+        ArtifactCode artifactCode = RdfHasher.getArtifactCode(md);
+        return artifactCode.toString().equals(r.getArtifactCode());
     }
 
-    public String getArtifactCode() {
-        return r.getArtifactCode();
+    public ArtifactCode getArtifactCode() {
+        return ArtifactCode.of(r.getArtifactCode());
     }
 
 }

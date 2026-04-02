@@ -47,7 +47,6 @@ public class CheckFile {
         boolean valid = c.check();
         if (valid) {
             logger.info("Correct hash: {}", c.r.getArtifactCode());
-            //System.out.println("ni URI: " + TrustyUriUtils.getNiUri(fileName));
         } else {
             logger.error("*** INCORRECT HASH ***");
         }
