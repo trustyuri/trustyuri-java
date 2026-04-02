@@ -1,0 +1,78 @@
+name: Autorelease
+
+on:
+  push:
+    branches: [ release ]
+    paths-ignore:
+      - 'CHANGELOG.md'
+env:
+  GITHUB_USERNAME: ${{ github.actor }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  CENTRAL_USERNAME: ${{ vars.CENTRAL_USERNAME }}
+  CENTRAL_PASSWORD: ${{ secrets.CENTRAL_PASSWORD }}
+  MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        distribution: [ "temurin" ]
+        java: [ "21" , "23", "25" ]
+    name: Testing with Java ${{ matrix.java }} (${{ matrix.distribution }})
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Set up JDK
+        uses: actions/setup-java@f2beeb24e141e01a676f977032f5a29d81c9e27e # v5.1.0
+        with:
+          distribution: ${{ matrix.distribution }}
+          java-version: ${{ matrix.java }}
+          cache: 'maven'
+
+      - name: Test with Maven
+        run: ./mvnw -B test
+
+  release:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Set up JDK
+        uses: actions/setup-java@f2beeb24e141e01a676f977032f5a29d81c9e27e # v5.1.0
+        with:
+          distribution: "temurin"
+          java-version: "23"
+
+      - name: Import GPG key
+        run: |
+          echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --batch --import
+          gpg --list-secret-keys --keyid-format LONG
+
+      - name: Configure GPG for CI
+        run: |
+          echo "use-agent" >> ~/.gnupg/gpg.conf
+          echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
+
+      - name: Setup Node
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
+        with:
+          node-version: 22.20.0
+
+      - name: Release
+        run: |
+          npm ci
+          npx semantic-release
+
+      - name: Update master branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch --unshallow origin || true
+          git fetch origin master
+          git checkout -B master FETCH_HEAD
+          git merge release --no-edit
+          git push origin master
