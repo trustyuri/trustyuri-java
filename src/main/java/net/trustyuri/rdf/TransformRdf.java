@@ -1,5 +1,6 @@
 package net.trustyuri.rdf;
 
+import net.trustyuri.ArtifactCode;
 import net.trustyuri.TrustyUriException;
 import net.trustyuri.TrustyUriResource;
 import org.eclipse.rdf4j.model.IRI;
@@ -42,14 +43,14 @@ public class TransformRdf {
         }
 
         content = RdfPreprocessor.run(content, baseUri, setting);
-        String artifactCode = RdfHasher.makeArtifactCode(content.getStatements());
+        ArtifactCode artifactCode = RdfHasher.makeArtifactCode(content.getStatements());
         RDFFormat format = content.getOriginalFormat();
         String fileName = name;
         String ext = "";
         if (!format.getFileExtensions().isEmpty()) {
             ext = "." + format.getFileExtensions().get(0);
         }
-        if (fileName.length() == 0) {
+        if (fileName.isEmpty()) {
             fileName = artifactCode + ext;
         } else {
             fileName += "." + artifactCode + ext;
@@ -83,7 +84,7 @@ public class TransformRdf {
         } catch (RDFHandlerException ex) {
             throw new TrustyUriException(ex);
         }
-        String artifactCode = RdfHasher.makeArtifactCode(newContent.getStatements());
+        ArtifactCode artifactCode = RdfHasher.makeArtifactCode(newContent.getStatements());
         includeArtifactCode(newContent, artifactCode, baseUri, handler, setting);
         return finalizeTransformMap(rp.getTransformMap(), artifactCode);
     }
@@ -101,19 +102,19 @@ public class TransformRdf {
 
     public static IRI transformPreprocessed(RdfFileContent preprocessedContent, IRI baseUri, RDFWriter writer, TransformRdfSetting setting)
             throws TrustyUriException {
-        String artifactCode = RdfHasher.makeArtifactCode(preprocessedContent.getStatements());
+        ArtifactCode artifactCode = RdfHasher.makeArtifactCode(preprocessedContent.getStatements());
         return includeArtifactCode(preprocessedContent, artifactCode, baseUri, writer, setting);
     }
 
     public static IRI transformPreprocessed(RdfFileContent preprocessedContent, IRI baseUri, RDFHandler handler, TransformRdfSetting setting)
             throws TrustyUriException {
-        String artifactCode = RdfHasher.makeArtifactCode(preprocessedContent.getStatements());
+        ArtifactCode artifactCode = RdfHasher.makeArtifactCode(preprocessedContent.getStatements());
         return includeArtifactCode(preprocessedContent, artifactCode, baseUri, handler, setting);
     }
 
-    public static IRI includeArtifactCode(RdfFileContent preprocessedContent, String artifactCode, IRI baseUri, Object writerOrHandler, TransformRdfSetting setting)
+    public static IRI includeArtifactCode(RdfFileContent preprocessedContent, ArtifactCode artifactCode, IRI baseUri, Object writerOrHandler, TransformRdfSetting setting)
             throws TrustyUriException {
-        Map<String, String> ns = makeNamespaceMap(preprocessedContent.getStatements(), baseUri, artifactCode, setting);
+        Map<String, String> ns = makeNamespaceMap(preprocessedContent.getStatements(), baseUri, artifactCode.toString(), setting);
         HashAdder hashAdder;
         if (writerOrHandler instanceof RDFWriter) {
             hashAdder = new HashAdder(baseUri, artifactCode, (RDFWriter) writerOrHandler, ns);
@@ -125,7 +126,7 @@ public class TransformRdf {
         } catch (RDFHandlerException ex) {
             throw new TrustyUriException(ex);
         }
-        return RdfUtils.getTrustyUri(baseUri, artifactCode, setting);
+        return RdfUtils.getTrustyUri(baseUri, artifactCode.toString(), setting);
 
     }
 
@@ -171,10 +172,10 @@ public class TransformRdf {
         }
     }
 
-    public static Map<Resource, IRI> finalizeTransformMap(Map<Resource, IRI> transformMap, String artifactCode) {
+    public static Map<Resource, IRI> finalizeTransformMap(Map<Resource, IRI> transformMap, ArtifactCode artifactCode) {
         Map<Resource, IRI> finalMap = new HashMap<>();
         for (Resource r : transformMap.keySet()) {
-            String s = transformMap.get(r).stringValue().replaceFirst(" ", artifactCode);
+            String s = transformMap.get(r).stringValue().replaceFirst(" ", artifactCode.toString());
             finalMap.put(r, SimpleValueFactory.getInstance().createIRI(s));
         }
         return finalMap;
