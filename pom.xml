@@ -101,7 +101,7 @@
     <dependency>
       <groupId>com.google.code.externalsortinginjava</groupId>
       <artifactId>externalsortinginjava</artifactId>
-      <version>0.6.2</version>
+      <version>0.6.6</version>
     </dependency>
   </dependencies>
 
