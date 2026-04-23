@@ -8,10 +8,19 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Module for trusty URIs that are based on the hash of a file. The file is hashed using SHA-256, and the resulting hash is encoded in Base64 and used as the artifact code in the trusty URI.
+ */
 public class FileModule extends AbstractTrustyUriModule {
 
+    /**
+     * The module identifier for this module, which is "FA". This is used in the trusty URI to indicate that the artifact code is based on a file hash.
+     */
     public static final String MODULE_ID = "FA";
 
+    /**
+     * Constructor for the FileModule class. It calls the constructor of the superclass AbstractTrustyUriModule with the module identifier "FA".
+     */
     public FileModule() {
         super(MODULE_ID);
     }

@@ -26,6 +26,9 @@ public class Run {
      * Interprets the arguments as a command to run, for example: {"ProcessFile", "file.txt"}
      *
      * @param args the command
+     * @throws IOException        if an I/O error occurs
+     * @throws RDF4JException     if an RDF4J error occurs
+     * @throws TrustyUriException if a TrustyUri error occurs
      */
     public static void main(String[] args) throws IOException, RDF4JException, TrustyUriException {
         run(args);
@@ -35,6 +38,9 @@ public class Run {
      * Runs the given command, for example: {"ProcessFile", "file.txt"}
      *
      * @param command the command, as a String array
+     * @throws IOException        if an I/O error occurs
+     * @throws RDF4JException     if an RDF4J error occurs
+     * @throws TrustyUriException if a TrustyUri error occurs
      */
     public static void run(String[] command) throws IOException, RDF4JException, TrustyUriException {
         String cmd = command[0];

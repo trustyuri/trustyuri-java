@@ -22,6 +22,8 @@ public class CheckFile {
      * files (in the form of trusty file names).
      *
      * @param args a list of URLs or file names
+     * @throws IOException        if the content cannot be read
+     * @throws TrustyUriException if any of the URIs is not a trusty URI or if any of the modules is unknown
      */
     public static void main(String[] args) throws IOException, TrustyUriException {
         for (String arg : args) {
@@ -34,6 +36,8 @@ public class CheckFile {
      * file system).
      *
      * @param fileOrUrl the file name or URL
+     * @throws IOException        if the content cannot be read
+     * @throws TrustyUriException if the URI is not a trusty URI or if the module is unknown
      */
     public static void check(String fileOrUrl) throws IOException, TrustyUriException {
         CheckFile c;
@@ -58,6 +62,7 @@ public class CheckFile {
      * Creates a new object to check the content to be fetched from a URL.
      *
      * @param url the URL
+     * @throws IOException if the content cannot be read
      */
     public CheckFile(URL url) throws IOException {
         r = new TrustyUriResource(url);
@@ -76,6 +81,8 @@ public class CheckFile {
      * Checks whether the content matches the hash of the trusty URI.
      *
      * @return true if the content matches the hash
+     * @throws IOException        if the content cannot be read
+     * @throws TrustyUriException if the URI is not a trusty URI or if the module is unknown
      */
     public boolean check() throws IOException, TrustyUriException {
         TrustyUriModule module = ModuleDirectory.getModule(r.getModuleId());

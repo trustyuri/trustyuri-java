@@ -8,10 +8,19 @@ import net.trustyuri.TrustyUriResource;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Module for RDF content.
+ */
 public class RdfModule extends AbstractTrustyUriModule {
 
+    /**
+     * The module identifier for RDF content. The identifier is "RA".
+     */
     public static final String MODULE_ID = "RA";
 
+    /**
+     * Creates a new instance of the RDF module. The constructor does not take any parameters and initializes the module with the predefined module identifier "RA".
+     */
     public RdfModule() {
         super(MODULE_ID);
     }

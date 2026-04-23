@@ -19,10 +19,20 @@ import java.security.MessageDigest;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * Checks the hash of a large RDF file by sorting the statements in a temporary file and then reading them one by one.
+ */
 public class CheckLargeRdf {
 
     private static final Logger logger = LoggerFactory.getLogger(CheckLargeRdf.class);
 
+    /**
+     * Checks the hash of a large RDF file.
+     *
+     * @param args the first argument is the file to check
+     * @throws IOException        if there is an error reading or writing files
+     * @throws TrustyUriException if there is an error with the trusty URI (e.g. invalid format, hash mismatch)
+     */
     public static void main(String[] args) throws IOException, TrustyUriException {
         File file = new File(args[0]);
         CheckLargeRdf t = new CheckLargeRdf(file);
@@ -38,10 +48,22 @@ public class CheckLargeRdf {
     private MessageDigest md;
     private ArtifactCode ac;
 
+    /**
+     * Creates a new instance of CheckLargeRdf with the specified file.
+     *
+     * @param file the RDF file to check
+     */
     public CheckLargeRdf(File file) {
         this.file = file;
     }
 
+    /**
+     * Checks the hash of the RDF file.
+     *
+     * @return true if the hash is correct, false otherwise
+     * @throws IOException        if there is an error reading or writing files
+     * @throws TrustyUriException if there is an error with the trusty URI
+     */
     public boolean check() throws IOException, TrustyUriException {
         TrustyUriResource r = new TrustyUriResource(file);
         File dir = file.getParentFile();

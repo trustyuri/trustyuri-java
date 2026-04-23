@@ -40,9 +40,19 @@ public interface TrustyUriModule {
      *
      * @param resource the resource to be checked
      * @return true if the hash matches the content
+     * @throws IOException        if an I/O error occurs
+     * @throws TrustyUriException if the trusty URI is invalid
      */
     public boolean hasCorrectHash(TrustyUriResource resource) throws IOException, TrustyUriException;
 
+    /**
+     * Fixes the trusty URI of the given file by calculating the correct hash and renaming the file
+     *
+     * @param file the file to be fixed
+     * @throws IOException                   if an I/O error occurs
+     * @throws TrustyUriException            if the trusty URI is invalid
+     * @throws UnsupportedOperationException if the module does not support fixing trusty URIs
+     */
     public void fixTrustyFile(File file) throws IOException, TrustyUriException, UnsupportedOperationException;
 
     /**

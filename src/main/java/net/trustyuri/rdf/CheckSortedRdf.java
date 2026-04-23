@@ -17,10 +17,20 @@ import java.io.File;
 import java.io.IOException;
 import java.security.MessageDigest;
 
+/**
+ * Checks that the RDF file is sorted and that the hash is correct.
+ */
 public class CheckSortedRdf {
 
     private static final Logger logger = LoggerFactory.getLogger(CheckSortedRdf.class);
 
+    /**
+     * Checks that the RDF file is sorted and that the hash is correct.
+     *
+     * @param args the first argument is the file to check
+     * @throws IOException        if there is an error reading the file
+     * @throws TrustyUriException if there is an error with the trusty URI (e.g. not a trusty URI, unsupported module, etc.)
+     */
     public static void main(String[] args) throws IOException, TrustyUriException {
         File file = new File(args[0]);
         CheckSortedRdf ch = new CheckSortedRdf(file);
@@ -37,10 +47,22 @@ public class CheckSortedRdf {
     private Statement previous;
     private TrustyUriResource r;
 
+    /**
+     * Creates a new CheckSortedRdf instance for the given file.
+     *
+     * @param file the file to check
+     */
     public CheckSortedRdf(File file) {
         this.file = file;
     }
 
+    /**
+     * Checks that the RDF file is sorted and that the hash is correct.
+     *
+     * @return true if the hash is correct, false otherwise
+     * @throws IOException        if there is an error reading the file
+     * @throws TrustyUriException if there is an error with the trusty URI (e.g. not a trusty URI, unsupported module, etc.)
+     */
     public boolean check() throws IOException, TrustyUriException {
         md = RdfHasher.getDigest();
         r = new TrustyUriResource(file);
@@ -84,6 +106,11 @@ public class CheckSortedRdf {
         return artifactCode.toString().equals(r.getArtifactCode());
     }
 
+    /**
+     * Returns the artifact code of the nanopublication contained in the file.
+     *
+     * @return the artifact code of the nanopublication contained in the file
+     */
     public ArtifactCode getArtifactCode() {
         return ArtifactCode.of(r.getArtifactCode());
     }

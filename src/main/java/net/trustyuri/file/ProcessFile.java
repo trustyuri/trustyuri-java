@@ -7,14 +7,29 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+/**
+ * Utility class for processing a file by computing its artifact code and renaming it to include the artifact code in the filename.
+ */
 public class ProcessFile {
 
+    /**
+     * Main method that takes a filename as an argument, processes the file, and renames it to include the artifact code in the filename.
+     *
+     * @param args the command-line arguments, where args[0] is the filename to process
+     * @throws IOException if the file cannot be read or renamed
+     */
     public static void main(String[] args) throws IOException {
         String filename = args[0];
         File file = new File(filename);
         process(file);
     }
 
+    /**
+     * Process the given file by computing its artifact code and renaming it to include the artifact code in the filename.
+     *
+     * @param file the file to process
+     * @throws IOException if the file cannot be read or renamed
+     */
     public static void process(File file) throws IOException {
         String filename = file.getName();
         FileHasher hasher = new FileHasher();
