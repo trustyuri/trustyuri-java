@@ -11,7 +11,6 @@ import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.rio.*;
 
 import java.io.*;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
@@ -69,7 +68,7 @@ public class TransformRdf {
         String fileName = name;
         String ext = "";
         if (!format.getFileExtensions().isEmpty()) {
-            ext = "." + format.getFileExtensions().get(0);
+            ext = "." + format.getFileExtensions().getFirst();
         }
         if (fileName.isEmpty()) {
             fileName = artifactCode + ext;

@@ -82,7 +82,7 @@ public class TransformLargeRdf {
         fileName = name;
         ext = "";
         if (!format.getFileExtensions().isEmpty()) {
-            ext = "." + format.getFileExtensions().get(0);
+            ext = "." + format.getFileExtensions().getFirst();
         }
 
         RDFParser p = RdfUtils.getParser(format);

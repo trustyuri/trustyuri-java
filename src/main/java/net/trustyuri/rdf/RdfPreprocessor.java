@@ -10,6 +10,8 @@ import org.eclipse.rdf4j.model.Value;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.rio.RDFHandler;
 import org.eclipse.rdf4j.rio.RDFHandlerException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,6 +22,8 @@ import java.util.Map;
  * RdfPreprocessor is a class that implements the RDFHandler interface to preprocess RDF content by transforming all URIs to trusty URIs, and blank nodes to URIs based on the base URI and a mapping of blank node IDs to integers.
  */
 public class RdfPreprocessor implements RDFHandler {
+
+    private static final Logger logger = LoggerFactory.getLogger(RdfPreprocessor.class);
 
     // TODO check that already hashed graphs are not changed
 
@@ -41,12 +45,15 @@ public class RdfPreprocessor implements RDFHandler {
      * @throws TrustyUriException if the propagation fails, e.g. due to an RDFHandlerException
      */
     public static RdfFileContent run(RdfFileContent content, IRI baseUri, TransformRdfSetting setting) throws TrustyUriException {
+        logger.debug("Preprocessing RDF content with base URI '{}' ({} statements)", baseUri, content.getStatements().size());
         RdfFileContent p = new RdfFileContent(content.getOriginalFormat());
         try {
             content.propagate(new RdfPreprocessor(p, baseUri, setting));
         } catch (RDFHandlerException ex) {
+            logger.error("RDF preprocessing failed for base URI '{}': {}", baseUri, ex.getMessage());
             throw new TrustyUriException(ex);
         }
+        logger.debug("Preprocessing complete: {} statements produced", p.getStatements().size());
         return p;
     }
 
@@ -59,12 +66,15 @@ public class RdfPreprocessor implements RDFHandler {
      * @throws TrustyUriException if the propagation fails, e.g. due to an RDFHandlerException
      */
     public static RdfFileContent run(RdfFileContent content, String artifactCode) throws TrustyUriException {
+        logger.debug("Preprocessing RDF content with artifact code '{}' ({} statements)", artifactCode, content.getStatements().size());
         RdfFileContent p = new RdfFileContent(content.getOriginalFormat());
         try {
             content.propagate(new RdfPreprocessor(p, artifactCode));
         } catch (RDFHandlerException ex) {
+            logger.error("RDF preprocessing failed for artifact code '{}': {}", artifactCode, ex.getMessage());
             throw new TrustyUriException(ex);
         }
+        logger.debug("Preprocessing complete: {} statements produced", p.getStatements().size());
         return p;
     }
 
@@ -93,6 +103,7 @@ public class RdfPreprocessor implements RDFHandler {
     }
 
     private static List<Statement> run(List<Statement> statements, IRI baseUri, String artifactCode, TransformRdfSetting setting) {
+        logger.debug("Preprocessing {} statements (baseUri='{}', artifactCode='{}')", statements.size(), baseUri, artifactCode);
         List<Statement> r = new ArrayList<>();
         RdfPreprocessor obj = new RdfPreprocessor(baseUri, artifactCode, setting);
         for (Statement st : statements) {
@@ -177,6 +188,7 @@ public class RdfPreprocessor implements RDFHandler {
 
     @Override
     public void endRDF() throws RDFHandlerException {
+        logger.debug("Preprocessing complete; {} URI transformations recorded", transformMap.size());
         nestedHandler.endRDF();
     }
 
@@ -211,6 +223,7 @@ public class RdfPreprocessor implements RDFHandler {
         if (context != null) {
             if (context instanceof IRI && moduleRB.matches((IRI) context)) {
                 trustyGraph = (IRI) context;
+                logger.debug("Statement is in trusty graph '{}', freezing context", trustyGraph);
             }
             context = transform(context, trustyGraph);
         }
@@ -231,9 +244,10 @@ public class RdfPreprocessor implements RDFHandler {
         IRI uri = RdfUtils.getPreUri(r, baseUri, blankNodeMap, trustyGraph != null, setting);
         if (uri == null) {
             // TODO Allow for 'force' option; URI might only look like a trusty URI...
-            throw new RuntimeException("Transformation would break existing trusty URI graph: " +
-                                       trustyGraph);
+            logger.error("Transformation of '{}' would break existing trusty URI graph '{}'", r, trustyGraph);
+            throw new RuntimeException("Transformation would break existing trusty URI graph: " + trustyGraph);
         } else if (!r.toString().equals(uri.toString())) {
+            logger.trace("Transformed '{}' → '{}'", r, uri);
             transformMap.put(r, uri);
         }
         return uri;

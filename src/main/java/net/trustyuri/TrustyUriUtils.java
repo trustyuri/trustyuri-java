@@ -3,6 +3,8 @@ package net.trustyuri;
 import jakarta.activation.MimetypesFileTypeMap;
 import jakarta.xml.bind.DatatypeConverter;
 import net.trustyuri.rdf.RdfHasher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.security.MessageDigest;
@@ -13,6 +15,8 @@ import java.util.regex.Pattern;
  * A utility class for working with trusty URIs. This class provides static methods for extracting information from trusty URI strings, such as the artifact code. It also includes methods for checking if a string is a potential artifact code or trusty URI, and for converting between base64 strings and byte arrays.
  */
 public class TrustyUriUtils {
+
+    private static final Logger logger = LoggerFactory.getLogger(TrustyUriUtils.class);
 
     private static final String TRUSTY_URI_REGEX = "^(.*[^A-Za-z0-9\\-_]|)([A-Za-z0-9\\-_]{25,})(\\.[A-Za-z0-9\\-_\\.]{0,20})?$";
     private static final Pattern trustyUriPattern = Pattern.compile(TRUSTY_URI_REGEX);
@@ -28,9 +32,12 @@ public class TrustyUriUtils {
     public static String getArtifactCode(String trustyUriString) {
         final Matcher matcher = trustyUriPattern.matcher(trustyUriString);
         if (!matcher.matches()) {
+            logger.debug("No artifact code found in string: '{}'", trustyUriString);
             return null;
         }
-        return matcher.group(2);
+        String ac = matcher.group(2);
+        logger.debug("Extracted artifact code '{}' from '{}'", ac, trustyUriString);
+        return ac;
     }
 
     /**
@@ -46,9 +53,16 @@ public class TrustyUriUtils {
         String id = getModuleId(potentialArtifactCode);
         TrustyUriModule module = ModuleDirectory.getModule(id);
         if (module == null) {
+            logger.debug("No module registered for ID '{}' in potential artifact code '{}'", id, potentialArtifactCode);
             return false;
         }
-        return getDataPart(potentialArtifactCode).length() == module.getDataPartLength();
+        int expected = module.getDataPartLength();
+        int actual = getDataPart(potentialArtifactCode).length();
+        if (actual != expected) {
+            logger.debug("Data part length mismatch for artifact code '{}': expected {}, got {}", potentialArtifactCode, expected, actual);
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -101,6 +115,7 @@ public class TrustyUriUtils {
     public static String getNiUri(String s, boolean withAuthority) {
         String ac = getArtifactCode(s);
         if (ac == null) {
+            logger.warn("Cannot convert to ni URI — no artifact code found in: '{}'", s);
             return null;
         }
         String moduleId = getModuleId(ac);
@@ -111,12 +126,16 @@ public class TrustyUriUtils {
         if (withAuthority) {
             try {
                 String authority = (new URI(s)).getAuthority();
-                return "ni://" + authority + tail;
+                String niUri = "ni://" + authority + tail;
+                logger.debug("Converted '{}' to ni URI with authority: '{}'", s, niUri);
+                return niUri;
             } catch (Exception ex) {
-                // Ignore URI parsing errors and fall back to returning ni:// without authority
+                logger.warn("Could not parse authority from URI '{}', falling back to ni:// without authority: {}", s, ex.getMessage());
             }
         }
-        return "ni://" + tail;
+        String niUri = "ni://" + tail;
+        logger.debug("Converted '{}' to ni URI: '{}'", s, niUri);
+        return niUri;
     }
 
     /**
@@ -166,7 +185,9 @@ public class TrustyUriUtils {
      * @return the MIME type for the given filename, or null if the MIME type cannot be determined
      */
     public static String getMimetype(String filename) {
-        return mimeMap.getContentType(filename);
+        String mimetype = mimeMap.getContentType(filename);
+        logger.debug("Resolved mimetype for '{}': '{}'", filename, mimetype);
+        return mimetype;
     }
 
 }

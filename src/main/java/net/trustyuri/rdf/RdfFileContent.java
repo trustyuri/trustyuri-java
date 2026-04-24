@@ -9,6 +9,8 @@ import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.RDFHandler;
 import org.eclipse.rdf4j.rio.RDFHandlerException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,7 +22,9 @@ import java.util.Map;
  */
 public class RdfFileContent implements RDFHandler {
 
-    private Map<Value, Value> rdfEntityMap = new HashMap<Value, Value>();
+    private static final Logger logger = LoggerFactory.getLogger(RdfFileContent.class);
+
+    private final Map<Value, Value> rdfEntityMap = new HashMap<>();
 
     private RDFFormat originalFormat = null;
     private List<Pair<String, String>> namespaces;
@@ -33,39 +37,49 @@ public class RdfFileContent implements RDFHandler {
      */
     public RdfFileContent(RDFFormat originalFormat) {
         this.originalFormat = originalFormat;
+        logger.debug("Created RdfFileContent with original format: {}", originalFormat);
     }
 
     @Override
     public void startRDF() throws RDFHandlerException {
-        namespaces = new ArrayList<Pair<String, String>>();
-        statements = new ArrayList<Statement>();
+        namespaces = new ArrayList<>();
+        statements = new ArrayList<>();
+        logger.debug("startRDF: initialized namespaces and statements containers");
     }
 
     @Override
     public void endRDF() throws RDFHandlerException {
+        int nsCount = namespaces == null ? 0 : namespaces.size();
+        int stCount = statements == null ? 0 : statements.size();
+        logger.debug("endRDF: completed reading RDF content (namespaces={}, statements={})", nsCount, stCount);
     }
 
     @Override
     public void handleNamespace(String prefix, String uri) throws RDFHandlerException {
         namespaces.add(Pair.of(prefix, uri));
+        logger.debug("handleNamespace: added namespace prefix='{}' uri='{}' (total namespaces={})", prefix, uri, namespaces.size());
     }
 
     @Override
     public void handleStatement(Statement st) throws RDFHandlerException {
+        logger.trace("Processing statement {}", st);
         Resource subj = (Resource) rdfEntityMap.get(st.getSubject());
         if (subj == null) {
             subj = st.getSubject();
             rdfEntityMap.put(subj, subj);
+            logger.trace("Added subject {} to rdfEntityMap (total entities={})", subj, rdfEntityMap.size());
         }
         IRI pred = (IRI) rdfEntityMap.get(st.getPredicate());
         if (pred == null) {
             pred = st.getPredicate();
             rdfEntityMap.put(pred, pred);
+            logger.trace("Added predicate {} to rdfEntityMap (total entities={})", pred, rdfEntityMap.size());
         }
         Value obj = (Value) rdfEntityMap.get(st.getObject());
         if (obj == null) {
             obj = st.getObject();
             rdfEntityMap.put(obj, obj);
+            logger.trace("Added object {} to rdfEntityMap (total entities={})", obj, rdfEntityMap.size());
         }
         Resource context;
         if (st.getContext() == null) {
@@ -75,16 +89,19 @@ public class RdfFileContent implements RDFHandler {
             if (context == null) {
                 context = st.getContext();
                 rdfEntityMap.put(context, context);
+                logger.trace("Added context {} to rdfEntityMap (total entities={})", context, rdfEntityMap.size());
             }
             st = SimpleValueFactory.getInstance().createStatement(subj, pred, obj, context);
         }
 
         statements.add(st);
+        logger.debug("handleStatement: added statement {} (total statements={})", st, statements.size());
     }
 
     @Override
     public void handleComment(String comment) throws RDFHandlerException {
         // Ignore comments
+        logger.trace("Ignored comment '{}'", comment);
     }
 
     /**
@@ -123,8 +140,12 @@ public class RdfFileContent implements RDFHandler {
      * @throws RDFHandlerException if there is an error propagating the content
      */
     public void propagate(RDFHandler handler, boolean doStartAndEnd) throws RDFHandlerException {
+        int nsCount = namespaces == null ? 0 : namespaces.size();
+        int stCount = statements == null ? 0 : statements.size();
+        logger.debug("propagate: starting propagation to handler {} (doStartAndEnd={}, namespaces={}, statements={})", handler, doStartAndEnd, nsCount, stCount);
         if (doStartAndEnd) {
             handler.startRDF();
+            logger.trace("propagate: called startRDF() on handler {}", handler);
         }
         for (Pair<String, String> ns : namespaces) {
             handler.handleNamespace(ns.getLeft(), ns.getRight());
@@ -133,6 +154,7 @@ public class RdfFileContent implements RDFHandler {
         for (Statement st : statements) {
             // omitting duplicates
             if (prev != null && prev.equals(st)) {
+                logger.debug("propagate: skipping duplicate statement {}", st);
                 continue;
             }
             prev = st;
@@ -140,7 +162,9 @@ public class RdfFileContent implements RDFHandler {
         }
         if (doStartAndEnd) {
             handler.endRDF();
+            logger.trace("propagate: called handler.endRDF()");
         }
+        logger.debug("propagate: completed propagation to handler {}", handler);
     }
 
     /**
@@ -149,6 +173,7 @@ public class RdfFileContent implements RDFHandler {
      * @return the original format of the RDF file, or null if the format is unknown
      */
     public RDFFormat getOriginalFormat() {
+        logger.debug("getOriginalFormat: returning original format {}", originalFormat);
         return originalFormat;
     }
 

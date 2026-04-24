@@ -5,6 +5,8 @@ import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.rio.RDFHandler;
 import org.eclipse.rdf4j.rio.RDFHandlerException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +15,8 @@ import java.util.Map;
  * RDFHandler that adds a hash to all IRIs in the graph, based on the provided artifact code.
  */
 public class HashAdder implements RDFHandler {
+
+    private static final Logger logger = LoggerFactory.getLogger(HashAdder.class);
 
     private IRI baseURI;
     private ArtifactCode artifactCode;
@@ -37,6 +41,7 @@ public class HashAdder implements RDFHandler {
             this.ns = new HashMap<>();
         }
         transformMap = new HashMap<>();
+        logger.debug("HashAdder created with base URI '{}' and artifact code '{}'", baseURI, artifactCode);
     }
 
     @Override
@@ -55,12 +60,14 @@ public class HashAdder implements RDFHandler {
 
     @Override
     public void endRDF() throws RDFHandlerException {
+        logger.debug("HashAdder finished: {} IRI transformations recorded", transformMap.size());
         handler.endRDF();
     }
 
     @Override
     public void handleNamespace(String prefix, String uri) throws RDFHandlerException {
         if (baseURI != null && baseURI.toString().equals(uri)) {
+            logger.debug("Suppressing namespace '{}' = '{}' (matches base URI)", prefix, uri);
             return;
         }
         handler.handleNamespace(prefix, uri);
@@ -88,9 +95,11 @@ public class HashAdder implements RDFHandler {
         if (r == null) {
             return null;
         } else if (r instanceof BNode) {
+            logger.error("Unexpected blank node encountered in HashAdder: '{}' — blank nodes should have been skolemized before this stage", r);
             throw new RuntimeException("Unexpected blank node encountered");
         } else {
             IRI transformedURI = SimpleValueFactory.getInstance().createIRI(r.toString().replace(" ", artifactCode.toString()));
+            logger.trace("Transformed IRI '{}' → '{}'", r, transformedURI);
             transformMap.put((IRI) r, transformedURI);
             return transformedURI;
         }

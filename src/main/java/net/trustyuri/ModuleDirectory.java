@@ -3,6 +3,8 @@ package net.trustyuri;
 import net.trustyuri.file.FileModule;
 import net.trustyuri.rdf.RdfGraphModule;
 import net.trustyuri.rdf.RdfModule;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,6 +16,8 @@ import java.util.Map;
  */
 public class ModuleDirectory {
 
+    private static final Logger logger = LoggerFactory.getLogger(ModuleDirectory.class);
+
     private ModuleDirectory() {
     }  // no instances allowed
 
@@ -23,6 +27,7 @@ public class ModuleDirectory {
         addModule(new FileModule());
         addModule(new RdfModule());
         addModule(new RdfGraphModule());
+        logger.debug("ModuleDirectory initialized with {} modules: {}", modules.size(), modules.keySet());
     }
 
     /**
@@ -32,11 +37,16 @@ public class ModuleDirectory {
      * @return the module object
      */
     public static TrustyUriModule getModule(String moduleId) {
-        return modules.get(moduleId);
+        TrustyUriModule module = modules.get(moduleId);
+        if (module == null) {
+            logger.debug("No module registered for ID: '{}'", moduleId);
+        }
+        return module;
     }
 
     private static void addModule(TrustyUriModule module) {
         modules.put(module.getModuleId(), module);
+        logger.debug("Registered module '{}' ({})", module.getModuleId(), module.getClass().getSimpleName());
     }
 
 }

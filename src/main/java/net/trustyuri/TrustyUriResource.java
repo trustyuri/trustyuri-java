@@ -2,11 +2,12 @@ package net.trustyuri;
 
 import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.Rio;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.zip.GZIPInputStream;
@@ -15,6 +16,8 @@ import java.util.zip.GZIPInputStream;
  * A resource that can be represented by a trusty URI.
  */
 public class TrustyUriResource {
+
+    private static final Logger logger = LoggerFactory.getLogger(TrustyUriResource.class);
 
     private String filename;
     private String mimetype;
@@ -31,6 +34,7 @@ public class TrustyUriResource {
      * @throws IOException if the file cannot be read
      */
     public TrustyUriResource(String mimetype, File file, String hash) throws IOException {
+        logger.debug("Creating TrustyUriResource from file '{}' with explicit mimetype '{}' and hash '{}'", file, mimetype, hash);
         init(file.toString(), mimetype, new FileInputStream(file), hash);
     }
 
@@ -44,6 +48,7 @@ public class TrustyUriResource {
     public TrustyUriResource(String mimetype, File file) throws IOException {
         String n = file.toString();
         String ac = TrustyUriUtils.getArtifactCode(n);
+        logger.debug("Creating TrustyUriResource from file '{}' with explicit mimetype '{}'; derived artifact code: '{}'", n, mimetype, ac);
         init(n, mimetype, new FileInputStream(file), ac);
     }
 
@@ -56,7 +61,9 @@ public class TrustyUriResource {
      */
     public TrustyUriResource(File file, String artifactCode) throws IOException {
         String n = file.toString();
-        init(n, TrustyUriUtils.getMimetype(n), new FileInputStream(file), artifactCode);
+        String mimetype = TrustyUriUtils.getMimetype(n);
+        logger.debug("Creating TrustyUriResource from file '{}' with explicit artifact code '{}'; derived mimetype: '{}'", n, artifactCode, mimetype);
+        init(n, mimetype, new FileInputStream(file), artifactCode);
     }
 
     /**
@@ -68,7 +75,9 @@ public class TrustyUriResource {
     public TrustyUriResource(File file) throws IOException {
         String n = file.toString();
         String ac = TrustyUriUtils.getArtifactCode(n);
-        init(n, TrustyUriUtils.getMimetype(n), new FileInputStream(file), ac);
+        String mimetype = TrustyUriUtils.getMimetype(n);
+        logger.debug("Creating TrustyUriResource from file '{}'; derived mimetype: '{}', artifact code: '{}'", n, mimetype, ac);
+        init(n, mimetype, new FileInputStream(file), ac);
     }
 
     /**
@@ -80,6 +89,7 @@ public class TrustyUriResource {
      * @throws IOException if the file cannot be read
      */
     public TrustyUriResource(String mimetype, URL url, String artifactCode) throws IOException {
+        logger.debug("Creating TrustyUriResource from URL '{}' with explicit mimetype '{}' and artifact code '{}'", url, mimetype, artifactCode);
         URLConnection conn = url.openConnection();
         init(url.toString(), mimetype, conn.getInputStream(), artifactCode);
     }
@@ -93,8 +103,9 @@ public class TrustyUriResource {
      */
     public TrustyUriResource(String mimetype, URL url) throws IOException {
         String n = url.toString();
-        URLConnection conn = url.openConnection();
         String ac = TrustyUriUtils.getArtifactCode(n);
+        logger.debug("Creating TrustyUriResource from URL '{}' with explicit mimetype '{}'; derived artifact code: '{}'", n, mimetype, ac);
+        URLConnection conn = url.openConnection();
         init(n, mimetype, conn.getInputStream(), ac);
     }
 
@@ -106,8 +117,11 @@ public class TrustyUriResource {
      * @throws IOException if the file cannot be read
      */
     public TrustyUriResource(URL url, String artifactCode) throws IOException {
+        logger.debug("Creating TrustyUriResource from URL '{}' with explicit artifact code '{}'", url, artifactCode);
         URLConnection conn = url.openConnection();
-        init(url.toString(), conn.getContentType(), conn.getInputStream(), artifactCode);
+        String contentType = conn.getContentType();
+        logger.debug("Content-Type reported by server for '{}': '{}'", url, contentType);
+        init(url.toString(), contentType, conn.getInputStream(), artifactCode);
     }
 
     /**
@@ -118,20 +132,24 @@ public class TrustyUriResource {
      */
     public TrustyUriResource(URL url) throws IOException {
         String n = url.toString();
-        URLConnection conn = url.openConnection();
         String ac = TrustyUriUtils.getArtifactCode(n);
-        init(n, conn.getContentType(), conn.getInputStream(), ac);
+        logger.debug("Creating TrustyUriResource from URL '{}'; derived artifact code: '{}'", n, ac);
+        URLConnection conn = url.openConnection();
+        String contentType = conn.getContentType();
+        logger.debug("Content-Type reported by server for '{}': '{}'", n, contentType);
+        init(n, contentType, conn.getInputStream(), ac);
     }
 
     private void init(String filename, String mimetype, InputStream in, String artifactCode) throws IOException {
+        this.filename = filename;
+        this.mimetype = mimetype;
+        this.artifactCode = artifactCode;
         if (filename.matches(".*\\.(gz|gzip)")) {
+            logger.debug("Detected compressed resource '{}', wrapping stream in GZIPInputStream", filename);
             this.in = new GZIPInputStream(in);
         } else {
             this.in = in;
         }
-        this.filename = filename;
-        this.mimetype = mimetype;
-        this.artifactCode = artifactCode;
     }
 
     /**
@@ -209,8 +227,10 @@ public class TrustyUriResource {
             format = Rio.getParserFormatForFileName(getFilename());
         }
         if (format.isPresent()) {
+            logger.debug("Resolved RDF format for '{}': {}", filename, format.get().getName());
             return format.get();
         }
+        logger.debug("Could not determine RDF format for '{}' (mimetype: '{}'), using default: {}", filename, mimetype, defaultFormat != null ? defaultFormat.getName() : "null");
         return defaultFormat;
     }
 

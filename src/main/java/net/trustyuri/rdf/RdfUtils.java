@@ -9,6 +9,8 @@ import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
 import org.eclipse.rdf4j.rio.*;
 import org.eclipse.rdf4j.rio.helpers.BasicParserSettings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.URI;
@@ -22,6 +24,8 @@ import java.util.zip.GZIPOutputStream;
  * This class is used for various utility functions related to RDF processing.
  */
 public class RdfUtils {
+
+    private static final Logger logger = LoggerFactory.getLogger(RdfUtils.class);
 
     private RdfUtils() {
     }  // no instances allowed
@@ -46,6 +50,7 @@ public class RdfUtils {
                 s += "" + getPostAcChar(baseUri, setting) + suffix;
             }
         }
+        logger.debug("Generated trusty URI string: '{}'", s);
         return s;
     }
 
@@ -72,6 +77,7 @@ public class RdfUtils {
      */
     public static IRI getTrustyUri(IRI baseUri, String artifactCode, String suffix, TransformRdfSetting setting) {
         if (baseUri == null) {
+            logger.debug("getTrustyUri called with null baseUri, returning null");
             return null;
         }
         return SimpleValueFactory.getInstance().createIRI(getTrustyUriString(baseUri, artifactCode, suffix, setting));
@@ -87,6 +93,7 @@ public class RdfUtils {
      */
     public static IRI getTrustyUri(IRI baseUri, String artifactCode, TransformRdfSetting setting) {
         if (baseUri == null) {
+            logger.debug("getTrustyUri called with null baseUri, returning null");
             return null;
         }
         return SimpleValueFactory.getInstance().createIRI(getTrustyUriString(baseUri, artifactCode, setting));
@@ -104,6 +111,7 @@ public class RdfUtils {
      */
     public static IRI getPreUri(Resource resource, IRI baseUri, Map<String, Integer> bnodeMap, boolean frozen, TransformRdfSetting setting) {
         if (resource == null) {
+            logger.error("getPreUri called with null resource");
             throw new RuntimeException("Resource is null");
         } else if (resource instanceof IRI) {
             IRI plainUri = (IRI) resource;
@@ -111,19 +119,26 @@ public class RdfUtils {
             // TODO Add option to disable suffixes appended to trusty URIs
             String suffix = getSuffix(plainUri, baseUri);
             if (suffix == null && !plainUri.equals(baseUri)) {
+                logger.debug("URI '{}' is outside base URI scope, leaving as-is after placeholder substitution", plainUri);
                 return SimpleValueFactory.getInstance().createIRI(plainUri.stringValue().replaceAll("~~~ARTIFACTCODE~~~", " "));
             } else if (frozen) {
+                logger.debug("URI '{}' would modify a frozen trusty graph, returning null", plainUri);
                 return null;
             } else if (TrustyUriUtils.isPotentialTrustyUri(plainUri)) {
+                logger.debug("URI '{}' is already a trusty URI, leaving unchanged", plainUri);
                 return plainUri;
             } else {
+                logger.debug("Generating trusty pre-URI for '{}' with suffix '{}'", plainUri, suffix);
                 return getTrustyUri(baseUri, " ", suffix, setting);
             }
         } else {
             if (frozen) {
+                logger.debug("Blank node '{}' in frozen context, returning null", resource);
                 return null;
             } else {
-                return getSkolemizedUri((BNode) resource, baseUri, bnodeMap, setting);
+                IRI skolemized = getSkolemizedUri((BNode) resource, baseUri, bnodeMap, setting);
+                logger.debug("Skolemized blank node '{}' to '{}'", resource, skolemized);
+                return skolemized;
             }
         }
     }
@@ -135,9 +150,9 @@ public class RdfUtils {
      */
     public static void checkUri(IRI uri) {
         try {
-            // Raise error if not well-formed
             new URI(uri.stringValue());
         } catch (URISyntaxException ex) {
+            logger.error("Malformed URI encountered: '{}'", uri.stringValue());
             throw new RuntimeException("Malformed URI: " + uri.stringValue(), ex);
         }
     }
@@ -151,6 +166,7 @@ public class RdfUtils {
      */
     public static char getPostAcChar(IRI baseUri, TransformRdfSetting setting) {
         if (setting.getPostAcChar() == '#' && baseUri.stringValue().contains("#")) {
+            logger.debug("Base URI '{}' already contains '#', using fallback post-AC char '{}'", baseUri, setting.getPostAcFallbackChar());
             return setting.getPostAcFallbackChar();
         }
         return setting.getPostAcChar();
@@ -200,6 +216,7 @@ public class RdfUtils {
         if (n == null) {
             n = bnodeMap.size() + 1;
             bnodeMap.put(id, n);
+            logger.debug("Assigned blank node '{}' skolem number {}", id, n);
         }
         return n;
     }
@@ -215,6 +232,7 @@ public class RdfUtils {
         if (s.matches(".*[A-Za-z0-9\\-_]")) {
             s += setting.getPreAcChar();
         }
+        logger.debug("Expanded base URI '{}' to '{}'", baseUri, s);
         return s;
     }
 
@@ -228,16 +246,19 @@ public class RdfUtils {
      * @throws TrustyUriException if there is an error parsing the RDF content, for example if the content is not well-formed or if there are issues with the URIs in the content
      */
     public static RdfFileContent load(InputStream in, RDFFormat format) throws IOException, TrustyUriException {
+        logger.debug("Loading RDF content in format '{}'", format.getName());
         RDFParser p = getParser(format);
         RdfFileContent content = new RdfFileContent(format);
         p.setRDFHandler(content);
         try {
             p.parse(new InputStreamReader(in, StandardCharsets.UTF_8), "");
         } catch (RDF4JException ex) {
-            ex.printStackTrace();
+            logger.error("Failed to parse RDF content in format '{}': {}", format.getName(), ex.getMessage());
             throw new TrustyUriException(ex);
+        } finally {
+            in.close();
         }
-        in.close();
+        logger.debug("Loaded {} statements from RDF content", content.getStatements().size());
         return content;
     }
 
@@ -263,6 +284,7 @@ public class RdfUtils {
      * @throws TrustyUriException if there is an error parsing the RDF content, for example if the content is not well-formed or if there are issues with the URIs in the content
      */
     public static RdfFileContent load(TrustyUriResource r) throws IOException, TrustyUriException {
+        logger.debug("Loading RDF content from resource: '{}'", r);
         return load(r.getInputStream(), r.getFormat(RDFFormat.TURTLE));
     }
 
@@ -274,11 +296,14 @@ public class RdfUtils {
      * @throws TrustyUriException if there is an error with the trusty URI, for example if the file is not a trusty file or if the module is unknown
      */
     public static void fixTrustyRdf(File file) throws IOException, TrustyUriException {
+        logger.info("Fixing trusty RDF file: '{}'", file.getAbsolutePath());
         TrustyUriResource r = new TrustyUriResource(file);
         RdfFileContent content = RdfUtils.load(r);
         ArtifactCode oldArtifactCode = ArtifactCode.of(r.getArtifactCode());
+        logger.debug("Old artifact code: '{}'", oldArtifactCode);
         content = RdfPreprocessor.run(content, oldArtifactCode.toString());
         ArtifactCode newArtifactCode = createArtifactCode(content, oldArtifactCode.getModule().getModuleId().equals(RdfGraphModule.MODULE_ID));
+        logger.info("Replacing artifact code '{}' with '{}' in '{}'", oldArtifactCode, newArtifactCode, file.getName());
         content = processNamespaces(content, oldArtifactCode, newArtifactCode);
         OutputStream out;
         String filename = r.getFilename().replace(oldArtifactCode.toString(), newArtifactCode.toString());
@@ -287,8 +312,10 @@ public class RdfUtils {
         } else {
             out = new FileOutputStream("fixed." + filename);
         }
+        logger.debug("Writing fixed RDF content to: 'fixed.{}'", filename);
         RDFWriter writer = Rio.createWriter(r.getFormat(RDFFormat.TRIG), new OutputStreamWriter(out, StandardCharsets.UTF_8));
         TransformRdf.transformPreprocessed(content, null, writer, null);
+        logger.info("Successfully wrote fixed file: 'fixed.{}'", filename);
     }
 
     /**
@@ -301,13 +328,16 @@ public class RdfUtils {
      */
     public static void fixTrustyRdf(RdfFileContent content, ArtifactCode oldArtifactCode, RDFHandler writer)
             throws TrustyUriException {
+        logger.debug("Fixing trusty RDF content with artifact code '{}'", oldArtifactCode);
         content = RdfPreprocessor.run(content, oldArtifactCode.toString());
         ArtifactCode newArtifactCode = createArtifactCode(content, oldArtifactCode.getModule().getModuleId().equals(RdfGraphModule.MODULE_ID));
+        logger.info("Replacing artifact code '{}' with '{}'", oldArtifactCode, newArtifactCode);
         content = processNamespaces(content, oldArtifactCode, newArtifactCode);
         TransformRdf.transformPreprocessed(content, null, writer, null);
     }
 
     private static ArtifactCode createArtifactCode(RdfFileContent preprocessedContent, boolean graphModule) throws TrustyUriException {
+        logger.debug("Creating artifact code using {} module over {} statements", graphModule ? "RdfGraph" : "Rdf", preprocessedContent.getStatements().size());
         if (graphModule) {
             return RdfHasher.makeGraphArtifactCode(preprocessedContent.getStatements());
         } else {
@@ -321,7 +351,7 @@ public class RdfUtils {
             content.propagate(new NamespaceProcessor(oldArtifactCode, newArtifactCode, contentOut));
             return contentOut;
         } catch (RDFHandlerException ex) {
-            ex.printStackTrace();
+            logger.error("Failed to process namespaces while replacing artifact code '{}' with '{}': {}", oldArtifactCode, newArtifactCode, ex.getMessage(), ex);
         }
         return content;
     }
@@ -356,7 +386,11 @@ public class RdfUtils {
 
         @Override
         public void handleNamespace(String prefix, String uri) throws RDFHandlerException {
-            handler.handleNamespace(prefix, uri.replace(oldArtifactCode.toString(), newArtifactCode.toString()));
+            String updated = uri.replace(oldArtifactCode.toString(), newArtifactCode.toString());
+            if (!updated.equals(uri)) {
+                logger.debug("Updated namespace '{}': '{}' → '{}'", prefix, uri, updated);
+            }
+            handler.handleNamespace(prefix, updated);
         }
 
         @Override

@@ -43,16 +43,27 @@ public class CheckFile {
         CheckFile c;
         try {
             URL url = new URL(fileOrUrl);
+            logger.debug("Interpreting input as URL: {}", fileOrUrl);
             c = new CheckFile(url);
         } catch (MalformedURLException ex) {
+            logger.debug("Interpreting input as local file: {}", fileOrUrl);
             c = new CheckFile(new File(fileOrUrl));
         }
 
-        boolean valid = c.check();
-        if (valid) {
-            logger.info("Correct hash: {}", c.r.getArtifactCode());
-        } else {
-            logger.error("*** INCORRECT HASH ***");
+        logger.info("Starting check for {}", fileOrUrl);
+        try {
+            boolean valid = c.check();
+            if (valid) {
+                logger.info("Hash verified successfully for {} (artifact code: {})", fileOrUrl, c.r.getArtifactCode());
+            } else {
+                logger.warn("Hash mismatch for {}", fileOrUrl);
+            }
+        } catch (TrustyUriException e) {
+            logger.error("Trusty URI validation failed for {}: {}", fileOrUrl, e.getMessage());
+            throw e;
+        } catch (IOException e) {
+            logger.error("I/O error while processing {}: {}", fileOrUrl, e.getMessage());
+            throw e;
         }
     }
 
@@ -86,11 +97,19 @@ public class CheckFile {
      * @throws TrustyUriException if the URI is not a trusty URI or if the module is unknown
      */
     public boolean check() throws IOException, TrustyUriException {
-        TrustyUriModule module = ModuleDirectory.getModule(r.getModuleId());
+        String moduleId = r.getModuleId();
+        logger.debug("Resolving module for ID: {}", moduleId);
+
+        TrustyUriModule module = ModuleDirectory.getModule(moduleId);
+
         if (module == null) {
+            logger.error("Unknown module ID '{}' for resource", moduleId);
             throw new TrustyUriException("ERROR: Not a trusty URI or unknown module");
         }
-        return module.hasCorrectHash(r);
+        logger.debug("Using module {} to verify hash", module.getClass().getSimpleName());
+        boolean result = module.hasCorrectHash(r);
+        logger.debug("Hash verification result: {}", result);
+        return result;
     }
 
 }

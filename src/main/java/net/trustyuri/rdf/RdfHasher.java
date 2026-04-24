@@ -6,6 +6,8 @@ import net.trustyuri.TrustyUriException;
 import net.trustyuri.TrustyUriUtils;
 import org.eclipse.rdf4j.model.*;
 import org.eclipse.rdf4j.model.vocabulary.XSD;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -17,6 +19,8 @@ import java.util.List;
  * A class for creating artifact codes for RDF statements.
  */
 public class RdfHasher {
+
+    private static final Logger logger = LoggerFactory.getLogger(RdfHasher.class);
 
     // TODO Make this a command line argument:
     private static final boolean DEBUG = false;
@@ -31,7 +35,10 @@ public class RdfHasher {
      * @return the artifact code for the given RDF statements
      */
     public static ArtifactCode makeArtifactCode(List<Statement> statements) {
-        return getArtifactCode(digest(statements));
+        logger.debug("Making artifact code for {} statements", statements.size());
+        ArtifactCode ac = getArtifactCode(digest(statements));
+        logger.debug("Produced artifact code: '{}'", ac);
+        return ac;
     }
 
     /**
@@ -42,24 +49,32 @@ public class RdfHasher {
      * @throws TrustyUriException if the graph is null, a blank node, or if multiple graphs are found
      */
     public static ArtifactCode makeGraphArtifactCode(List<Statement> statements) throws TrustyUriException {
+        logger.debug("Making graph artifact code for {} statements", statements.size());
         IRI graphUri = null;
         List<Statement> graph = new ArrayList<>();
         for (Statement st : statements) {
             Resource c = st.getContext();
             if (c == null) {
+                logger.error("Encountered statement with null graph context");
                 throw new TrustyUriException("Graph is null");
             } else if (c instanceof BNode) {
+                logger.error("Encountered statement with blank node graph context: '{}'", c);
                 throw new TrustyUriException("Graph is blank node");
             } else if (graphUri != null && !c.equals(graphUri)) {
+                logger.error("Multiple graphs encountered: expected '{}', found '{}'", graphUri, c);
                 throw new TrustyUriException("Multiple graphs");
             }
             graphUri = (IRI) c;
             graph.add(st);
         }
         if (graph.isEmpty()) {
+            logger.error("No statements found for graph artifact code");
             throw new TrustyUriException("Graph not found");
         }
-        return getGraphArtifactCode(digest(graph));
+        logger.debug("Computing graph artifact code over graph '{}' ({} statements)", graphUri, graph.size());
+        ArtifactCode ac = getGraphArtifactCode(digest(graph));
+        logger.debug("Produced graph artifact code: '{}'", ac);
+        return ac;
     }
 
     /**
@@ -72,6 +87,7 @@ public class RdfHasher {
      * @throws TrustyUriException if the graph is null, a blank node, or if multiple graphs are found
      */
     public static ArtifactCode makeGraphArtifactCode(List<Statement> statements, IRI baseUri, TransformRdfSetting setting) throws TrustyUriException {
+        logger.debug("Making graph artifact code for {} statements with base URI '{}'", statements.size(), baseUri);
         IRI graphUri = RdfUtils.getTrustyUri(baseUri, " ", setting);
         List<Statement> graph = new ArrayList<>();
         for (Statement st : statements) {
@@ -81,9 +97,13 @@ public class RdfHasher {
             }
         }
         if (graph.isEmpty()) {
+            logger.error("No statements found for graph URI '{}'", graphUri);
             throw new TrustyUriException("Graph not found");
         }
-        return getGraphArtifactCode(digest(graph));
+        logger.debug("Found {} statements in graph '{}'", graph.size(), graphUri);
+        ArtifactCode ac = getGraphArtifactCode(digest(graph));
+        logger.debug("Produced graph artifact code: '{}'", ac);
+        return ac;
     }
 
     /**
@@ -101,6 +121,7 @@ public class RdfHasher {
         Statement previous = null;
         for (Statement st : statements) {
             if (!st.equals(previous)) {
+                logger.trace("Digesting statement: {}", getDigestString(st).trim());
                 digest(st, md);
             }
             previous = st;
@@ -136,13 +157,12 @@ public class RdfHasher {
      * @return the message digest
      */
     public static MessageDigest getDigest() {
-        MessageDigest md;
         try {
-            md = MessageDigest.getInstance("SHA-256");
+            return MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException ex) {
-            throw new RuntimeException(ex);
+            logger.error("SHA-256 algorithm not available on this JVM");
+            throw new IllegalStateException("SHA-256 algorithm not available", ex);
         }
-        return md;
     }
 
     /**
@@ -220,10 +240,12 @@ public class RdfHasher {
                 return "^" + dataType.stringValue() + " " + escapeString(l.stringValue()) + "\n";
             }
         } else if (v instanceof BNode) {
+            logger.error("Blank node encountered during digest — this should have been skolemized earlier: '{}'", v);
             throw new RuntimeException("Unexpected blank node encountered");
         } else if (v == null) {
             return "\n";
         } else {
+            logger.error("Unknown RDF value type during digest: '{}'", v.getClass().getName());
             throw new RuntimeException("Unknown element");
         }
     }

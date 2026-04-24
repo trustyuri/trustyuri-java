@@ -11,7 +11,6 @@ import org.eclipse.rdf4j.rio.RDFHandlerException;
 import org.eclipse.rdf4j.rio.Rio;
 
 import java.io.*;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +52,7 @@ public class TransformRdfGraph {
         String outputFilePath = inputFile.getPath().replaceFirst("[.][^.]+$", "") + ".t";
         RDFFormat format = content.getOriginalFormat();
         if (!format.getFileExtensions().isEmpty()) {
-            outputFilePath += "." + format.getFileExtensions().get(0);
+            outputFilePath += "." + format.getFileExtensions().getFirst();
         }
         transform(content, new File(outputFilePath), TransformRdfSetting.defaultSetting, baseUris.toArray(new IRI[baseUris.size()]));
     }
