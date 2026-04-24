@@ -43,6 +43,19 @@ public class Run {
      * @throws TrustyUriException if a TrustyUri error occurs
      */
     public static void run(String[] command) throws IOException, RDF4JException, TrustyUriException {
+        if (command.length == 0) {
+            System.err.println("ERROR: No command given");
+            System.err.println("Usage: trustyuri <command> [args]");
+            System.err.println("""
+                    Available commands:\s
+                      - CheckFile
+                      - ProcessFile
+                      - CheckLargeRdf
+                      - TransformRdf
+                      - TransformLargeRdf
+                      - CheckSortedRdf""");
+            System.exit(1);
+        }
         String cmd = command[0];
         String[] cmdArgs = Arrays.copyOfRange(command, 1, command.length);
         switch (cmd) {
