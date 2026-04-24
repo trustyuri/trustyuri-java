@@ -1,3 +1,42 @@
+## [1.24.1](https://github.com/trustyuri/trustyuri-java/compare/trustyuri-1.24.0...trustyuri-1.24.1) (2026-04-24)
+
+### Dependency updates
+
+* **deps:** bump externalsortinginjava from 0.6.2 to 0.6.6 ([4809269](https://github.com/trustyuri/trustyuri-java/commit/4809269603a3b8ffbbf9108e80880aa796a3e36f))
+* **deps:** bump jakarta.xml.bind-api from 4.0.2 to 4.0.5 ([eacd92a](https://github.com/trustyuri/trustyuri-java/commit/eacd92a5dc0dd7177d1efa96c646eb228d756a92))
+* **deps:** bump rdf4j from 5.1.4 to 5.3.0 ([7181230](https://github.com/trustyuri/trustyuri-java/commit/718123060c57e059f376cffddfa35df28c536fd4))
+* **deps:** refactor dependency versions to use properties ([681fc09](https://github.com/trustyuri/trustyuri-java/commit/681fc09ed817be8c4857531c0230efca1df8c5a4))
+* **deps:** update JUnit to v6.0.3 and switch to JUnit bom for dependencyManagement ([5bade03](https://github.com/trustyuri/trustyuri-java/commit/5bade0354601f6b3ca7d36791109e9a6199345ef))
+
+### Bug Fixes
+
+* **cli:** add error handling for missing command ([762aef1](https://github.com/trustyuri/trustyuri-java/commit/762aef158fc7972fbcb470b380791371c02a2e14))
+
+### Documentation
+
+* enhance JavaDoc annotations ([6cbb4e6](https://github.com/trustyuri/trustyuri-java/commit/6cbb4e675b923a0c0253a8c86060185a889ea026))
+* enhance JavaDoc comments across multiple classes ([f2d3cee](https://github.com/trustyuri/trustyuri-java/commit/f2d3cee993a5f045e141d8108497189ee7fdc53e))
+* update README to include CLI tool usage instructions ([d97f13b](https://github.com/trustyuri/trustyuri-java/commit/d97f13be3a90e1d916c07b974b1e204599e0417c))
+
+### Tests
+
+* **deps:** update commons-io:commons-io dependency to v2.22.0 ([c3f948a](https://github.com/trustyuri/trustyuri-java/commit/c3f948aa2ba7812148ca2237bdc9cea28e34a21d))
+
+### General maintenance
+
+* add CLI profile with SLF4J dependency and assembly plugin configuration for CLI tool release ([318b811](https://github.com/trustyuri/trustyuri-java/commit/318b811bbe968edbdf7412288b8b9ad49b702b89))
+* **logging:** add messages to .file package ([e777c61](https://github.com/trustyuri/trustyuri-java/commit/e777c6187cd96926ea25fcd47cb3d70f82cbd55e))
+* **logging:** add missing messages and improve existing exception ones ([9a161e9](https://github.com/trustyuri/trustyuri-java/commit/9a161e9b12c7c49d050f9163c56cbbb9452767a4))
+* **logging:** enhance logging messages for RDF processing and error handling ([070f3c5](https://github.com/trustyuri/trustyuri-java/commit/070f3c50c0d441e91f15276db9234f564f44142d))
+* **release:** add CLI tool to assets in the GitHub release ([c7a0d09](https://github.com/trustyuri/trustyuri-java/commit/c7a0d09dcb2698d7d4b18c8fac97f5df1380085f))
+* remove GPG passphrase server configuration from settings ([c0f43a1](https://github.com/trustyuri/trustyuri-java/commit/c0f43a186d2a5b1070c27777a1f461759f46fff5))
+* setting next snapshot version [skip ci] ([38a0593](https://github.com/trustyuri/trustyuri-java/commit/38a05937478fbda76e014ba65f1a2eb281d1cb01))
+
+### Refactoring
+
+* migrate JUnit tests to JUnit 6 ([7694eaa](https://github.com/trustyuri/trustyuri-java/commit/7694eaad3e4d6fe4d7c799f3223aa7dd45e63309))
+* minor code clean up ([8cfaace](https://github.com/trustyuri/trustyuri-java/commit/8cfaaceb383ab9cf8f06b4f7b68f3ad0c2c3bfcb))
+
 ## [1.24.0](https://github.com/trustyuri/trustyuri-java/compare/trustyuri-1.23.0...trustyuri-1.24.0) (2026-04-08)
 
 ### Features
