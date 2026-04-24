@@ -19,21 +19,21 @@ public interface TrustyUriModule {
      *
      * @return the module ID
      */
-    public String getModuleId();
+    String getModuleId();
 
     /**
      * Returns the algorithm ID used for the transformation to ni-URIs.
      *
      * @return the algorithm ID
      */
-    public String getAlgorithmId();
+    String getAlgorithmId();
 
     /**
      * Returns the length of the trusty URI data part in bytes.
      *
      * @return data part length
      */
-    public int getDataPartLength();
+    int getDataPartLength();
 
     /**
      * Checks the hash for the given resource.
@@ -43,7 +43,7 @@ public interface TrustyUriModule {
      * @throws IOException        if an I/O error occurs
      * @throws TrustyUriException if the trusty URI is invalid
      */
-    public boolean hasCorrectHash(TrustyUriResource resource) throws IOException, TrustyUriException;
+    boolean hasCorrectHash(TrustyUriResource resource) throws IOException, TrustyUriException;
 
     /**
      * Fixes the trusty URI of the given file by calculating the correct hash and renaming the file
@@ -53,7 +53,7 @@ public interface TrustyUriModule {
      * @throws TrustyUriException            if the trusty URI is invalid
      * @throws UnsupportedOperationException if the module does not support fixing trusty URIs
      */
-    public void fixTrustyFile(File file) throws IOException, TrustyUriException, UnsupportedOperationException;
+    void fixTrustyFile(File file) throws IOException, TrustyUriException, UnsupportedOperationException;
 
     /**
      * Checks whether the given URI could be a trusty URI represented by this module.
@@ -61,6 +61,6 @@ public interface TrustyUriModule {
      * @param uri the URI
      * @return true if the URI matches the format of this module
      */
-    public boolean matches(IRI uri);
+    boolean matches(IRI uri);
 
 }

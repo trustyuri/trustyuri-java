@@ -67,7 +67,7 @@ public class RdfFileContent implements RDFHandler {
             obj = st.getObject();
             rdfEntityMap.put(obj, obj);
         }
-        Resource context = null;
+        Resource context;
         if (st.getContext() == null) {
             st = SimpleValueFactory.getInstance().createStatement(subj, pred, obj);
         } else {

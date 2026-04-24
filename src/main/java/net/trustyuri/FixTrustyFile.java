@@ -41,9 +41,8 @@ public class FixTrustyFile {
      * Creates a new FixTrustyFile object for the given trusty file.
      *
      * @param file the trusty file to fix
-     * @throws IOException if there is an error reading the file
      */
-    public FixTrustyFile(File file) throws IOException {
+    public FixTrustyFile(File file) {
         this.file = file;
     }
 

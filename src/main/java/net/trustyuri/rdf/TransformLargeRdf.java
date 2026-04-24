@@ -12,6 +12,7 @@ import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.Comparator;
 import java.util.List;
@@ -31,7 +32,7 @@ public class TransformLargeRdf {
      */
     public static void main(String[] args) throws IOException, TrustyUriException {
         File inputFile = new File(args[0]);
-        String baseName = "";
+        String baseName;
         if (args.length > 1) {
             baseName = args[1];
         } else {
@@ -146,7 +147,7 @@ public class TransformLargeRdf {
         } else {
             out = new FileOutputStream(new File(inputDir, acFileName));
         }
-        RDFWriter writer = Rio.createWriter(format, new OutputStreamWriter(out, Charset.forName("UTF-8")));
+        RDFWriter writer = Rio.createWriter(format, new OutputStreamWriter(out, StandardCharsets.UTF_8));
         final HashAdder replacer = new HashAdder(baseUri, artifactCode, writer, null);
 
         br = new BufferedReader(new FileReader(sortOutFile));

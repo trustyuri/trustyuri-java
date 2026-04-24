@@ -12,6 +12,7 @@ import org.eclipse.rdf4j.rio.Rio;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,7 +72,7 @@ public class TransformRdfGraph {
             throws IOException, TrustyUriException {
         try {
             OutputStream out = new FileOutputStream(outputFile);
-            processBaseUris(content, Rio.createWriter(content.getOriginalFormat(), new OutputStreamWriter(out, Charset.forName("UTF-8"))), setting, baseUris);
+            processBaseUris(content, Rio.createWriter(content.getOriginalFormat(), new OutputStreamWriter(out, StandardCharsets.UTF_8)), setting, baseUris);
             out.close();
         } catch (RDFHandlerException ex) {
             throw new TrustyUriException(ex);
@@ -111,7 +112,7 @@ public class TransformRdfGraph {
             throws IOException, TrustyUriException {
         RdfFileContent content = RdfUtils.load(in, format);
         try {
-            processBaseUris(content, Rio.createWriter(format, new OutputStreamWriter(out, Charset.forName("UTF-8"))), setting, baseUris);
+            processBaseUris(content, Rio.createWriter(format, new OutputStreamWriter(out, StandardCharsets.UTF_8)), setting, baseUris);
         } catch (RDFHandlerException ex) {
             throw new TrustyUriException(ex);
         }

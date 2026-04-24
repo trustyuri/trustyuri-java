@@ -136,7 +136,7 @@ public class RdfHasher {
      * @return the message digest
      */
     public static MessageDigest getDigest() {
-        MessageDigest md = null;
+        MessageDigest md;
         try {
             md = MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException ex) {

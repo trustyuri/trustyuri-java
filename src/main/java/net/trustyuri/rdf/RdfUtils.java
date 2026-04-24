@@ -13,7 +13,7 @@ import org.eclipse.rdf4j.rio.helpers.BasicParserSettings;
 import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
@@ -232,7 +232,7 @@ public class RdfUtils {
         RdfFileContent content = new RdfFileContent(format);
         p.setRDFHandler(content);
         try {
-            p.parse(new InputStreamReader(in, Charset.forName("UTF-8")), "");
+            p.parse(new InputStreamReader(in, StandardCharsets.UTF_8), "");
         } catch (RDF4JException ex) {
             ex.printStackTrace();
             throw new TrustyUriException(ex);
@@ -283,11 +283,11 @@ public class RdfUtils {
         OutputStream out;
         String filename = r.getFilename().replace(oldArtifactCode.toString(), newArtifactCode.toString());
         if (filename.matches(".*\\.(gz|gzip)")) {
-            out = new GZIPOutputStream(new FileOutputStream(new File("fixed." + filename)));
+            out = new GZIPOutputStream(new FileOutputStream("fixed." + filename));
         } else {
-            out = new FileOutputStream(new File("fixed." + filename));
+            out = new FileOutputStream("fixed." + filename);
         }
-        RDFWriter writer = Rio.createWriter(r.getFormat(RDFFormat.TRIG), new OutputStreamWriter(out, Charset.forName("UTF-8")));
+        RDFWriter writer = Rio.createWriter(r.getFormat(RDFFormat.TRIG), new OutputStreamWriter(out, StandardCharsets.UTF_8));
         TransformRdf.transformPreprocessed(content, null, writer, null);
     }
 

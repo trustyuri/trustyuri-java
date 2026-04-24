@@ -12,6 +12,7 @@ import org.eclipse.rdf4j.rio.*;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -81,7 +82,7 @@ public class TransformRdf {
         } else {
             out = new FileOutputStream(new File(inputFile.getParent(), fileName));
         }
-        RDFWriter writer = Rio.createWriter(format, new OutputStreamWriter(out, Charset.forName("UTF-8")));
+        RDFWriter writer = Rio.createWriter(format, new OutputStreamWriter(out, StandardCharsets.UTF_8));
         IRI uri = includeArtifactCode(content, artifactCode, baseUri, writer, setting);
         out.close();
         return uri;
@@ -146,7 +147,7 @@ public class TransformRdf {
         IRI baseUri = getBaseURI(baseName);
         RdfFileContent content = RdfUtils.load(in, format);
         content = RdfPreprocessor.run(content, baseUri, setting);
-        RDFWriter writer = Rio.createWriter(format, new OutputStreamWriter(out, Charset.forName("UTF-8")));
+        RDFWriter writer = Rio.createWriter(format, new OutputStreamWriter(out, StandardCharsets.UTF_8));
         IRI uri = transformPreprocessed(content, baseUri, writer, setting);
         out.close();
         return uri;

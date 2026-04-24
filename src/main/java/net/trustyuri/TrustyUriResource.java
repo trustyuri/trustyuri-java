@@ -7,6 +7,7 @@ import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.zip.GZIPInputStream;
 
@@ -166,7 +167,7 @@ public class TrustyUriResource {
      * @return an InputStreamReader for the resource, using UTF-8 encoding
      */
     public InputStreamReader getInputStreamReader() {
-        return new InputStreamReader(in, Charset.forName("UTF-8"));
+        return new InputStreamReader(in, StandardCharsets.UTF_8);
     }
 
     /**

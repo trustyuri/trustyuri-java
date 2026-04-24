@@ -153,7 +153,9 @@ public class TrustyUriUtils {
      */
     public static byte[] getBase64Bytes(String base64String) {
         base64String = base64String.replace('-', '+').replace('_', '/');
-        while (base64String.length() % 4 > 0) base64String = base64String + "=";
+        while (base64String.length() % 4 > 0) {
+            base64String = base64String + "=";
+        }
         return DatatypeConverter.parseBase64Binary(base64String);
     }
 

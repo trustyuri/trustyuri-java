@@ -41,7 +41,7 @@ public class ProcessFile {
             base = filename.replaceFirst("^(.*)(\\.[A-Za-z0-9\\-_]{0,20})$", "$1");
         }
         String glue = "";
-        if (base.length() > 0 && base.charAt(base.length() - 1) != '.') {
+        if (!base.isEmpty() && base.charAt(base.length() - 1) != '.') {
             glue = ".";
         }
         File hashFile = new File(file.getParentFile(), base + glue + ac.toString() + ext);

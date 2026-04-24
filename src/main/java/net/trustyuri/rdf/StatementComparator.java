@@ -121,7 +121,7 @@ public class StatementComparator implements Comparator<Statement> {
             return -1;
         } else if (lang1.isPresent() && !lang2.isPresent()) {
             return 1;
-        } else if (lang1.isPresent() && !lang1.get().toLowerCase().equals(lang2.get().toLowerCase())) {
+        } else if (lang1.isPresent() && !lang1.get().equalsIgnoreCase(lang2.get())) {
             return lang1.get().toLowerCase().compareTo(lang2.get().toLowerCase());
         }
         return 0;

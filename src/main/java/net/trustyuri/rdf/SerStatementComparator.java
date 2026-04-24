@@ -90,7 +90,7 @@ public class SerStatementComparator implements Comparator<String> {
         }
         Resource subj = vf.createIRI(parts[1]);
         IRI pred = vf.createIRI(parts[2]);
-        Value obj = null;
+        Value obj;
         if (!parts[3].isEmpty()) {
             obj = SimpleValueFactory.getInstance().createIRI(parts[3]);
         } else {
@@ -129,16 +129,16 @@ public class SerStatementComparator implements Comparator<String> {
         } else if (context == null) {
             sb.append("\t");
         } else {
-            sb.append(context.stringValue() + "\t");
+            sb.append(context.stringValue()).append("\t");
         }
         Resource subj = st.getSubject();
         if (subj instanceof BNode) {
             throw new RuntimeException("Unexpected blank node");
         } else {
-            sb.append(subj.stringValue() + "\t");
+            sb.append(subj.stringValue()).append("\t");
         }
         IRI pred = st.getPredicate();
-        sb.append(pred.stringValue() + "\t");
+        sb.append(pred.stringValue()).append("\t");
         Value obj = st.getObject();
         if (obj instanceof BNode) {
             throw new RuntimeException("Unexpected blank node");
@@ -150,9 +150,9 @@ public class SerStatementComparator implements Comparator<String> {
                 if (dataType == null) {
                     dataType = XSD.STRING;
                 }
-                sb.append(dataType.stringValue() + "  ");
+                sb.append(dataType.stringValue()).append("  ");
             } else {
-                sb.append(" " + objl.getLanguage().get().toLowerCase() + " ");
+                sb.append(" ").append(objl.getLanguage().get().toLowerCase()).append(" ");
             }
             sb.append(escape(obj.stringValue()));
         } else {

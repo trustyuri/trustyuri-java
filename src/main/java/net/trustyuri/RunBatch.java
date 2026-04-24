@@ -26,11 +26,10 @@ public class RunBatch {
      * Runs a batch of commands from a file, one per line. Lines starting with # are ignored.
      *
      * @param args the first argument is the batch file to run
-     * @throws IOException        if there is an error reading the batch file or the running file
-     * @throws RDF4JException     if there is an error running a command that uses RDF4J
-     * @throws TrustyUriException if there is an error running a command that uses TrustyUri
+     * @throws IOException    if there is an error reading the batch file or the running file
+     * @throws RDF4JException if there is an error running a command that uses RDF4J
      */
-    public static void main(String[] args) throws IOException, RDF4JException, TrustyUriException {
+    public static void main(String[] args) throws IOException, RDF4JException {
         String batchFile = args[0];
 
         BufferedReader reader = new BufferedReader(new FileReader(batchFile));

@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.Comparator;
 import java.util.List;
@@ -80,7 +81,7 @@ public class CheckLargeRdf {
             public void handleStatement(Statement st) throws RDFHandlerException {
                 String s = SerStatementComparator.toString(st) + "\n";
                 try {
-                    preOut.write(s.getBytes(Charset.forName("UTF-8")));
+                    preOut.write(s.getBytes(StandardCharsets.UTF_8));
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
