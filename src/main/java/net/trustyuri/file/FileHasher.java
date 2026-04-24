@@ -3,6 +3,8 @@ package net.trustyuri.file;
 import net.trustyuri.ArtifactCode;
 import net.trustyuri.ModuleDirectory;
 import net.trustyuri.TrustyUriUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,6 +16,10 @@ import java.security.NoSuchAlgorithmException;
  * Class for hashing files. The hash is calculated using the SHA-256 algorithm and encoded in Base64.
  */
 public class FileHasher {
+
+    private static final Logger logger = LoggerFactory.getLogger(FileHasher.class);
+
+    private static final String HASH_ALGORITHM = "SHA-256";
 
     /**
      * Creates a new FileHasher instance.
@@ -29,10 +35,12 @@ public class FileHasher {
      * @throws IOException if an I/O error occurs while reading the input stream
      */
     public ArtifactCode makeArtifactCode(InputStream in) throws IOException {
+        logger.debug("Computing {} artifact code from input stream", HASH_ALGORITHM);
         MessageDigest md = null;
         try {
-            md = MessageDigest.getInstance("SHA-256");
+            md = MessageDigest.getInstance(HASH_ALGORITHM);
         } catch (NoSuchAlgorithmException ex) {
+            throw new IllegalStateException(HASH_ALGORITHM + " algorithm not available on this JVM", ex);
         }
         DigestInputStream d = null;
         try {
@@ -42,7 +50,9 @@ public class FileHasher {
         } finally {
             d.close();
         }
-        return ArtifactCode.of(ModuleDirectory.getModule(FileModule.MODULE_ID), TrustyUriUtils.getBase64(md.digest()));
+        ArtifactCode code = ArtifactCode.of(ModuleDirectory.getModule(FileModule.MODULE_ID), TrustyUriUtils.getBase64(md.digest()));
+        logger.debug("Computed artifact code: {}", code);
+        return code;
     }
 
 }
