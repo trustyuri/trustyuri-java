@@ -39,9 +39,9 @@ public class CheckLargeRdf {
         CheckLargeRdf t = new CheckLargeRdf(file);
         boolean valid = t.check();
         if (valid) {
-            logger.info("Correct hash: {}", t.ac.toString());
+            logger.info("Hash is correct for file: {}", file.getAbsolutePath() + " with artifact code: " + t.ac.toString());
         } else {
-            logger.error("*** INCORRECT HASH ***");
+            logger.error("Hash is incorrect for file: {}", file.getAbsolutePath());
         }
     }
 
@@ -83,7 +83,7 @@ public class CheckLargeRdf {
                 try {
                     preOut.write(s.getBytes(StandardCharsets.UTF_8));
                 } catch (IOException ex) {
-                    ex.printStackTrace();
+                    logger.error("Error writing to temporary file for artifact code {}: {}", r.getArtifactCode(), ex.getMessage());
                 }
             }
 
