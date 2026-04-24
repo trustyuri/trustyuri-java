@@ -54,7 +54,7 @@ public class TransformRdfGraph {
         if (!format.getFileExtensions().isEmpty()) {
             outputFilePath += "." + format.getFileExtensions().get(0);
         }
-        transform(content, new File(outputFilePath), TransformRdfSetting.defautSetting, baseUris.toArray(new IRI[baseUris.size()]));
+        transform(content, new File(outputFilePath), TransformRdfSetting.defaultSetting, baseUris.toArray(new IRI[baseUris.size()]));
     }
 
     /**
@@ -78,8 +78,17 @@ public class TransformRdfGraph {
         }
     }
 
+    /**
+     * Transforms the RDF graph in the given content by replacing blank nodes with URIs based on the given base URIs, and adding a trusty URI artifact code to the graph, and writes the transformed graph to the given output file.
+     *
+     * @param content  the RDF graph content to transform
+     * @param handler  the RDFHandler to write the transformed RDF graph to
+     * @param setting  the settings to use for the transformation, such as whether to use blank node identifiers or not
+     * @param baseUris the base URIs to use for replacing blank nodes with URIs, where each base URI will be used in a separate transformation step, and the resulting graph from each step will be used as the input for the next step
+     * @throws TrustyUriException if there is an error during the transformation process, such as an invalid base URI or an error calculating the artifact code
+     */
     public static void transform(RdfFileContent content, RDFHandler handler, TransformRdfSetting setting, IRI... baseUris)
-            throws IOException, TrustyUriException {
+            throws TrustyUriException {
         try {
             processBaseUris(content, handler, setting, baseUris);
         } catch (RDFHandlerException ex) {
@@ -87,6 +96,17 @@ public class TransformRdfGraph {
         }
     }
 
+    /**
+     * Transforms the RDF graph in the given content by replacing blank nodes with URIs based on the given base URIs, and adding a trusty URI artifact code to the graph, and writes the transformed graph to the given output file.
+     *
+     * @param in       the InputStream to read the RDF graph from
+     * @param format   the RDFFormat of the input RDF graph
+     * @param out      the OutputStream to write the transformed RDF graph to
+     * @param setting  the settings to use for the transformation, such as whether to use blank node identifiers or not
+     * @param baseUris the base URIs to use for replacing blank nodes with URIs, where each base URI will be used in a separate transformation step, and the resulting graph from each step will be used as the input for the next step
+     * @throws IOException        if there is an error reading the input or writing the output
+     * @throws TrustyUriException if there is an error during the transformation process, such as an invalid base URI or an error calculating the artifact code
+     */
     public static void transform(InputStream in, RDFFormat format, OutputStream out, TransformRdfSetting setting, IRI... baseUris)
             throws IOException, TrustyUriException {
         RdfFileContent content = RdfUtils.load(in, format);

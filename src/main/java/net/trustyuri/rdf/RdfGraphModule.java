@@ -8,10 +8,19 @@ import net.trustyuri.TrustyUriResource;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Module for RDF graphs.
+ */
 public class RdfGraphModule extends AbstractTrustyUriModule {
 
+    /**
+     * Module identifier for RDF graphs.
+     */
     public static final String MODULE_ID = "RB";
 
+    /**
+     * Constructor that initializes the module with its identifier.
+     */
     public RdfGraphModule() {
         super(MODULE_ID);
     }

@@ -6,8 +6,14 @@ import org.eclipse.rdf4j.model.vocabulary.XSD;
 
 import java.util.Comparator;
 
+/**
+ * A comparator for statements that compares the string representations of the statements.
+ */
 public class SerStatementComparator implements Comparator<String> {
 
+    /**
+     * Create a new SerStatementComparator.
+     */
     public SerStatementComparator() {
     }
 
@@ -69,6 +75,12 @@ public class SerStatementComparator implements Comparator<String> {
         return l1.compareTo(l2);
     }
 
+    /**
+     * Convert the string to a statement.
+     *
+     * @param string The string to convert.
+     * @return The statement represented by the string.
+     */
     public static Statement fromString(String string) {
         ValueFactory vf = SimpleValueFactory.getInstance();
         String[] parts = string.split("\\t");
@@ -103,6 +115,12 @@ public class SerStatementComparator implements Comparator<String> {
         }
     }
 
+    /**
+     * Convert the statement to a string.
+     *
+     * @param st The statement to convert.
+     * @return The string representation of the statement
+     */
     public static String toString(Statement st) {
         StringBuffer sb = new StringBuffer();
         Resource context = st.getContext();
@@ -143,10 +161,22 @@ public class SerStatementComparator implements Comparator<String> {
         return sb.toString();
     }
 
+    /**
+     * Escape the string, i.e. replace \ with \\, \n with \\n, \r with \\r, and \t with \\t.
+     *
+     * @param s The string to escape.
+     * @return The escaped string.
+     */
     public static String escape(String s) {
         return s.replace("\\", "\\\\").replace("\n", "\\n").replace("\r", "\\r").replace("\t", "\\t");
     }
 
+    /**
+     * Unescape the string, i.e. replace \t, \r, \n, and \\ with the corresponding characters.
+     *
+     * @param s The string to unescape.
+     * @return The unescaped string.
+     */
     public static String unescape(String s) {
         return s.replace("\\t", "\t").replace("\\r", "\r").replace("\\n", "\n").replace("\\\\", "\\");
     }

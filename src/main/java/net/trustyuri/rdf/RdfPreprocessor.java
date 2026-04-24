@@ -108,14 +108,35 @@ public class RdfPreprocessor implements RDFHandler {
         init();
     }
 
+    /**
+     * Preprocesses RDF content
+     *
+     * @param nestedHandler the RDFHandler to which the preprocessed statements will be passed
+     * @param baseUri       the base URI used
+     * @param setting       settings for the transformation
+     */
     public RdfPreprocessor(RDFHandler nestedHandler, IRI baseUri, TransformRdfSetting setting) {
         this(nestedHandler, baseUri, null, setting);
     }
 
+    /**
+     * Preprocesses RDF content
+     *
+     * @param nestedHandler the RDFHandler to which the preprocessed statements will be passed
+     * @param artifactCode  the artifact code to use in the transformation
+     */
     public RdfPreprocessor(RDFHandler nestedHandler, String artifactCode) {
         this(nestedHandler, artifactCode, null);
     }
 
+    /**
+     * Preprocesses RDF content
+     *
+     * @param nestedHandler the RDFHandler to which the preprocessed statements will be passed
+     * @param baseUri       the base URI used
+     * @param blankNodeMap  mapping of blank node IDs to integers
+     * @param setting       settings for the transformation
+     */
     public RdfPreprocessor(RDFHandler nestedHandler, IRI baseUri, Map<String, Integer> blankNodeMap, TransformRdfSetting setting) {
         this.nestedHandler = nestedHandler;
         this.baseUri = baseUri;
@@ -125,6 +146,13 @@ public class RdfPreprocessor implements RDFHandler {
         init();
     }
 
+    /**
+     * Preprocesses RDF content
+     *
+     * @param nestedHandler the RDFHandler to which the preprocessed statements will be passed
+     * @param artifactCode  the artifact code to use in the transformation
+     * @param blankNodeMap  mapping of blank node IDs to integers
+     */
     public RdfPreprocessor(RDFHandler nestedHandler, String artifactCode, Map<String, Integer> blankNodeMap) {
         this.nestedHandler = nestedHandler;
         this.baseUri = null;
@@ -168,6 +196,11 @@ public class RdfPreprocessor implements RDFHandler {
         nestedHandler.handleComment(comment);
     }
 
+    /**
+     * Returns a map of original resources to their transformed IRIs.
+     *
+     * @return a map of original resources to their transformed IRIs
+     */
     public Map<Resource, IRI> getTransformMap() {
         return transformMap;
     }

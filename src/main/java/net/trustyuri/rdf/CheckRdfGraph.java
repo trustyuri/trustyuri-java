@@ -17,10 +17,20 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class can be used to check an RDF graph.
+ */
 public class CheckRdfGraph {
 
     private static final Logger logger = LoggerFactory.getLogger(CheckRdfGraph.class);
 
+    /**
+     * Checks the given RDF graph(s).
+     *
+     * @param args the first argument is the file containing the RDF graph, the following arguments are the graph URIs to check
+     * @throws IOException        if there is an error reading the file
+     * @throws TrustyUriException if there is an error with the trusty URI, for example if the file is not a trusty file or if the module is unknown
+     */
     public static void main(String[] args) throws IOException, TrustyUriException {
         if (args.length < 2) {
             throw new RuntimeException("Not enough arguments: <file> <graph-uri1> (<graph-uri2> ...)");
@@ -47,11 +57,25 @@ public class CheckRdfGraph {
     private TrustyUriResource r;
     private RdfFileContent content;
 
+    /**
+     * Creates a new CheckRdfGraph object for the given URL.
+     *
+     * @param url the URL of the RDF graph to check
+     * @throws IOException        if there is an error reading the file
+     * @throws TrustyUriException if there is an error with the trusty URI, for example if the file is not a trusty file or if the module is unknown
+     */
     public CheckRdfGraph(URL url) throws IOException, TrustyUriException {
         r = new TrustyUriResource(url);
         init();
     }
 
+    /**
+     * Creates a new CheckRdfGraph object for the given file.
+     *
+     * @param file the file containing the RDF graph to check
+     * @throws IOException        if there is an error reading the file
+     * @throws TrustyUriException if there is an error with the trusty URI, for example if the file is not a trusty file or if the module is unknown
+     */
     public CheckRdfGraph(File file) throws IOException, TrustyUriException {
         r = new TrustyUriResource(file);
         init();
@@ -61,6 +85,13 @@ public class CheckRdfGraph {
         content = RdfUtils.load(r);
     }
 
+    /**
+     * Checks the graph with the given graph URI.
+     *
+     * @param graphUri the graph URI of the graph to check
+     * @return true if the hash is correct, false otherwise
+     * @throws TrustyUriException if there is an error with the trusty URI, for example if the graph URI is not a trusty URI or if the module is unknown
+     */
     public boolean check(IRI graphUri) throws TrustyUriException {
         ArtifactCode artifactCode = getArtifactCode(graphUri);
         if (!artifactCode.getModule().getModuleId().equals(RdfGraphModule.MODULE_ID)) {

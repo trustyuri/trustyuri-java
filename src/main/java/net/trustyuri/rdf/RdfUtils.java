@@ -18,11 +18,23 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
 
+/**
+ * This class is used for various utility functions related to RDF processing.
+ */
 public class RdfUtils {
 
     private RdfUtils() {
     }  // no instances allowed
 
+    /**
+     * Creates a trusty URI string based on the given base URI, artifact code, and suffix.
+     *
+     * @param baseUri      the base URI to use for the trusty URI
+     * @param artifactCode the artifact code to include in the trusty URI
+     * @param suffix       the suffix to append to the trusty URI (can be null)
+     * @param setting      the settings to use for generating the trusty URI
+     * @return the generated trusty URI string
+     */
     public static String getTrustyUriString(IRI baseUri, String artifactCode, String suffix, TransformRdfSetting setting) {
         String s = expandBaseUri(baseUri, setting) + artifactCode;
         if (suffix != null) {
@@ -37,10 +49,27 @@ public class RdfUtils {
         return s;
     }
 
+    /**
+     * Creates a trusty URI string based on the given base URI, artifact code, and suffix.
+     *
+     * @param baseUri      the base URI to use for the trusty URI
+     * @param artifactCode the artifact code to include in the trusty URI
+     * @param setting      the settings to use for generating the trusty URI
+     * @return the generated trusty URI string
+     */
     public static String getTrustyUriString(IRI baseUri, String artifactCode, TransformRdfSetting setting) {
         return getTrustyUriString(baseUri, artifactCode, null, setting);
     }
 
+    /**
+     * Creates a trusty URI based on the given base URI, artifact code, and suffix.
+     *
+     * @param baseUri      the base URI to use for the trusty URI
+     * @param artifactCode the artifact code to include in the trusty URI
+     * @param suffix       the suffix to append to the trusty URI (can be null)
+     * @param setting      the settings to use for generating the trusty URI
+     * @return the generated trusty URI, or null if the base URI is null
+     */
     public static IRI getTrustyUri(IRI baseUri, String artifactCode, String suffix, TransformRdfSetting setting) {
         if (baseUri == null) {
             return null;
@@ -48,6 +77,14 @@ public class RdfUtils {
         return SimpleValueFactory.getInstance().createIRI(getTrustyUriString(baseUri, artifactCode, suffix, setting));
     }
 
+    /**
+     * Creates a trusty URI based on the given base URI, artifact code, and suffix.
+     *
+     * @param baseUri      the base URI to use for the trusty URI
+     * @param artifactCode the artifact code to include in the trusty URI
+     * @param setting      the settings to use for generating the trusty URI
+     * @return the generated trusty URI, or null if the base URI is null
+     */
     public static IRI getTrustyUri(IRI baseUri, String artifactCode, TransformRdfSetting setting) {
         if (baseUri == null) {
             return null;
@@ -55,6 +92,16 @@ public class RdfUtils {
         return SimpleValueFactory.getInstance().createIRI(getTrustyUriString(baseUri, artifactCode, setting));
     }
 
+    /**
+     * Gets the pre-URI for a given RDF resource.
+     *
+     * @param resource the RDF resource for which to get the pre-URI
+     * @param baseUri  the base URI to use for generating the pre-URI
+     * @param bnodeMap a map to keep track of blank node identifiers and their corresponding numbers
+     * @param frozen   a boolean indicating whether to return null for blank nodes (if true) or to generate skolemized URIs (if false)
+     * @param setting  the settings to use for generating the pre-URI
+     * @return the pre-URI for the given RDF resource, or null if the resource is a blank node and frozen is true
+     */
     public static IRI getPreUri(Resource resource, IRI baseUri, Map<String, Integer> bnodeMap, boolean frozen, TransformRdfSetting setting) {
         if (resource == null) {
             throw new RuntimeException("Resource is null");
@@ -81,6 +128,11 @@ public class RdfUtils {
         }
     }
 
+    /**
+     * Checks if the given URI is well-formed by attempting to create a java.net.URI object from its string value.
+     *
+     * @param uri the IRI to check for well-formedness
+     */
     public static void checkUri(IRI uri) {
         try {
             // Raise error if not well-formed
@@ -90,6 +142,13 @@ public class RdfUtils {
         }
     }
 
+    /**
+     * Gets the character to use for separating the artifact code from the suffix in a trusty URI, based on the given base URI and settings.
+     *
+     * @param baseUri the base URI to check for the presence of the default post-artifact-code character
+     * @param setting the settings to use for determining the post-artifact-code character and fallback character
+     * @return the character to use for separating the artifact code from the suffix in a trusty URI
+     */
     public static char getPostAcChar(IRI baseUri, TransformRdfSetting setting) {
         if (setting.getPostAcChar() == '#' && baseUri.stringValue().contains("#")) {
             return setting.getPostAcFallbackChar();
@@ -117,6 +176,13 @@ public class RdfUtils {
         }
     }
 
+    /**
+     * Normalizes a URI by replacing the artifact code with a space and checking for newline or tab characters.
+     *
+     * @param uri          the URI to normalize
+     * @param artifactCode the artifact code to replace with a space (can be null)
+     * @return the normalized URI string
+     */
     public static String normalize(IRI uri, String artifactCode) {
         String s = uri.toString();
         if (s.indexOf('\n') > -1 || s.indexOf('\t') > -1) {
@@ -152,6 +218,15 @@ public class RdfUtils {
         return s;
     }
 
+    /**
+     * Loads RDF content from the given input stream and format, and returns it as an RdfFileContent object.
+     *
+     * @param in     the input stream to read the RDF content from
+     * @param format the RDF format of the content to load
+     * @return an RdfFileContent object containing the loaded RDF content
+     * @throws IOException        if there is an error reading from the input stream
+     * @throws TrustyUriException if there is an error parsing the RDF content, for example if the content is not well-formed or if there are issues with the URIs in the content
+     */
     public static RdfFileContent load(InputStream in, RDFFormat format) throws IOException, TrustyUriException {
         RDFParser p = getParser(format);
         RdfFileContent content = new RdfFileContent(format);
@@ -166,6 +241,12 @@ public class RdfUtils {
         return content;
     }
 
+    /**
+     * Creates and configures an RDFParser for the given RDF format.
+     *
+     * @param format the RDF format for which to create the parser
+     * @return a configured RDFParser for the given RDF format
+     */
     public static RDFParser getParser(RDFFormat format) {
         RDFParser p = Rio.createParser(format);
         p.getParserConfig().addNonFatalError(BasicParserSettings.VERIFY_URI_SYNTAX);
@@ -173,10 +254,25 @@ public class RdfUtils {
         return p;
     }
 
+    /**
+     * Loads RDF content from the given TrustyUriResource and returns it as an RdfFileContent object.
+     *
+     * @param r the TrustyUriResource to load the RDF content from
+     * @return an RdfFileContent object containing the loaded RDF content
+     * @throws IOException        if there is an error reading from the resource
+     * @throws TrustyUriException if there is an error parsing the RDF content, for example if the content is not well-formed or if there are issues with the URIs in the content
+     */
     public static RdfFileContent load(TrustyUriResource r) throws IOException, TrustyUriException {
         return load(r.getInputStream(), r.getFormat(RDFFormat.TURTLE));
     }
 
+    /**
+     * Fixes the given trusty RDF file by recalculating the artifact code based on the content and updating the URIs accordingly.
+     *
+     * @param file the trusty RDF file to fix
+     * @throws IOException        if there is an error reading or writing the file
+     * @throws TrustyUriException if there is an error with the trusty URI, for example if the file is not a trusty file or if the module is unknown
+     */
     public static void fixTrustyRdf(File file) throws IOException, TrustyUriException {
         TrustyUriResource r = new TrustyUriResource(file);
         RdfFileContent content = RdfUtils.load(r);
@@ -195,6 +291,14 @@ public class RdfUtils {
         TransformRdf.transformPreprocessed(content, null, writer, null);
     }
 
+    /**
+     * Fixes the given trusty RDF file by recalculating the artifact code based on the content and updating the URIs accordingly.
+     *
+     * @param content         the RdfFileContent object containing the RDF content to fix
+     * @param oldArtifactCode the old artifact code to replace in the RDF content
+     * @param writer          the RDFHandler to write the fixed RDF content to
+     * @throws TrustyUriException if there is an error with the trusty URI, for example if the file is not a trusty file or if the module is unknown
+     */
     public static void fixTrustyRdf(RdfFileContent content, ArtifactCode oldArtifactCode, RDFHandler writer)
             throws TrustyUriException {
         content = RdfPreprocessor.run(content, oldArtifactCode.toString());
@@ -222,12 +326,18 @@ public class RdfUtils {
         return content;
     }
 
-
     private static class NamespaceProcessor implements RDFHandler {
 
         private RDFHandler handler;
         private ArtifactCode oldArtifactCode, newArtifactCode;
 
+        /**
+         * Creates a new NamespaceProcessor that replaces the old artifact code with the new artifact code in namespace URIs.
+         *
+         * @param oldArtifactCode the old artifact code to replace in namespace URIs
+         * @param newArtifactCode the new artifact code to use in namespace URIs
+         * @param handler         the RDFHandler to which the processed RDF content will be passed
+         */
         public NamespaceProcessor(ArtifactCode oldArtifactCode, ArtifactCode newArtifactCode, RDFHandler handler) {
             this.handler = handler;
             this.oldArtifactCode = oldArtifactCode;

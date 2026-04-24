@@ -13,6 +13,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * A class for creating artifact codes for RDF statements.
+ */
 public class RdfHasher {
 
     // TODO Make this a command line argument:
@@ -21,13 +24,26 @@ public class RdfHasher {
     private RdfHasher() {
     }  // no instances allowed
 
+    /**
+     * Creates an artifact code for the given RDF statements.
+     *
+     * @param statements the RDF statements to create the artifact code for
+     * @return the artifact code for the given RDF statements
+     */
     public static ArtifactCode makeArtifactCode(List<Statement> statements) {
         return getArtifactCode(digest(statements));
     }
 
+    /**
+     * Creates an artifact code for the given RDF statements, where the artifact code is based on the statements in a specific graph.
+     *
+     * @param statements the RDF statements to create the artifact code for
+     * @return the artifact code for the given RDF statements
+     * @throws TrustyUriException if the graph is null, a blank node, or if multiple graphs are found
+     */
     public static ArtifactCode makeGraphArtifactCode(List<Statement> statements) throws TrustyUriException {
         IRI graphUri = null;
-        List<Statement> graph = new ArrayList<Statement>();
+        List<Statement> graph = new ArrayList<>();
         for (Statement st : statements) {
             Resource c = st.getContext();
             if (c == null) {
@@ -46,9 +62,18 @@ public class RdfHasher {
         return getGraphArtifactCode(digest(graph));
     }
 
+    /**
+     * Creates an artifact code for the given RDF statements, where the artifact code is based on the statements in a specific graph
+     *
+     * @param statements the RDF statements to create the artifact code for
+     * @param baseUri    the base URI to use
+     * @param setting    the setting to use for creating the artifact code
+     * @return the artifact code for the given RDF statements
+     * @throws TrustyUriException if the graph is null, a blank node, or if multiple graphs are found
+     */
     public static ArtifactCode makeGraphArtifactCode(List<Statement> statements, IRI baseUri, TransformRdfSetting setting) throws TrustyUriException {
         IRI graphUri = RdfUtils.getTrustyUri(baseUri, " ", setting);
-        List<Statement> graph = new ArrayList<Statement>();
+        List<Statement> graph = new ArrayList<>();
         for (Statement st : statements) {
             Resource c = st.getContext();
             if (c != null && c.equals(graphUri)) {
@@ -61,6 +86,12 @@ public class RdfHasher {
         return getGraphArtifactCode(digest(graph));
     }
 
+    /**
+     * Creates a message digest for the given RDF statements.
+     *
+     * @param statements the RDF statements to create the message digest for
+     * @return the message digest for the given RDF statements
+     */
     public static MessageDigest digest(List<Statement> statements) {
         MessageDigest md = getDigest();
         Collections.sort(statements, new StatementComparator());
@@ -80,6 +111,12 @@ public class RdfHasher {
         return md;
     }
 
+    /**
+     * Creates a string representation of the given RDF statements for use in the message digest.
+     *
+     * @param statements the RDF statements to create the string representation for
+     * @return the string representation of the given RDF statements for use in the message digest
+     */
     public static String getDigestString(List<Statement> statements) {
         StringBuilder sb = new StringBuilder();
         Collections.sort(statements, new StatementComparator());
@@ -93,6 +130,11 @@ public class RdfHasher {
         return sb.toString();
     }
 
+    /**
+     * Creates a message digest.
+     *
+     * @return the message digest
+     */
     public static MessageDigest getDigest() {
         MessageDigest md = null;
         try {
@@ -103,14 +145,32 @@ public class RdfHasher {
         return md;
     }
 
+    /**
+     * Creates an artifact code for the given message digest.
+     *
+     * @param md the message digest to create the artifact code for
+     * @return the artifact code for the given message digest
+     */
     public static ArtifactCode getArtifactCode(MessageDigest md) {
         return ArtifactCode.of(ModuleDirectory.getModule(RdfModule.MODULE_ID), TrustyUriUtils.getBase64(md.digest()));
     }
 
+    /**
+     * Creates an artifact code for the given message digest
+     *
+     * @param md the message digest to create the artifact code for
+     * @return the artifact code for the given message digest
+     */
     public static ArtifactCode getGraphArtifactCode(MessageDigest md) {
         return ArtifactCode.of(ModuleDirectory.getModule(RdfGraphModule.MODULE_ID), TrustyUriUtils.getBase64(md.digest()));
     }
 
+    /**
+     * Updates the given message digest with the given RDF statement.
+     *
+     * @param st the RDF statement to update the message digest with
+     * @param md the message digest to update
+     */
     public static void digest(Statement st, MessageDigest md) {
         if (DEBUG) {
             System.err.print(valueToString(st.getContext()));
@@ -130,6 +190,12 @@ public class RdfHasher {
         md.update(valueToString(st.getObject()).getBytes());
     }
 
+    /**
+     * Creates a string representation of the given RDF statement for use in the message digest.
+     *
+     * @param st the RDF statement to create the string representation for
+     * @return the string representation of the given RDF statement for use in the message digest
+     */
     public static String getDigestString(Statement st) {
         String s = "";
         s += valueToString(st.getContext());

@@ -72,6 +72,7 @@ public class CheckFile {
      * Creates a new object to check the content to be read from a local file.
      *
      * @param file the local file from which the content is read
+     * @throws IOException if the content cannot be read
      */
     public CheckFile(File file) throws IOException {
         r = new TrustyUriResource(file);

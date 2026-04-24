@@ -17,8 +17,18 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.zip.GZIPOutputStream;
 
+/**
+ * This class can be used to transform a large RDF file.
+ */
 public class TransformLargeRdf {
 
+    /**
+     * Transforms the given RDF file.
+     *
+     * @param args the first argument is the RDF file to transform, the second argument is the base name for the output file (optional, default: the input file name without extension)
+     * @throws IOException        if there is an error reading or writing the file
+     * @throws TrustyUriException if there is an error with the trusty URI, for example if the file is not a valid RDF file or if the base name is invalid
+     */
     public static void main(String[] args) throws IOException, TrustyUriException {
         File inputFile = new File(args[0]);
         String baseName = "";
@@ -28,7 +38,7 @@ public class TransformLargeRdf {
             baseName = inputFile.getName().replaceFirst("[.][^.]+$", "");
         }
         TransformLargeRdf t = new TransformLargeRdf(inputFile, baseName);
-        t.transform(TransformRdfSetting.defautSetting);
+        t.transform(TransformRdfSetting.defaultSetting);
     }
 
     private File inputFile;
@@ -38,11 +48,25 @@ public class TransformLargeRdf {
     private IRI baseUri;
     private String fileName, ext;
 
+    /**
+     * Creates a new TransformLargeRdf object for the given RDF file and base name.
+     *
+     * @param inputFile the RDF file to transform
+     * @param baseName  the base name for the output file
+     */
     public TransformLargeRdf(File inputFile, String baseName) {
         this.inputFile = inputFile;
         this.baseName = baseName;
     }
 
+    /**
+     * Transforms the RDF file.
+     *
+     * @param setting the setting to use for the transformation
+     * @return the trusty URI of the transformed RDF file
+     * @throws IOException        if there is an error reading or writing the file
+     * @throws TrustyUriException if there is an error with the trusty URI, for example if the file is not a valid RDF file or if the base name is invalid
+     */
     public IRI transform(TransformRdfSetting setting) throws IOException, TrustyUriException {
         baseUri = TransformRdf.getBaseURI(baseName);
         md = RdfHasher.getDigest();

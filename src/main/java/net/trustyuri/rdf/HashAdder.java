@@ -9,6 +9,9 @@ import org.eclipse.rdf4j.rio.RDFHandlerException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * RDFHandler that adds a hash to all IRIs in the graph, based on the provided artifact code.
+ */
 public class HashAdder implements RDFHandler {
 
     private IRI baseURI;
@@ -17,15 +20,23 @@ public class HashAdder implements RDFHandler {
     private Map<String, String> ns;
     private Map<IRI, IRI> transformMap;
 
+    /**
+     * Creates a new HashAdder.
+     *
+     * @param baseURI      the base URI to use for the graph
+     * @param artifactCode the artifact code to use
+     * @param handler      the RDFHandler to delegate to
+     * @param ns           a map of namespace prefixes to URIs, which will be passed to the handler
+     */
     public HashAdder(IRI baseURI, ArtifactCode artifactCode, RDFHandler handler, Map<String, String> ns) {
         this.baseURI = baseURI;
         this.artifactCode = artifactCode;
         this.handler = handler;
         this.ns = ns;
         if (ns == null) {
-            this.ns = new HashMap<String, String>();
+            this.ns = new HashMap<>();
         }
-        transformMap = new HashMap<IRI, IRI>();
+        transformMap = new HashMap<>();
     }
 
     @Override
@@ -85,6 +96,11 @@ public class HashAdder implements RDFHandler {
         }
     }
 
+    /**
+     * Returns a map of the original IRIs to the transformed IRIs.
+     *
+     * @return a map of the original IRIs to the transformed IRIs
+     */
     public Map<IRI, IRI> getTransformMap() {
         return transformMap;
     }

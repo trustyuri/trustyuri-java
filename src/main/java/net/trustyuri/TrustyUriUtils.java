@@ -81,10 +81,23 @@ public class TrustyUriUtils {
         return artifactCode.substring(2);
     }
 
+    /**
+     * Converts a trusty URI string to an ni URI string.
+     *
+     * @param s the trusty URI string to convert
+     * @return the ni URI string corresponding to the given trusty URI string, or null if the given string does not contain a valid artifact code
+     */
     public static String getNiUri(String s) {
         return getNiUri(s, true);
     }
 
+    /**
+     * Converts a trusty URI string to an ni URI string.
+     *
+     * @param s             the trusty URI string to convert
+     * @param withAuthority if true, the authority part of the original URI will be included in the resulting ni URI; if false, the resulting ni URI will not include an authority part
+     * @return the ni URI string corresponding to the given trusty URI string, or null if the given string does not contain a valid artifact code
+     */
     public static String getNiUri(String s, boolean withAuthority) {
         String ac = getArtifactCode(s);
         if (ac == null) {
@@ -106,6 +119,12 @@ public class TrustyUriUtils {
         return "ni://" + tail;
     }
 
+    /**
+     * Converts a byte array to a base64 string.
+     *
+     * @param bytes the byte array to convert
+     * @return the base64 string representation of the byte array
+     */
     public static String getBase64(byte[] bytes) {
         String h = DatatypeConverter.printBase64Binary(bytes);
         h = h.replaceFirst("=*$", "");
@@ -114,18 +133,36 @@ public class TrustyUriUtils {
         return h;
     }
 
+    /**
+     * Returns the base64-encoded hash of the given string.
+     *
+     * @param s the string to hash and encode in base64
+     * @return the base64-encoded hash of the given string
+     */
     public static String getBase64Hash(String s) {
         MessageDigest md = RdfHasher.getDigest();
         md.update(s.getBytes());
         return getBase64(md.digest());
     }
 
+    /**
+     * Converts a base64 string to a byte array.
+     *
+     * @param base64String the base64 string to convert
+     * @return the byte array represented by the base64 string
+     */
     public static byte[] getBase64Bytes(String base64String) {
         base64String = base64String.replace('-', '+').replace('_', '/');
         while (base64String.length() % 4 > 0) base64String = base64String + "=";
         return DatatypeConverter.parseBase64Binary(base64String);
     }
 
+    /**
+     * Returns the MIME type for the given filename.
+     *
+     * @param filename the name of the file to get the MIME type for
+     * @return the MIME type for the given filename, or null if the MIME type cannot be determined
+     */
     public static String getMimetype(String filename) {
         return mimeMap.getContentType(filename);
     }

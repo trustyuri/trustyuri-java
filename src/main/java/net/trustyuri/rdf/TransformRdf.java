@@ -37,7 +37,7 @@ public class TransformRdf {
         if (args.length > 1) {
             baseName = args[1];
         }
-        transform(inputFile, baseName, TransformRdfSetting.defautSetting);
+        transform(inputFile, baseName, TransformRdfSetting.defaultSetting);
     }
 
     /**
@@ -104,6 +104,16 @@ public class TransformRdf {
         return transformPreprocessed(content, baseUri, handler, setting);
     }
 
+    /**
+     * Transforms the RDF content into trusty URI format and writes it using the provided RDFHandler.
+     *
+     * @param content  the RDF content to be transformed
+     * @param handler  the RDFHandler to which the transformed RDF statements will be written
+     * @param baseName the base name for the output
+     * @param setting  the settings for the transformation
+     * @return a map containing the resources and their corresponding IRIs in the transformed RDF content
+     * @throws TrustyUriException if the transformation fails due to an invalid input, issues with the RDF content, or other problems encountered during processing; this exception may be thrown if there are issues with generating the artifact code, constructing the trusty URI, or writing the RDF statements using the provided handler
+     */
     public static Map<Resource, IRI> transformAndGetMap(RdfFileContent content, RDFHandler handler, String baseName, TransformRdfSetting setting)
             throws TrustyUriException {
         IRI baseUri = getBaseURI(baseName);
@@ -119,6 +129,18 @@ public class TransformRdf {
         return finalizeTransformMap(rp.getTransformMap(), artifactCode);
     }
 
+    /**
+     * Transforms the RDF content into trusty URI format and writes it using the provided RDFHandler. The base name for the output can be given as an argument, which can also be a base URI. If not given, the base name is derived from the input file name by removing the extension.
+     *
+     * @param in       the InputStream from which the RDF content will be read
+     * @param format   the RDFFormat of the input RDF content
+     * @param out      the OutputStream to which the transformed RDF statements will be written
+     * @param baseName an optional base name for the output, which can also be a base URI; if null, the base name is derived from the input file name by removing the extension; this base name is used to construct the trusty URI and may affect how blank nodes and other elements are handled during transformation
+     * @param setting  the settings for the transformation, which can include options for handling blank nodes, literals, and other aspects of the RDF content; these settings may influence how the trusty URI is generated and how the RDF statements are processed during transformation
+     * @return the IRI of the transformed RDF content in trusty URI format, which is constructed based on the base name and the artifact code generated from the RDF content; this IRI can be used to reference the transformed RDF data and may be included in the output RDF statements as needed
+     * @throws IOException        if an I/O error occurs during reading the input or writing the output
+     * @throws TrustyUriException if the transformation fails due to an invalid input, issues with the RDF content, or other problems encountered during processing; this exception may be thrown if there are issues with generating the artifact code, constructing the trusty URI, or writing the RDF statements using the provided handler
+     */
     public static IRI transform(InputStream in, RDFFormat format, OutputStream out, String baseName, TransformRdfSetting setting)
             throws IOException, TrustyUriException {
         IRI baseUri = getBaseURI(baseName);
