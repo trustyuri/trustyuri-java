@@ -1,9 +1,9 @@
 package net.trustyuri;
 
 import net.trustyuri.rdf.RdfModule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ArtifactCodeImplTest {
 
@@ -39,7 +39,7 @@ public class ArtifactCodeImplTest {
     @Test
     public void testGetModule() {
         ArtifactCode artifactCode = ArtifactCode.of(validArtifactCode);
-        assertTrue(artifactCode.getModule() instanceof RdfModule);
+        assertInstanceOf(RdfModule.class, artifactCode.getModule());
         assertEquals(RdfModule.MODULE_ID, artifactCode.getModule().getModuleId());
     }
 
