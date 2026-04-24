@@ -11,7 +11,17 @@ config.plugins.push(
       "mvnw": true
     }
   ],
-  "@semantic-release/github",
+  [
+    "@semantic-release/github",
+    {
+      "assets": [
+        {
+          "path": "target/trustyuri-*-jar-with-dependencies.jar",
+          "label": "JAR for CLI usage (v${nextRelease.version})"
+        },
+      ]
+    }
+  ],
   "@semantic-release/git"
 )
 module.exports = config
