@@ -33,6 +33,20 @@ Maven is required to build and run this library:
 
     $ ./mvnw clean install
 
+Run as CLI tool
+-----------------
+
+You can download a prebuilt JAR file: https://github.com/trustyuri/trustyuri-java/releases/latest
+
+Then you can use the following command (replace `VERSION` with the version number
+you are using):
+
+    $ java -jar trustyuri-VERSION-jar-with-dependencies.jar [COMMAND] [ARGS]
+
+For example:
+
+    $ java -jar trustyuri-VERSION-jar-with-dependencies.jar CheckFile http://trustyuri.net/spec/v1.FADQoZWcYugekAb4jW-Zm3_5Cd9tmkkYEV0bxK2fLSKao.md
+
 Run from Source
 ---------------
 
@@ -47,26 +61,6 @@ The following command adds a hash to a local file using module `FA`:
 To transform an RDF document, use this command (the second argument is optional):
 
     $ scripts/TransformRdf.sh [FILE] [BASE-URI]
-
-Run from JAR File
------------------
-
-Alternatively, you can generate a single JAR file with the following command
-(the JAR file will show up in `target/`):
-
-    $ ./mvnw compile assembly:single
-
-Or you can download a prebuilt JAR file:
-https://github.com/trustyuri/trustyuri-java/releases
-
-Then you can use the same commands as in the `scripts/` directory as follows (replace `VERSION` with the version number
-you are using):
-
-    $ java -jar trustyuri-VERSION-jar-with-dependencies.jar [COMMAND] [ARGS]
-
-For example:
-
-    $ java -jar trustyuri-VERSION-jar-with-dependencies.jar CheckFile http://trustyuri.net/spec/v1.FADQoZWcYugekAb4jW-Zm3_5Cd9tmkkYEV0bxK2fLSKao.md
 
 License
 -------
