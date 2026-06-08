@@ -40,7 +40,7 @@
     <central.publishing.plugin.version>0.10.0</central.publishing.plugin.version>
     <maven.dependency.plugin.version>3.8.1</maven.dependency.plugin.version>
     <maven.jar.plugin.version>3.5.0</maven.jar.plugin.version>
-    <maven.assembly.plugin.version>3.7.1</maven.assembly.plugin.version>
+    <maven.assembly.plugin.version>3.8.0</maven.assembly.plugin.version>
   </properties>
 
   <dependencyManagement>
