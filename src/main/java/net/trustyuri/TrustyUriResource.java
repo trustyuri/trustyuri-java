@@ -120,7 +120,11 @@ public class TrustyUriResource {
         logger.debug("Creating TrustyUriResource from URL '{}' with explicit artifact code '{}'", url, artifactCode);
         URLConnection conn = url.openConnection();
         String contentType = conn.getContentType();
-        logger.debug("Content-Type reported by server for '{}': '{}'", url, contentType);
+        if (contentType == null) {
+            logger.warn("Server did not report a Content-Type for URL '{}'; mimetype will be unknown", url);
+        } else {
+            logger.debug("Content-Type reported by server for '{}': '{}'", url, contentType);
+        }
         init(url.toString(), contentType, conn.getInputStream(), artifactCode);
     }
 
@@ -136,7 +140,11 @@ public class TrustyUriResource {
         logger.debug("Creating TrustyUriResource from URL '{}'; derived artifact code: '{}'", n, ac);
         URLConnection conn = url.openConnection();
         String contentType = conn.getContentType();
-        logger.debug("Content-Type reported by server for '{}': '{}'", n, contentType);
+        if (contentType == null) {
+            logger.warn("Server did not report a Content-Type for URL '{}'; mimetype will be unknown", n);
+        } else {
+            logger.debug("Content-Type reported by server for '{}': '{}'", n, contentType);
+        }
         init(n, contentType, conn.getInputStream(), ac);
     }
 
@@ -145,11 +153,17 @@ public class TrustyUriResource {
         this.mimetype = mimetype;
         this.artifactCode = artifactCode;
         if (filename.matches(".*\\.(gz|gzip)")) {
-            logger.debug("Detected compressed resource '{}', wrapping stream in GZIPInputStream", filename);
-            this.in = new GZIPInputStream(in);
+            logger.debug("Detected compressed resource '{}' (.gz/.gzip extension), wrapping stream in GZIPInputStream", filename);
+            try {
+                this.in = new GZIPInputStream(in);
+            } catch (IOException ex) {
+                logger.error("Failed to read '{}' as a GZIP stream despite .gz/.gzip extension: {}", filename, ex.getMessage());
+                throw ex;
+            }
         } else {
             this.in = in;
         }
+        logger.debug("Initialized TrustyUriResource: filename='{}', mimetype='{}', artifactCode='{}', compressed={}", filename, mimetype, artifactCode, compressed);
     }
 
     /**
@@ -212,7 +226,9 @@ public class TrustyUriResource {
      * @return the module identifier of the resource, which is derived from the artifact code
      */
     public String getModuleId() {
-        return TrustyUriUtils.getModuleId(artifactCode);
+        String moduleId = TrustyUriUtils.getModuleId(artifactCode);
+        logger.debug("Resolved module ID for artifact code '{}': '{}'", artifactCode, moduleId);
+        return moduleId;
     }
 
     /**

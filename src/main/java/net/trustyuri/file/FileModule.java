@@ -41,15 +41,14 @@ public class FileModule extends AbstractTrustyUriModule {
 
     @Override
     public boolean hasCorrectHash(TrustyUriResource r) throws IOException {
-        logger.debug("Verifying hash for resource: {}", r);
+        logger.debug("Verifying hash for resource '{}' (claimed artifact code: '{}')", r.getFilename(), r.getArtifactCode());
         FileHasher hasher = new FileHasher();
         ArtifactCode ac = hasher.makeArtifactCode(new BufferedInputStream(r.getInputStream()));
         boolean matches = r.getArtifactCode().equals(ac.toString());
         if (matches) {
-            logger.debug("Hash verification passed for resource: {}", r);
+            logger.debug("Hash verification passed for resource '{}'", r.getFilename());
         } else {
-            logger.warn("Hash verification FAILED for resource: {} — expected {}, got {}",
-                    r, r.getArtifactCode(), ac);
+            logger.warn("Hash verification FAILED for resource '{}' — claimed '{}', actual computed hash '{}'", r.getFilename(), r.getArtifactCode(), ac);
         }
         return matches;
     }
@@ -57,16 +56,25 @@ public class FileModule extends AbstractTrustyUriModule {
     @Override
     public void fixTrustyFile(File file) throws IOException {
         logger.info("Fixing trusty URI filename for: {}", file.getAbsolutePath());
+
         TrustyUriResource r = new TrustyUriResource(file);
+        String artifactCode = r.getArtifactCode();
+        if (artifactCode == null || artifactCode.isEmpty()) {
+            logger.warn("No artifact code derived from filename '{}'; nothing to strip before reprocessing", r.getFilename());
+        }
+
         File renamedFile = new File(r.getFilename().replaceAll(r.getArtifactCode(), ""));
-        logger.debug("Stripping artifact code '{}' — renaming to: {}", r.getArtifactCode(), renamedFile.getName());
+        logger.debug("Stripping artifact code '{}' from '{}' — renaming to: '{}'", artifactCode, file.getName(), renamedFile.getName());
+
         boolean renamed = file.renameTo(renamedFile);
         if (!renamed) {
             logger.error("Failed to rename '{}' to '{}' before reprocessing", file.getName(), renamedFile.getName());
             throw new IOException("Could not rename file: " + file.getAbsolutePath());
         }
-        logger.debug("Renamed successfully, reprocessing: {}", renamedFile.getName());
+        logger.debug("Renamed '{}' to '{}', reprocessing", file.getName(), renamedFile.getName());
+
         ProcessFile.process(renamedFile);
+        logger.info("Finished fixing trusty file (now reprocessed as: '{}')", renamedFile.getName());
     }
 
 }

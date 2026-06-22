@@ -122,6 +122,10 @@ public class TrustyUriUtils {
         // TODO For future modules, hash might not be equal to data part:
         String hash = getDataPart(ac);
         TrustyUriModule module = ModuleDirectory.getModule(moduleId);
+        if (module == null) {
+            logger.warn("Cannot convert to ni URI — no module registered for ID '{}' (artifact code '{}', from '{}')", moduleId, ac, s);
+            return null;
+        }
         String tail = "/" + module.getAlgorithmId() + ";" + hash + "?module=" + moduleId;
         if (withAuthority) {
             try {
@@ -161,7 +165,9 @@ public class TrustyUriUtils {
     public static String getBase64Hash(String s) {
         MessageDigest md = RdfHasher.getDigest();
         md.update(s.getBytes());
-        return getBase64(md.digest());
+        String hash = getBase64(md.digest());
+        logger.debug("Computed base64 hash for string of length {}: '{}'", s.length(), hash);
+        return hash;
     }
 
     /**

@@ -35,21 +35,31 @@ public class FileHasher {
      * @throws IOException if an I/O error occurs while reading the input stream
      */
     public ArtifactCode makeArtifactCode(InputStream in) throws IOException {
-        logger.debug("Computing {} artifact code from input stream", HASH_ALGORITHM);
-        MessageDigest md = null;
+        logger.debug("Starting {} hash computation from input stream", HASH_ALGORITHM);
+        MessageDigest md;
         try {
             md = MessageDigest.getInstance(HASH_ALGORITHM);
         } catch (NoSuchAlgorithmException ex) {
+            logger.error("{} algorithm not available on this JVM", HASH_ALGORITHM, ex);
             throw new IllegalStateException(HASH_ALGORITHM + " algorithm not available on this JVM", ex);
         }
+
+        long bytesRead = 0;
         DigestInputStream d = null;
         try {
             d = new DigestInputStream(in, md);
             while (d.read() != -1) {
+                bytesRead++;
             }
+        } catch (IOException ex) {
+            logger.error("I/O error while hashing input stream after {} byte(s) read", bytesRead, ex);
+            throw ex;
         } finally {
             d.close();
         }
+
+        logger.debug("Read and hashed {} byte(s) from input stream", bytesRead);
+
         ArtifactCode code = ArtifactCode.of(ModuleDirectory.getModule(FileModule.MODULE_ID), TrustyUriUtils.getBase64(md.digest()));
         logger.debug("Computed artifact code: {}", code);
         return code;
