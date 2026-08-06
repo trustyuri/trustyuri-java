@@ -26,8 +26,18 @@ public class CheckFile {
      * @throws TrustyUriException if any of the URIs is not a trusty URI or if any of the modules is unknown
      */
     public static void main(String[] args) throws IOException, TrustyUriException {
+        boolean allCorrect = true;
         for (String arg : args) {
-            check(arg);
+            CheckFile c = create(arg);
+            if (c.check()) {
+                System.out.println("Correct hash: " + c.r.getArtifactCode());
+            } else {
+                System.out.println("*** INCORRECT HASH ***");
+                allCorrect = false;
+            }
+        }
+        if (!allCorrect) {
+            System.exit(1);
         }
     }
 
@@ -40,30 +50,23 @@ public class CheckFile {
      * @throws TrustyUriException if the URI is not a trusty URI or if the module is unknown
      */
     public static void check(String fileOrUrl) throws IOException, TrustyUriException {
-        CheckFile c;
+        CheckFile c = create(fileOrUrl);
+        logger.debug("Starting check for {}", fileOrUrl);
+        if (c.check()) {
+            logger.debug("Hash verified successfully for {} (artifact code: {})", fileOrUrl, c.r.getArtifactCode());
+        } else {
+            logger.warn("Hash mismatch for {}", fileOrUrl);
+        }
+    }
+
+    private static CheckFile create(String fileOrUrl) throws IOException {
         try {
             URL url = new URL(fileOrUrl);
             logger.debug("Interpreting input as URL: {}", fileOrUrl);
-            c = new CheckFile(url);
+            return new CheckFile(url);
         } catch (MalformedURLException ex) {
             logger.debug("Interpreting input as local file: {}", fileOrUrl);
-            c = new CheckFile(new File(fileOrUrl));
-        }
-
-        logger.info("Starting check for {}", fileOrUrl);
-        try {
-            boolean valid = c.check();
-            if (valid) {
-                logger.info("Hash verified successfully for {} (artifact code: {})", fileOrUrl, c.r.getArtifactCode());
-            } else {
-                logger.warn("Hash mismatch for {}", fileOrUrl);
-            }
-        } catch (TrustyUriException e) {
-            logger.error("Trusty URI validation failed for {}: {}", fileOrUrl, e.getMessage());
-            throw e;
-        } catch (IOException e) {
-            logger.error("I/O error while processing {}: {}", fileOrUrl, e.getMessage());
-            throw e;
+            return new CheckFile(new File(fileOrUrl));
         }
     }
 
@@ -103,8 +106,7 @@ public class CheckFile {
         TrustyUriModule module = ModuleDirectory.getModule(moduleId);
 
         if (module == null) {
-            logger.error("Unknown module ID '{}' for resource", moduleId);
-            throw new TrustyUriException("ERROR: Not a trusty URI or unknown module");
+            throw new TrustyUriException("Not a trusty URI or unknown module: " + moduleId);
         }
         logger.debug("Using module {} to verify hash", module.getClass().getSimpleName());
         boolean result = module.hasCorrectHash(r);

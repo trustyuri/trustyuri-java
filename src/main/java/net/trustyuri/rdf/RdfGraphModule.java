@@ -56,7 +56,7 @@ public class RdfGraphModule extends AbstractTrustyUriModule {
 
     @Override
     public void fixTrustyFile(File file) throws IOException, TrustyUriException {
-        logger.info("Fixing trusty RDF graph file: '{}'", file.getAbsolutePath());
+        logger.debug("Fixing trusty RDF graph file: '{}'", file.getAbsolutePath());
         RdfUtils.fixTrustyRdf(file);
     }
 

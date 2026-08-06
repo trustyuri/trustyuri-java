@@ -39,7 +39,7 @@ public class TransformRdfTest {
         TransformRdf.main(new String[]{preFile.getAbsolutePath(), baseUri});
         File file = testDir.resolve(name).toFile();
         assertTrue(file.exists(), "Expected output file to exist: " + name);
-        CheckFile.main(new String[]{file.getAbsolutePath()});
+        assertTrue(new CheckFile(file).check(), "Expected correct hash for: " + name);
     }
 
 }

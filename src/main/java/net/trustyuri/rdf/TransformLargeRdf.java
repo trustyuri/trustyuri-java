@@ -43,7 +43,10 @@ public class TransformLargeRdf {
             baseName = inputFile.getName().replaceFirst("[.][^.]+$", "");
         }
         TransformLargeRdf t = new TransformLargeRdf(inputFile, baseName);
-        t.transform(TransformRdfSetting.defaultSetting);
+        IRI trustyUri = t.transform(TransformRdfSetting.defaultSetting);
+        if (trustyUri != null) {
+            System.out.println(trustyUri.stringValue());
+        }
     }
 
     private File inputFile;
@@ -73,13 +76,13 @@ public class TransformLargeRdf {
      * @throws TrustyUriException if there is an error with the trusty URI, for example if the file is not a valid RDF file or if the base name is invalid
      */
     public IRI transform(TransformRdfSetting setting) throws IOException, TrustyUriException {
-        logger.info("Starting RDF transformation: input='{}', baseName='{}'", inputFile, baseName);
+        logger.debug("Starting RDF transformation: input='{}', baseName='{}'", inputFile, baseName);
         baseUri = TransformRdf.getBaseURI(baseName);
         md = RdfHasher.getDigest();
         inputDir = inputFile.getParent();
         TrustyUriResource r = new TrustyUriResource(inputFile);
         RDFFormat format = r.getFormat(RDFFormat.TURTLE);
-        logger.info("Detected RDF format: {}", format);
+        logger.debug("Detected RDF format: {}", format);
 
         String name = baseName;
         if (baseName.indexOf("/") > 0) {
@@ -93,7 +96,7 @@ public class TransformLargeRdf {
 
         RDFParser p = RdfUtils.getParser(format);
         File sortInFile = new File(inputDir, fileName + ".temp.sort-in");
-        logger.info("Preprocessing RDF into sortable form: {}", sortInFile);
+        logger.debug("Preprocessing RDF into sortable form: {}", sortInFile);
 
         final FileOutputStream preOut = new FileOutputStream(sortInFile);
         p.setRDFHandler(new RdfPreprocessor(new AbstractRDFHandler() {
@@ -104,8 +107,7 @@ public class TransformLargeRdf {
                 try {
                     preOut.write(s.getBytes());
                 } catch (IOException ex) {
-                    logger.error("Failed to write preprocessed statement to temp file: {}", sortInFile, ex);
-                    throw new RDFHandlerException("Error writing preprocessed RDF", ex);
+                    throw new RDFHandlerException("Error writing preprocessed RDF to " + sortInFile, ex);
                 }
             }
 
@@ -114,7 +116,6 @@ public class TransformLargeRdf {
         try {
             p.parse(reader, "");
         } catch (RDF4JException ex) {
-            logger.error("Failed to parse RDF input file: {}", inputFile, ex);
             throw new TrustyUriException(ex);
         } finally {
             reader.close();
@@ -132,7 +133,7 @@ public class TransformLargeRdf {
         Charset cs = Charset.defaultCharset();
         System.gc();
         List<File> tempFiles = ExternalSort.sortInBatch(sortInFile, cmp, 1024, cs, sortTempDir, false);
-        logger.info("Created {} sorted temp files", tempFiles.size());
+        logger.debug("Created {} sorted temp files", tempFiles.size());
 
         ExternalSort.mergeSortedFiles(tempFiles, sortOutFile, cmp, cs);
         if (!sortInFile.delete()) {
@@ -154,7 +155,7 @@ public class TransformLargeRdf {
             previous = st;
         }
         br.close();
-        logger.info("Hashing completed.");
+        logger.debug("Hashing completed.");
 
         ArtifactCode artifactCode = RdfHasher.getArtifactCode(md);
         String acFileName = fileName;
@@ -167,11 +168,11 @@ public class TransformLargeRdf {
         OutputStream out;
         if (inputFile.getName().matches(".*\\.(gz|gzip)")) {
             outputFile = new File(inputDir, acFileName + ".gz");
-            logger.info("Writing compressed output: {}", outputFile);
+            logger.debug("Writing compressed output: {}", outputFile);
             out = new GZIPOutputStream(new FileOutputStream(outputFile));
         } else {
             outputFile = new File(inputDir, acFileName);
-            logger.info("Writing output: {}", outputFile);
+            logger.debug("Writing output: {}", outputFile);
             out = new FileOutputStream(outputFile);
         }
         RDFWriter writer = Rio.createWriter(format, new OutputStreamWriter(out, StandardCharsets.UTF_8));
@@ -190,7 +191,6 @@ public class TransformLargeRdf {
             }
             replacer.endRDF();
         } catch (RDFHandlerException ex) {
-            logger.error("Failed during RDF writing phase", ex);
             throw new TrustyUriException(ex);
         } finally {
             br.close();

@@ -7,8 +7,6 @@ import net.trustyuri.TrustyUriUtils;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Statement;
 import org.eclipse.rdf4j.model.impl.SimpleValueFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,8 +19,6 @@ import java.util.List;
  * This class can be used to check an RDF graph.
  */
 public class CheckRdfGraph {
-
-    private static final Logger logger = LoggerFactory.getLogger(CheckRdfGraph.class);
 
     /**
      * Checks the given RDF graph(s).
@@ -43,14 +39,18 @@ public class CheckRdfGraph {
         } catch (MalformedURLException ex) {
             c = new CheckRdfGraph(new File(fileName));
         }
+        boolean allCorrect = true;
         for (int i = 1; i < args.length; i++) {
             IRI graphUri = SimpleValueFactory.getInstance().createIRI(args[i]);
-            boolean valid = c.check(graphUri);
-            if (valid) {
-                logger.info("Correct hash: {}", getArtifactCode(graphUri));
+            if (c.check(graphUri)) {
+                System.out.println("Correct hash: " + getArtifactCode(graphUri));
             } else {
-                logger.error("*** INCORRECT HASH ***");
+                System.out.println("*** INCORRECT HASH ***");
+                allCorrect = false;
             }
+        }
+        if (!allCorrect) {
+            System.exit(1);
         }
     }
 

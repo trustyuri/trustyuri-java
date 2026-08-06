@@ -40,7 +40,7 @@ public class ProcessFileTest {
         File file = testDir.resolve(name).toFile();
         assertFalse(preFile.exists());
         assertTrue(file.exists());
-        CheckFile.main(new String[]{file.getAbsolutePath()});
+        assertTrue(new CheckFile(file).check(), "Expected correct hash for: " + name);
     }
 
 }

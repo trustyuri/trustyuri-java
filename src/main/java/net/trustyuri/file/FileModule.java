@@ -55,7 +55,7 @@ public class FileModule extends AbstractTrustyUriModule {
 
     @Override
     public void fixTrustyFile(File file) throws IOException {
-        logger.info("Fixing trusty URI filename for: {}", file.getAbsolutePath());
+        logger.debug("Fixing trusty URI filename for: {}", file.getAbsolutePath());
 
         TrustyUriResource r = new TrustyUriResource(file);
         String artifactCode = r.getArtifactCode();
@@ -66,15 +66,14 @@ public class FileModule extends AbstractTrustyUriModule {
         File renamedFile = new File(r.getFilename().replaceAll(r.getArtifactCode(), ""));
         logger.debug("Stripping artifact code '{}' from '{}' — renaming to: '{}'", artifactCode, file.getName(), renamedFile.getName());
 
-        boolean renamed = file.renameTo(renamedFile);
-        if (!renamed) {
-            logger.error("Failed to rename '{}' to '{}' before reprocessing", file.getName(), renamedFile.getName());
-            throw new IOException("Could not rename file: " + file.getAbsolutePath());
+        if (!file.renameTo(renamedFile)) {
+            throw new IOException("Could not rename '" + file.getAbsolutePath()
+                    + "' to '" + renamedFile.getAbsolutePath() + "' before reprocessing");
         }
         logger.debug("Renamed '{}' to '{}', reprocessing", file.getName(), renamedFile.getName());
 
         ProcessFile.process(renamedFile);
-        logger.info("Finished fixing trusty file (now reprocessed as: '{}')", renamedFile.getName());
+        logger.debug("Finished fixing trusty file (now reprocessed as: '{}')", renamedFile.getName());
     }
 
 }

@@ -7,6 +7,8 @@ import org.junit.jupiter.api.io.TempDir;
 import java.io.File;
 import java.nio.file.Path;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 public class CheckFileTest {
 
@@ -24,7 +26,8 @@ public class CheckFileTest {
     }
 
     public void test(String filename) throws Exception {
-        CheckFile.main(new String[]{"src/main/resources/testsuite/FA/valid/" + filename});
+        File file = new File("src/main/resources/testsuite/FA/valid/" + filename);
+        assertTrue(new CheckFile(file).check(), "Expected correct hash for: " + filename);
     }
 
 }
