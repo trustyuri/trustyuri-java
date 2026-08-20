@@ -27,7 +27,6 @@ public class ArtifactCodeImpl implements ArtifactCode {
             this.module = ModuleDirectory.getModule(TrustyUriUtils.getModuleId(artifactCode));
             logger.debug("Created ArtifactCodeImpl from code '{}': module='{}', dataHash='{}'", artifactCode, module.getModuleId(), dataHash);
         } else {
-            logger.error("Invalid artifact code (failed format/length check): '{}'", artifactCode);
             throw new IllegalArgumentException("Invalid artifact code: " + artifactCode);
         }
     }
@@ -40,15 +39,12 @@ public class ArtifactCodeImpl implements ArtifactCode {
      */
     ArtifactCodeImpl(TrustyUriModule module, String dataHash) {
         if (module == null) {
-            logger.error("Cannot create artifact code: module is null (dataHash='{}')", dataHash);
             throw new IllegalArgumentException("Module cannot be null");
         }
         if (dataHash == null || dataHash.isEmpty()) {
-            logger.error("Cannot create artifact code: data hash is null or empty (module='{}')", module.getModuleId());
             throw new IllegalArgumentException("Data hash cannot be null or empty");
         }
         if (module.getDataPartLength() != dataHash.length()) {
-            logger.error("Cannot create artifact code for module '{}': data hash '{}' has length {}, expected {}", module.getModuleId(), dataHash, dataHash.length(), module.getDataPartLength());
             throw new IllegalArgumentException("Data hash length does not match module requirements: expected " + module.getDataPartLength() + ", got " + dataHash.length());
         }
         this.module = module;

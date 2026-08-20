@@ -9,8 +9,6 @@ import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.RDFHandlerException;
 import org.eclipse.rdf4j.rio.RDFParser;
 import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -22,8 +20,6 @@ import java.security.MessageDigest;
  */
 public class CheckSortedRdf {
 
-    private static final Logger logger = LoggerFactory.getLogger(CheckSortedRdf.class);
-
     /**
      * Checks that the RDF file is sorted and that the hash is correct.
      *
@@ -34,11 +30,11 @@ public class CheckSortedRdf {
     public static void main(String[] args) throws IOException, TrustyUriException {
         File file = new File(args[0]);
         CheckSortedRdf ch = new CheckSortedRdf(file);
-        boolean isCorrect = ch.check();
-        if (isCorrect) {
-            logger.info("Correct hash: {}", ch.getArtifactCode().toString());
+        if (ch.check()) {
+            System.out.println("Correct hash: " + ch.getArtifactCode());
         } else {
-            logger.error("*** INCORRECT HASH ***");
+            System.out.println("*** INCORRECT HASH ***");
+            System.exit(1);
         }
     }
 
@@ -67,13 +63,12 @@ public class CheckSortedRdf {
         md = RdfHasher.getDigest();
         r = new TrustyUriResource(file);
         if (r.getArtifactCode() == null) {
-            logger.error("ERROR: Not a trusty URI or unknown module");
-            System.exit(1);
+            throw new TrustyUriException("Not a trusty URI or unknown module: " + file);
         }
         String moduleId = r.getModuleId();
         if (!moduleId.equals(RdfModule.MODULE_ID)) {
-            logger.error("ERROR: Unsupported module: {} (this function only supports " + RdfModule.MODULE_ID + ")", moduleId);
-            System.exit(1);
+            throw new TrustyUriException("Unsupported module '" + moduleId
+                    + "': this function only supports " + RdfModule.MODULE_ID);
         }
         RDFFormat format = r.getFormat(RDFFormat.TURTLE);
 

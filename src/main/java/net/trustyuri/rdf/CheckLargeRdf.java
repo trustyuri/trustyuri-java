@@ -10,8 +10,6 @@ import org.eclipse.rdf4j.rio.RDFFormat;
 import org.eclipse.rdf4j.rio.RDFHandlerException;
 import org.eclipse.rdf4j.rio.RDFParser;
 import org.eclipse.rdf4j.rio.helpers.AbstractRDFHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -25,8 +23,6 @@ import java.util.List;
  */
 public class CheckLargeRdf {
 
-    private static final Logger logger = LoggerFactory.getLogger(CheckLargeRdf.class);
-
     /**
      * Checks the hash of a large RDF file.
      *
@@ -37,11 +33,11 @@ public class CheckLargeRdf {
     public static void main(String[] args) throws IOException, TrustyUriException {
         File file = new File(args[0]);
         CheckLargeRdf t = new CheckLargeRdf(file);
-        boolean valid = t.check();
-        if (valid) {
-            logger.info("Hash is correct for file: {}", file.getAbsolutePath() + " with artifact code: " + t.ac.toString());
+        if (t.check()) {
+            System.out.println("Correct hash: " + t.ac);
         } else {
-            logger.error("Hash is incorrect for file: {}", file.getAbsolutePath());
+            System.out.println("*** INCORRECT HASH ***");
+            System.exit(1);
         }
     }
 
@@ -83,7 +79,8 @@ public class CheckLargeRdf {
                 try {
                     preOut.write(s.getBytes(StandardCharsets.UTF_8));
                 } catch (IOException ex) {
-                    logger.error("Error writing to temporary file for artifact code {}: {}", r.getArtifactCode(), ex.getMessage());
+                    // Swallowing this would hash incomplete input and report a bogus mismatch.
+                    throw new RDFHandlerException("Error writing to temporary file " + sortInFile, ex);
                 }
             }
 

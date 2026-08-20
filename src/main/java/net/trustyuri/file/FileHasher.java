@@ -40,7 +40,6 @@ public class FileHasher {
         try {
             md = MessageDigest.getInstance(HASH_ALGORITHM);
         } catch (NoSuchAlgorithmException ex) {
-            logger.error("{} algorithm not available on this JVM", HASH_ALGORITHM, ex);
             throw new IllegalStateException(HASH_ALGORITHM + " algorithm not available on this JVM", ex);
         }
 
@@ -52,7 +51,6 @@ public class FileHasher {
                 bytesRead++;
             }
         } catch (IOException ex) {
-            logger.error("I/O error while hashing input stream after {} byte(s) read", bytesRead, ex);
             throw ex;
         } finally {
             d.close();

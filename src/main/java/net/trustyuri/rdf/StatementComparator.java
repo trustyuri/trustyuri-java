@@ -96,7 +96,6 @@ public class StatementComparator implements Comparator<Statement> {
 
     private static int compareResource(Resource r1, Resource r2) {
         if (r1 instanceof BNode) {
-            logger.error("Cannot compare blank nodes — blank nodes have no stable identity for canonical sorting: r1={}, r2={}", r1, r2);
             throw new IllegalArgumentException("Blank nodes are not supported in StatementComparator: " + r1);
         } else {
             return compareURIs((IRI) r1, (IRI) r2);

@@ -50,7 +50,6 @@ public class RdfPreprocessor implements RDFHandler {
         try {
             content.propagate(new RdfPreprocessor(p, baseUri, setting));
         } catch (RDFHandlerException ex) {
-            logger.error("RDF preprocessing failed for base URI '{}': {}", baseUri, ex.getMessage());
             throw new TrustyUriException(ex);
         }
         logger.debug("Preprocessing complete: {} statements produced", p.getStatements().size());
@@ -71,7 +70,6 @@ public class RdfPreprocessor implements RDFHandler {
         try {
             content.propagate(new RdfPreprocessor(p, artifactCode));
         } catch (RDFHandlerException ex) {
-            logger.error("RDF preprocessing failed for artifact code '{}': {}", artifactCode, ex.getMessage());
             throw new TrustyUriException(ex);
         }
         logger.debug("Preprocessing complete: {} statements produced", p.getStatements().size());
@@ -244,7 +242,6 @@ public class RdfPreprocessor implements RDFHandler {
         IRI uri = RdfUtils.getPreUri(r, baseUri, blankNodeMap, trustyGraph != null, setting);
         if (uri == null) {
             // TODO Allow for 'force' option; URI might only look like a trusty URI...
-            logger.error("Transformation of '{}' would break existing trusty URI graph '{}'", r, trustyGraph);
             throw new RuntimeException("Transformation would break existing trusty URI graph: " + trustyGraph);
         } else if (!r.toString().equals(uri.toString())) {
             logger.trace("Transformed '{}' → '{}'", r, uri);

@@ -111,7 +111,6 @@ public class RdfUtils {
      */
     public static IRI getPreUri(Resource resource, IRI baseUri, Map<String, Integer> bnodeMap, boolean frozen, TransformRdfSetting setting) {
         if (resource == null) {
-            logger.error("getPreUri called with null resource");
             throw new RuntimeException("Resource is null");
         } else if (resource instanceof IRI) {
             IRI plainUri = (IRI) resource;
@@ -152,7 +151,6 @@ public class RdfUtils {
         try {
             new URI(uri.stringValue());
         } catch (URISyntaxException ex) {
-            logger.error("Malformed URI encountered: '{}'", uri.stringValue());
             throw new RuntimeException("Malformed URI: " + uri.stringValue(), ex);
         }
     }
@@ -253,7 +251,6 @@ public class RdfUtils {
         try {
             p.parse(new InputStreamReader(in, StandardCharsets.UTF_8), "");
         } catch (RDF4JException ex) {
-            logger.error("Failed to parse RDF content in format '{}': {}", format.getName(), ex.getMessage());
             throw new TrustyUriException(ex);
         } finally {
             in.close();
@@ -296,14 +293,14 @@ public class RdfUtils {
      * @throws TrustyUriException if there is an error with the trusty URI, for example if the file is not a trusty file or if the module is unknown
      */
     public static void fixTrustyRdf(File file) throws IOException, TrustyUriException {
-        logger.info("Fixing trusty RDF file: '{}'", file.getAbsolutePath());
+        logger.debug("Fixing trusty RDF file: '{}'", file.getAbsolutePath());
         TrustyUriResource r = new TrustyUriResource(file);
         RdfFileContent content = RdfUtils.load(r);
         ArtifactCode oldArtifactCode = ArtifactCode.of(r.getArtifactCode());
         logger.debug("Old artifact code: '{}'", oldArtifactCode);
         content = RdfPreprocessor.run(content, oldArtifactCode.toString());
         ArtifactCode newArtifactCode = createArtifactCode(content, oldArtifactCode.getModule().getModuleId().equals(RdfGraphModule.MODULE_ID));
-        logger.info("Replacing artifact code '{}' with '{}' in '{}'", oldArtifactCode, newArtifactCode, file.getName());
+        logger.debug("Replacing artifact code '{}' with '{}' in '{}'", oldArtifactCode, newArtifactCode, file.getName());
         content = processNamespaces(content, oldArtifactCode, newArtifactCode);
         OutputStream out;
         String filename = r.getFilename().replace(oldArtifactCode.toString(), newArtifactCode.toString());
@@ -315,7 +312,7 @@ public class RdfUtils {
         logger.debug("Writing fixed RDF content to: 'fixed.{}'", filename);
         RDFWriter writer = Rio.createWriter(r.getFormat(RDFFormat.TRIG), new OutputStreamWriter(out, StandardCharsets.UTF_8));
         TransformRdf.transformPreprocessed(content, null, writer, null);
-        logger.info("Successfully wrote fixed file: 'fixed.{}'", filename);
+        logger.debug("Successfully wrote fixed file: 'fixed.{}'", filename);
     }
 
     /**
@@ -331,7 +328,7 @@ public class RdfUtils {
         logger.debug("Fixing trusty RDF content with artifact code '{}'", oldArtifactCode);
         content = RdfPreprocessor.run(content, oldArtifactCode.toString());
         ArtifactCode newArtifactCode = createArtifactCode(content, oldArtifactCode.getModule().getModuleId().equals(RdfGraphModule.MODULE_ID));
-        logger.info("Replacing artifact code '{}' with '{}'", oldArtifactCode, newArtifactCode);
+        logger.debug("Replacing artifact code '{}' with '{}'", oldArtifactCode, newArtifactCode);
         content = processNamespaces(content, oldArtifactCode, newArtifactCode);
         TransformRdf.transformPreprocessed(content, null, writer, null);
     }

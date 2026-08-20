@@ -63,9 +63,9 @@ public class RunBatch {
             try {
                 Run.run(cmd);
             } catch (Exception ex) {
-                logger.error(ex.getMessage(), ex);
+                logger.error("Command failed: {}", line, ex);
             } catch (OutOfMemoryError err) {
-                logger.error(err.getMessage(), err);
+                logger.error("Out of memory running command: {}", line, err);
                 System.exit(99);
             }
             long t = System.nanoTime() - ns;

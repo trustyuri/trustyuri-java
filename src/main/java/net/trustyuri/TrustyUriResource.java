@@ -157,8 +157,8 @@ public class TrustyUriResource {
             try {
                 this.in = new GZIPInputStream(in);
             } catch (IOException ex) {
-                logger.error("Failed to read '{}' as a GZIP stream despite .gz/.gzip extension: {}", filename, ex.getMessage());
-                throw ex;
+                throw new IOException("Could not read '" + filename
+                        + "' as a GZIP stream despite its .gz/.gzip extension", ex);
             }
         } else {
             this.in = in;

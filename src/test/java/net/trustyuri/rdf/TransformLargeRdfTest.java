@@ -37,8 +37,8 @@ public class TransformLargeRdfTest {
         FileUtils.copyFile(new File("src/main/resources/testsuite/RA/pre/" + preName), preFile);
         TransformLargeRdf.main(new String[]{preFile.getAbsolutePath(), baseUri});
         File file = testDir.resolve(name).toFile();
-        assertTrue(file.exists());
-        CheckFile.main(new String[]{file.getAbsolutePath()});
+        assertTrue(file.exists(), "Expected output file to exist: " + name);
+        assertTrue(new CheckFile(file).check(), "Expected correct hash for: " + name);
     }
 
 }

@@ -95,8 +95,8 @@ public class HashAdder implements RDFHandler {
         if (r == null) {
             return null;
         } else if (r instanceof BNode) {
-            logger.error("Unexpected blank node encountered in HashAdder: '{}' — blank nodes should have been skolemized before this stage", r);
-            throw new RuntimeException("Unexpected blank node encountered");
+            throw new RuntimeException("Unexpected blank node '" + r
+                    + "': blank nodes should have been skolemized before this stage");
         } else {
             IRI transformedURI = SimpleValueFactory.getInstance().createIRI(r.toString().replace(" ", artifactCode.toString()));
             logger.trace("Transformed IRI '{}' → '{}'", r, transformedURI);

@@ -24,13 +24,11 @@ public class ProcessFile {
      */
     public static void main(String[] args) throws IOException {
         if (args.length < 1) {
-            logger.error("No filename provided. Usage: ProcessFile <filename>");
-            throw new IllegalArgumentException("Expected a filename as the first argument");
+            throw new IllegalArgumentException("Usage: ProcessFile <filename>");
         }
         String filename = args[0];
-        logger.info("Processing file from command line: {}", filename);
-        File file = new File(filename);
-        process(file);
+        logger.debug("Processing file from command line: {}", filename);
+        System.out.println(processFile(new File(filename)).getName());
     }
 
     /**
@@ -40,9 +38,19 @@ public class ProcessFile {
      * @throws IOException if the file cannot be read or renamed
      */
     public static void process(File file) throws IOException {
-        logger.info("Processing file: {}", file.getAbsolutePath());
+        processFile(file);
+    }
+
+    /**
+     * Process the given file by computing its artifact code and renaming it to include the artifact code in the filename.
+     *
+     * @param file the file to process
+     * @return the renamed file, whose name includes the artifact code
+     * @throws IOException if the file cannot be read or renamed
+     */
+    public static File processFile(File file) throws IOException {
+        logger.debug("Processing file: {}", file.getAbsolutePath());
         if (!file.exists()) {
-            logger.error("File does not exist: {}", file.getAbsolutePath());
             throw new IOException("File not found: " + file.getAbsolutePath());
         }
         String filename = file.getName();
@@ -60,13 +68,13 @@ public class ProcessFile {
             glue = ".";
         }
         File hashFile = new File(file.getParentFile(), base + glue + ac.toString() + ext);
-        logger.info("Renaming '{}' to '{}'", file.getName(), hashFile.getName());
-        boolean renamed = file.renameTo(hashFile);
-        if (!renamed) {
-            logger.error("Failed to rename '{}' to '{}'", file.getAbsolutePath(), hashFile.getAbsolutePath());
-            throw new IOException("Could not rename file to: " + hashFile.getAbsolutePath());
+        logger.debug("Renaming '{}' to '{}'", file.getName(), hashFile.getName());
+        if (!file.renameTo(hashFile)) {
+            throw new IOException("Could not rename '" + file.getAbsolutePath()
+                    + "' to '" + hashFile.getAbsolutePath() + "'");
         }
-        logger.info("File successfully renamed to: {}", hashFile.getName());
+        logger.debug("File successfully renamed to: {}", hashFile.getName());
+        return hashFile;
     }
 
 }

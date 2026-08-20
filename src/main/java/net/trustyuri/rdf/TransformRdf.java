@@ -37,7 +37,10 @@ public class TransformRdf {
         if (args.length > 1) {
             baseName = args[1];
         }
-        transform(inputFile, baseName, TransformRdfSetting.defaultSetting);
+        IRI trustyUri = transform(inputFile, baseName, TransformRdfSetting.defaultSetting);
+        if (trustyUri != null) {
+            System.out.println(trustyUri.stringValue());
+        }
     }
 
     /**
